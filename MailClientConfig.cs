@@ -8,25 +8,25 @@ namespace MailClient
         private string fromAdress;
 
         [JsonInclude]
+        private string password;
+
+        [JsonInclude]
         private string smtpServer;
 
         [JsonInclude]
         private int port;
 
         [JsonInclude]
-        private string password;
-
-        [JsonInclude]
         private string htmlSource;
 
         public string From() => fromAdress;
 
-        public string SMTP() => smtpServer;
-
         public string Password() => password;
 
-        public string HtmlSource() => htmlSource;
+        public string SMTP() => smtpServer;
 
         public int Port() => port;
+
+        public string HtmlSource() => htmlSource;
     }
 }
