@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using System.Text.Json;
 
 namespace MailClient
@@ -19,49 +20,9 @@ namespace MailClient
 
         public static string Run(MailClientInput input)
         {
-            string configPath = Path.Combine(GetModuleDir(), configFile);
+            StringBuilder historyContent = new(GetHistory());
 
-            string historyContent = GetHistory();
-
-            if (!File.Exists(configPath))
-            {
-                CreateConfigFile(configPath);
-
-                return "Configure the config file";
-            }
-
-            string fileContent = File.ReadAllText(configPath);
-
-            MailClientConfig? config;
-
-            try
-            {
-                config = JsonSerializer.Deserialize<MailClientConfig>(fileContent);
-            }
-            catch (Exception ex)
-            {
-                CreateConfigFile(configPath);
-
-                return $"Error: Config was corrupt was was regenerated. Please start program again\n{ex.ToString()}\n{ex.Message}";
-            }
-
-            if (config == null)
-            {
-                return "Error: Config is null";
-            }
-
-            MailMessage mail = new()
-            {
-                From = new MailAddress(config.From()),
-
-                Subject = input.Subject(),
-
-                Body = input.Body(),
-
-                IsBodyHtml = true
-            };
-
-            input.GetTos().ForEach(x => mail.To.Add(x.GetAdress()));
+            MailClientConfig config = GetConfig();
 
             SmtpClient smtpClient = new(config.SMTP(), config.Port())
             {
@@ -69,16 +30,35 @@ namespace MailClient
                 EnableSsl = true
             };
 
-            smtpClient.Send(mail);
+            for (int i = 0; i < input.GetTos().Count; i++)
+            {
+                object[] format;
+
+                format = input.GetTos()[i].GetFormattings().ToArray();
+
+                MailMessage mail = new()
+                {
+                    From = new MailAddress(config.From()),
+
+                    Subject = input.Subject(),
+
+                    Body = string.Format(input.Body(), format),
+
+                    IsBodyHtml = true
+                };
+
+                string adr = input.GetTos()[i].GetAdress();
+
+                historyContent.Append(adr.ToString() + " " + DateTime.Now);
+
+                mail.To.Add(adr);
+
+                smtpClient.Send(mail);
+            }
 
             using (StreamWriter sw = new(GetHistoryPath()))
             {
-                sw.WriteLine(historyContent);
-
-                foreach (MailAddress? item in mail.To)
-                {
-                    sw.WriteLine(item.ToString() + " " + DateTime.Now);
-                }
+                sw.Write(historyContent);
             }
 
             return "";
@@ -94,6 +74,40 @@ namespace MailClient
             {
                 sw.Write(defaultJson);
             }
+        }
+
+        private static MailClientConfig GetConfig()
+        {
+            string configPath = Path.Combine(GetModuleDir(), configFile);
+
+            if (!File.Exists(configPath))
+            {
+                CreateConfigFile(configPath);
+
+                throw new Exception("Configure the config file");
+            }
+
+            string fileContent = File.ReadAllText(configPath);
+
+            MailClientConfig? config;
+
+            try
+            {
+                config = JsonSerializer.Deserialize<MailClientConfig>(fileContent);
+            }
+            catch (Exception ex)
+            {
+                CreateConfigFile(configPath);
+
+                throw new JsonException($"Error: Config was corrupt was was regenerated. Please start program again\n{ex.ToString()}\n{ex.Message}");
+            }
+
+            if (config == null)
+            {
+                throw new NullReferenceException("Error: Config is null");
+            }
+
+            return config;
         }
 
         public static string GetModuleDir()

@@ -13,7 +13,7 @@ namespace MailClient
         private string body;
 
         [JsonInclude]
-        private List<To> to;
+        private List<To> to = new();
 
         public class To
         {
@@ -21,7 +21,7 @@ namespace MailClient
             private string adress;
 
             [JsonInclude]
-            private List<string> formattings;
+            private List<string> formattings = new();
 
             public To()
             {
@@ -34,9 +34,9 @@ namespace MailClient
                 this.formattings = formattings;
             }
 
-            public string GetAdress() => this.adress;
+            public string GetAdress() => adress;
 
-            public List<string> GetFormattings() => this.formattings;
+            public List<string> GetFormattings() => formattings;
         }
 
         public async Task Run()
@@ -54,6 +54,8 @@ namespace MailClient
             var httpClient = new HttpClient();
 
             string html = await httpClient.GetStringAsync(url);
+
+            body = html;
 
             string regex = "{\\d}";
 
@@ -86,13 +88,14 @@ namespace MailClient
         {
             if (ValidateMail(rec, historyContent))
             {
-                Console.Write("Added: " + rec);
+                Console.WriteLine("Added: " + rec);
 
                 List<string> formattings = new();
 
                 for (int i = 0; i < count; i++)
                 {
                     Console.WriteLine("Add value for placeholder " + i);
+
                     formattings.Add(Console.ReadLine());
                 }
 
@@ -102,6 +105,13 @@ namespace MailClient
 
         private static bool ValidateMail(string mail, string history)
         {
+            if (!MailAddress.TryCreate(mail, out var _))
+            {
+                Console.WriteLine("Not a valid adress");
+
+                return false;
+            }
+
             if (history.ToLower().Contains(mail.ToLower()))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -109,15 +119,6 @@ namespace MailClient
                 Console.WriteLine($"Warning: {mail} was already used to send a mail");
 
                 Console.ResetColor();
-
-                return false;
-            }
-
-            if (!MailAddress.TryCreate(mail, out var _))
-            {
-                Console.WriteLine("Not a valid adress");
-
-                return false;
             }
 
             return true;
