@@ -49,7 +49,7 @@ namespace MailClient
 
                 string adr = input.GetTos()[i].GetAdress();
 
-                historyContent.Append(adr.ToString() + " " + DateTime.Now);
+                historyContent.AppendLine(adr.ToString() + " " + DateTime.Now);
 
                 mail.To.Add(adr);
 
