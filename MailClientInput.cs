@@ -23,6 +23,7 @@ namespace MailClient
             [JsonInclude]
             private List<string> formattings = new();
 
+            
             public To()
             {
 
@@ -41,8 +42,6 @@ namespace MailClient
 
         public async Task Run()
         {
-            string historyContent = MailClient.GetHistory();
-
             Console.WriteLine("Enter subject");
 
             subject = ForceInput("Input cannot be empty");
@@ -67,7 +66,7 @@ namespace MailClient
 
             string rec = ForceInput("You have to enter at least one recepient");
 
-            AddMail(rec, historyContent, to, count);
+            AddMail(rec, to, count);
 
             while (true)
             {
@@ -80,13 +79,13 @@ namespace MailClient
                     break;
                 }
 
-                AddMail(rec, historyContent, to, count);
+                AddMail(rec, to, count);
             }
         }
 
-        private static void AddMail(string rec, string historyContent, List<To> to, int count)
+        private static void AddMail(string rec, List<To> to, int count)
         {
-            if (ValidateMail(rec, historyContent))
+            if (ValidateFormat(rec))
             {
                 Console.WriteLine("Added: " + rec);
 
@@ -103,7 +102,7 @@ namespace MailClient
             }
         }
 
-        private static bool ValidateMail(string mail, string history)
+        private static bool ValidateFormat(string mail)
         {
             if (!MailAddress.TryCreate(mail, out var _))
             {
@@ -112,16 +111,28 @@ namespace MailClient
                 return false;
             }
 
-            if (history.ToLower().Contains(mail.ToLower()))
+            return true;
+        }
+
+        public bool ValidateHistory(string history)
+        {
+            bool result = true;
+
+            for (int i = 0; i < to.Count; i++)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
+                if (history.ToLower().Contains(to[i].GetAdress().ToLower()))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
 
-                Console.WriteLine($"Warning: {mail} was already used to send a mail");
+                    Console.WriteLine($"Warning: {to[i].GetAdress()} was already used to send a mail");
 
-                Console.ResetColor();
+                    Console.ResetColor();
+
+                    result = false;
+                }
             }
 
-            return true;
+            return result;
         }
 
         public static string ForceInput(string errorMsg)
