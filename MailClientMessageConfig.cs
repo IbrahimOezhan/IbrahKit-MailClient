@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace MailClient
 {
-    internal class MailClientInput
+    internal class MailClientMessageConfig
     {
         [JsonInclude]
         private string subject;
@@ -13,42 +13,17 @@ namespace MailClient
         private string body;
 
         [JsonInclude]
-        private List<To> to = new();
-
-        public class To
-        {
-            [JsonInclude]
-            private string adress;
-
-            [JsonInclude]
-            private List<string> formattings = new();
-
-            
-            public To()
-            {
-
-            }
-
-            public To(string adress, List<string> formattings)
-            {
-                this.adress = adress;
-                this.formattings = formattings;
-            }
-
-            public string GetAdress() => adress;
-
-            public List<string> GetFormattings() => formattings;
-        }
+        private List<MailClientRecepientConfig> to = new();
 
         public async Task Run()
         {
             Console.WriteLine("Enter subject");
 
-            subject = ForceInput("Input cannot be empty");
+            subject = MailClientUtilities.ForceInput("Input cannot be empty");
 
             Console.WriteLine("Enter body html source url");
 
-            string url = ForceInput("Input cannot be empty");
+            string url = MailClientUtilities.ForceInput("Input cannot be empty");
 
             var httpClient = new HttpClient();
 
@@ -64,7 +39,7 @@ namespace MailClient
 
             Console.WriteLine("Enter recepient");
 
-            string rec = ForceInput("You have to enter at least one recepient");
+            string rec = MailClientUtilities.ForceInput("You have to enter at least one recepient");
 
             AddMail(rec, to, count);
 
@@ -83,7 +58,7 @@ namespace MailClient
             }
         }
 
-        private static void AddMail(string rec, List<To> to, int count)
+        private static void AddMail(string rec, List<MailClientRecepientConfig> to, int count)
         {
             if (ValidateFormat(rec))
             {
@@ -135,24 +110,10 @@ namespace MailClient
             return result;
         }
 
-        public static string ForceInput(string errorMsg)
-        {
-            string input = Console.ReadLine();
-
-            while (input == null || input == string.Empty || input.Length == 0)
-            {
-                Console.WriteLine(errorMsg);
-
-                input = Console.ReadLine();
-            }
-
-            return input;
-        }
-
         public string Subject() => subject;
 
         public string Body() => body;
 
-        public List<To> GetTos() => to;
+        public List<MailClientRecepientConfig> GetTos() => to;
     }
 }

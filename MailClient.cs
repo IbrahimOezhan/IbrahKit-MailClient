@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Text.Json;
@@ -8,11 +7,47 @@ namespace MailClient
 {
     internal class MailClient
     {
-        public static string Run(MailClientInput input)
+        public static string Run(string[] args)
         {
+            MailClientMessageConfig? input = null;
+
+            switch (args.Length)
+            {
+                case 0:
+                    input = new MailClientMessageConfig();
+                    input.Run().GetAwaiter().GetResult();
+                    break;
+                case 1:
+                    input = JsonSerializer.Deserialize<MailClientMessageConfig>(args[0], MailClientUtilities.GetJsonOptions());
+                    break;
+                default:
+                    throw new Exception("Cannot pass more than 1 arg");
+            }
+
+            if (!input.ValidateHistory(MailClientUtilities.GetHistory()))
+            {
+                Console.WriteLine("Found duplicate adresses. Continue?");
+
+                ConsoleKeyInfo key = Console.ReadKey();
+
+                if (key.KeyChar.ToString().ToLower() != "y")
+                {
+                    return "Operation Cancelled";
+                }
+            }
+
             StringBuilder historyContent = new(MailClientUtilities.GetHistory());
 
-            MailClientConfig config = GetConfig();
+            MailClientServerConfig config;
+
+            try
+            {
+                config = MailClientServerConfig.Get();
+            }
+            catch(Exception e)
+            {
+                return MailClientUtilities.FormattedException(e);
+            }
 
             SmtpClient smtpClient = new(config.SMTP(), config.Port())
             {
@@ -47,10 +82,9 @@ namespace MailClient
                 {
                     smtpClient.Send(mail);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    Console.WriteLine(mail.To);
-                    Console.WriteLine(ex.ToString()); 
+                    Console.WriteLine(MailClientUtilities.FormattedException(ex));
                 }
             }
 
@@ -59,53 +93,7 @@ namespace MailClient
                 sw.Write(historyContent);
             }
 
-            return "";
-        }
-
-        private static void CreateConfigFile(string path)
-        {
-            MailClientConfig config = new();
-
-            string defaultJson = JsonSerializer.Serialize(config, MailClientUtilities.GetJsonOptions());
-
-            using (StreamWriter sw = new(path))
-            {
-                sw.Write(defaultJson);
-            }
-        }
-
-        private static MailClientConfig GetConfig()
-        {
-            string configPath = Path.Combine(MailClientUtilities.GetModuleDir(), MailClientUtilities.configFile);
-
-            if (!File.Exists(configPath))
-            {
-                CreateConfigFile(configPath);
-
-                throw new Exception("Configure the config file");
-            }
-
-            string fileContent = File.ReadAllText(configPath);
-
-            MailClientConfig? config;
-
-            try
-            {
-                config = JsonSerializer.Deserialize<MailClientConfig>(fileContent);
-            }
-            catch (Exception ex)
-            {
-                CreateConfigFile(configPath);
-
-                throw new JsonException($"Error: Config was corrupt was was regenerated. Please start program again\n{ex.ToString()}\n{ex.Message}");
-            }
-
-            if (config == null)
-            {
-                throw new NullReferenceException("Error: Config is null");
-            }
-
-            return config;
+            return "Success";
         }
     }
 }

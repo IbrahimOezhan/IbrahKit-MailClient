@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System.Diagnostics;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace MailClient
 {
@@ -58,6 +53,25 @@ namespace MailClient
             }
 
             return moduleProccessDir;
+        }
+
+        public static string ForceInput(string errorMsg)
+        {
+            string input = Console.ReadLine();
+
+            while (input == null || input == string.Empty || input.Length == 0)
+            {
+                Console.WriteLine(errorMsg);
+
+                input = Console.ReadLine();
+            }
+
+            return input;
+        }
+
+        public static string FormattedException(Exception exception)
+        {
+            return exception.ToString() + "\n" + exception.Message;
         }
     }
 }
