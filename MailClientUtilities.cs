@@ -25,10 +25,9 @@ namespace MailClient
 
         public static void SaveHistory(StringBuilder history)
         {
-            using (StreamWriter sw = new(GetHistoryPath()))
-            {
-                sw.Write(history);
-            }
+            using StreamWriter sw = new(GetHistoryPath());
+
+            sw.Write(history);
         }
 
         public static string GetHistory()
@@ -51,7 +50,7 @@ namespace MailClient
 
             if (module == null)
             {
-                return "Error: Module is null";
+                throw new NullReferenceException("Error: Module is null");
             }
 
             string? moduleProccessDir = Path.GetDirectoryName(module.FileName);

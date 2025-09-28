@@ -9,25 +9,7 @@ namespace MailClient
     {
         public static string Run(string[] args)
         {
-            MailClientMessageConfig? msgConfig;
-
-            switch (args.Length)
-            {
-                case 0:
-                    msgConfig = new MailClientMessageConfig();
-                    msgConfig.Run().GetAwaiter().GetResult();
-                    break;
-                case 1:
-                    msgConfig = JsonSerializer.Deserialize<MailClientMessageConfig>(args[0], MailClientUtilities.GetJsonOptions());
-                    break;
-                default:
-                    return "Error: Cannot pass more than 1 args when launching the tool";
-            }
-
-            if(msgConfig == null)
-            {
-                return "Error: Message config is null";
-            }
+            MailClientMessageConfig msgConfig = GetMsgConfig(args);
 
             if (!msgConfig.ValidateHistory(MailClientUtilities.GetHistory()))
             {
@@ -49,7 +31,7 @@ namespace MailClient
             {
                 serverConfig = MailClientServerConfig.Get();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return MailClientUtilities.FormattedException(e);
             }
@@ -96,6 +78,63 @@ namespace MailClient
             MailClientUtilities.SaveHistory(historyContent);
 
             return "Success";
+        }
+
+        private static MailClientMessageConfig GetMsgConfig(string[] args)
+        {
+            MailClientMessageConfig? msgConfig;
+
+            if (args.Length > 0)
+            {
+                string json;
+
+                switch (args[0])
+                {
+                    case "path":
+
+                        if (args.Length != 2)
+                        {
+                            throw new ArgumentException("Invalid arguments for path command");
+                        }
+
+                        if (!File.Exists(args[1]))
+                        {
+                            throw new ArgumentException("Path doesnt exist");
+                        }
+
+                        json = File.ReadAllText(args[0]);
+
+                        break;
+                    case "text":
+
+                        if (args.Length != 2)
+                        {
+                            throw new ArgumentException("Invalid arguments for text command");
+                        }
+
+                        json = args[1];
+
+                        break;
+                    default:
+
+                        throw new ArgumentException(args[0] + " is an invald argument");
+                }
+
+                msgConfig = JsonSerializer.Deserialize<MailClientMessageConfig>(json, MailClientUtilities.GetJsonOptions());
+
+            }
+            else
+            {
+                msgConfig = new MailClientMessageConfig();
+                msgConfig.Run().GetAwaiter().GetResult();
+            }
+
+            if (msgConfig == null)
+            {
+                throw new NullReferenceException("Message config is null");
+            }
+
+            return msgConfig;
         }
     }
 }
