@@ -12,9 +12,7 @@ namespace MailClient
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-
-                Console.WriteLine(ex.Message);
+                Console.WriteLine(MailClientUtilities.FormattedException(ex));
             }
 
             Console.WriteLine("Press anything to exit");

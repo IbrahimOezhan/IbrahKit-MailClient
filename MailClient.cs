@@ -9,7 +9,7 @@ namespace MailClient
     {
         public static string Run(string[] args)
         {
-            MailClientMessageConfig? msgConfig = null;
+            MailClientMessageConfig? msgConfig;
 
             switch (args.Length)
             {
@@ -79,7 +79,7 @@ namespace MailClient
 
                 string adr = msgConfig.GetTos()[i].GetAdress();
 
-                historyContent.AppendLine(adr.ToString() + " " + DateTime.Now);
+                historyContent.AppendLine(adr.ToString() + ";" + DateTime.Now);
 
                 mail.To.Add(adr);
 
@@ -93,10 +93,7 @@ namespace MailClient
                 }
             }
 
-            using (StreamWriter sw = new(MailClientUtilities.GetHistoryPath()))
-            {
-                sw.Write(historyContent);
-            }
+            MailClientUtilities.SaveHistory(historyContent);
 
             return "Success";
         }

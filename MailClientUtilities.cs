@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 
 namespace MailClient
 {
     internal static class MailClientUtilities
     {
-        public const string configFile = "MailClientConfig.json";
-        public const string historyFile = "MailClientHistory.txt";
+        public const string configFile = "MailClientServerConfig.json";
+        public const string historyFile = "MailClientHistory.csv";
 
         private static readonly JsonSerializerOptions options = new()
         {
@@ -15,16 +16,24 @@ namespace MailClient
             UnmappedMemberHandling = System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow
         };
 
-        public static string GetHistoryPath()
+        private static string GetHistoryPath()
         {
             return Path.Combine(GetModuleDir(), historyFile);
         }
 
         public static JsonSerializerOptions GetJsonOptions() => options;
 
+        public static void SaveHistory(StringBuilder history)
+        {
+            using (StreamWriter sw = new(GetHistoryPath()))
+            {
+                sw.Write(history);
+            }
+        }
+
         public static string GetHistory()
         {
-            string historyPath = Path.Combine(GetModuleDir(), historyFile);
+            string historyPath = GetHistoryPath();
 
             string historyContent = string.Empty;
 
@@ -57,7 +66,7 @@ namespace MailClient
 
         public static string ForceInput(string errorMsg)
         {
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
 
             while (input == null || input == string.Empty || input.Length == 0)
             {
