@@ -9,22 +9,27 @@ namespace MailClient
     {
         public static string Run(string[] args)
         {
-            MailClientMessageConfig? input = null;
+            MailClientMessageConfig? msgConfig = null;
 
             switch (args.Length)
             {
                 case 0:
-                    input = new MailClientMessageConfig();
-                    input.Run().GetAwaiter().GetResult();
+                    msgConfig = new MailClientMessageConfig();
+                    msgConfig.Run().GetAwaiter().GetResult();
                     break;
                 case 1:
-                    input = JsonSerializer.Deserialize<MailClientMessageConfig>(args[0], MailClientUtilities.GetJsonOptions());
+                    msgConfig = JsonSerializer.Deserialize<MailClientMessageConfig>(args[0], MailClientUtilities.GetJsonOptions());
                     break;
                 default:
-                    throw new Exception("Cannot pass more than 1 arg");
+                    return "Error: Cannot pass more than 1 args when launching the tool";
             }
 
-            if (!input.ValidateHistory(MailClientUtilities.GetHistory()))
+            if(msgConfig == null)
+            {
+                return "Error: Message config is null";
+            }
+
+            if (!msgConfig.ValidateHistory(MailClientUtilities.GetHistory()))
             {
                 Console.WriteLine("Found duplicate adresses. Continue?");
 
@@ -38,41 +43,41 @@ namespace MailClient
 
             StringBuilder historyContent = new(MailClientUtilities.GetHistory());
 
-            MailClientServerConfig config;
+            MailClientServerConfig serverConfig;
 
             try
             {
-                config = MailClientServerConfig.Get();
+                serverConfig = MailClientServerConfig.Get();
             }
             catch(Exception e)
             {
                 return MailClientUtilities.FormattedException(e);
             }
 
-            SmtpClient smtpClient = new(config.SMTP(), config.Port())
+            SmtpClient smtpClient = new(serverConfig.SMTP(), serverConfig.Port())
             {
-                Credentials = new NetworkCredential(config.From(), config.Password()),
+                Credentials = new NetworkCredential(serverConfig.From(), serverConfig.Password()),
                 EnableSsl = true
             };
 
-            for (int i = 0; i < input.GetTos().Count; i++)
+            for (int i = 0; i < msgConfig.GetTos().Count; i++)
             {
                 object[] format;
 
-                format = input.GetTos()[i].GetFormattings().ToArray();
+                format = msgConfig.GetTos()[i].GetFormattings().ToArray();
 
                 MailMessage mail = new()
                 {
-                    From = new MailAddress(config.From()),
+                    From = new MailAddress(serverConfig.From()),
 
-                    Subject = input.Subject(),
+                    Subject = msgConfig.Subject(),
 
-                    Body = string.Format(input.Body(), format),
+                    Body = string.Format(msgConfig.Body(), format),
 
                     IsBodyHtml = true
                 };
 
-                string adr = input.GetTos()[i].GetAdress();
+                string adr = msgConfig.GetTos()[i].GetAdress();
 
                 historyContent.AppendLine(adr.ToString() + " " + DateTime.Now);
 
