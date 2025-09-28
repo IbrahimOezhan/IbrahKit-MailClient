@@ -9,75 +9,69 @@ namespace MailClient
     {
         public static string Run(string[] args)
         {
-            MailClientMessageConfig msgConfig = GetMsgConfig(args);
-
-            if (!msgConfig.ValidateHistory(MailClientUtilities.GetHistory()))
-            {
-                Console.WriteLine("Found duplicate adresses. Continue?");
-
-                ConsoleKeyInfo key = Console.ReadKey();
-
-                if (key.KeyChar.ToString().ToLower() != "y")
-                {
-                    return "Operation Cancelled";
-                }
-            }
-
-            StringBuilder historyContent = new(MailClientUtilities.GetHistory());
-
-            MailClientServerConfig serverConfig;
-
             try
             {
+                MailClientMessageConfig msgConfig;
+                
+                MailClientServerConfig serverConfig;
+
+                msgConfig = GetMsgConfig(args);
+
                 serverConfig = MailClientServerConfig.Get();
+
+                if (!msgConfig.ValidateHistory(MailClientUtilities.GetHistory()))
+                {
+                    Console.WriteLine("Found duplicate adresses. Continue?");
+
+                    ConsoleKeyInfo key = Console.ReadKey();
+
+                    if (key.KeyChar.ToString().ToLower() != "y")
+                    {
+                        return "Operation Cancelled";
+                    }
+                }
+
+                StringBuilder historyContent = new(MailClientUtilities.GetHistory());
+
+                SmtpClient smtpClient = new(serverConfig.SMTP(), serverConfig.Port())
+                {
+                    Credentials = new NetworkCredential(serverConfig.From(), serverConfig.Password()),
+                    
+                    EnableSsl = true
+                };
+
+                for (int i = 0; i < msgConfig.GetTos().Count; i++)
+                {
+                    object[] format = msgConfig.GetTos()[i].GetFormattings().ToArray();
+
+                    MailMessage mail = new()
+                    {
+                        From = new MailAddress(serverConfig.From()),
+
+                        Subject = msgConfig.Subject(),
+
+                        Body = string.Format(msgConfig.Body(), format),
+
+                        IsBodyHtml = true
+                    };
+
+                    string adr = msgConfig.GetTos()[i].GetAdress();
+
+                    historyContent.AppendLine(adr.ToString() + ";" + DateTime.Now);
+
+                    mail.To.Add(adr);
+
+                    smtpClient.Send(mail);
+                }
+
+                MailClientUtilities.SaveHistory(historyContent);
+
+                return "Success";
             }
             catch (Exception e)
             {
                 return MailClientUtilities.FormattedException(e);
             }
-
-            SmtpClient smtpClient = new(serverConfig.SMTP(), serverConfig.Port())
-            {
-                Credentials = new NetworkCredential(serverConfig.From(), serverConfig.Password()),
-                EnableSsl = true
-            };
-
-            for (int i = 0; i < msgConfig.GetTos().Count; i++)
-            {
-                object[] format;
-
-                format = msgConfig.GetTos()[i].GetFormattings().ToArray();
-
-                MailMessage mail = new()
-                {
-                    From = new MailAddress(serverConfig.From()),
-
-                    Subject = msgConfig.Subject(),
-
-                    Body = string.Format(msgConfig.Body(), format),
-
-                    IsBodyHtml = true
-                };
-
-                string adr = msgConfig.GetTos()[i].GetAdress();
-
-                historyContent.AppendLine(adr.ToString() + ";" + DateTime.Now);
-
-                mail.To.Add(adr);
-
-                try
-                {
-                    smtpClient.Send(mail);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(MailClientUtilities.FormattedException(ex));
-                }
-            }
-
-            MailClientUtilities.SaveHistory(historyContent);
-
-            return "Success";
         }
 
         private static MailClientMessageConfig GetMsgConfig(string[] args)

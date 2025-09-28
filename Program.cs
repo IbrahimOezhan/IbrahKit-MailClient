@@ -4,14 +4,7 @@
     {
         static void Main(string[] args)
         {
-            try
-            {
-                Console.WriteLine(MailClient.Run(args));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(MailClientUtilities.FormattedException(ex));
-            }
+            Console.WriteLine(MailClient.Run(args));
 
             Console.WriteLine("Press anything to exit");
 
