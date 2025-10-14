@@ -21,6 +21,7 @@
                 Console.WriteLine(currentDir);
 
                 string[] dirs = Directory.GetDirectories(currentDir);
+
                 string[] dirFiles = Directory.GetFiles(currentDir);
 
                 string[] files = dirs.Concat(dirFiles).ToArray();
@@ -28,6 +29,7 @@
                 string[] fileNames = new string[files.Length];
 
                 int min = Math.Clamp(0 + (offset * maxDisplay), 0, files.Length - 1);
+
                 int max = Math.Clamp(min + maxDisplay, 0, files.Length);
 
                 for (int i = min; i < max; i++)

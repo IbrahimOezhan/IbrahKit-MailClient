@@ -1,4 +1,4 @@
-﻿namespace IbrahKit
+﻿namespace MailClient.Unused
 {
     public static class InputUtilities
     {

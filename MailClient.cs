@@ -11,25 +11,11 @@ namespace MailClient
         {
             try
             {
-                MailClientMessageConfig msgConfig;
+                MailClientMessageConfig msgConfig = GetMsgConfig(args);
                 
-                MailClientServerConfig serverConfig;
+                MailClientServerConfig serverConfig = MailClientServerConfig.Get();
 
-                msgConfig = GetMsgConfig(args);
-
-                serverConfig = MailClientServerConfig.Get();
-
-                if (!msgConfig.ValidateHistory(MailClientUtilities.GetHistory()))
-                {
-                    Console.WriteLine("Found duplicate adresses. Continue?");
-
-                    ConsoleKeyInfo key = Console.ReadKey();
-
-                    if (key.KeyChar.ToString().ToLower() != "y")
-                    {
-                        return "Operation Cancelled";
-                    }
-                }
+                if(!ValidateHistory(msgConfig)) return "Operation Cancelled";
 
                 StringBuilder historyContent = new(MailClientUtilities.GetHistory());
 
@@ -42,7 +28,7 @@ namespace MailClient
 
                 for (int i = 0; i < msgConfig.GetTos().Count; i++)
                 {
-                    object[] format = msgConfig.GetTos()[i].GetFormattings().ToArray();
+                    object[] placeholderFormattings = msgConfig.GetTos()[i].GetFormattings().ToArray();
 
                     MailMessage mail = new()
                     {
@@ -50,16 +36,16 @@ namespace MailClient
 
                         Subject = msgConfig.Subject(),
 
-                        Body = string.Format(msgConfig.Body(), format),
+                        Body = string.Format(msgConfig.Body(), placeholderFormattings),
 
                         IsBodyHtml = true
                     };
 
-                    string adr = msgConfig.GetTos()[i].GetAdress();
+                    string toAdress = msgConfig.GetTos()[i].GetAdress();
 
-                    historyContent.AppendLine(adr.ToString() + ";" + DateTime.Now);
+                    historyContent.AppendLine(toAdress.ToString() + ";" + DateTime.Now);
 
-                    mail.To.Add(adr);
+                    mail.To.Add(toAdress);
 
                     smtpClient.Send(mail);
                 }
@@ -72,6 +58,22 @@ namespace MailClient
             {
                 return MailClientUtilities.FormattedException(e);
             }
+        }
+
+        private static bool ValidateHistory(MailClientMessageConfig msgConfig)
+        {
+            if (!msgConfig.ValidateHistory(MailClientUtilities.GetHistory()))
+            {
+                Console.WriteLine("Found duplicate adresses. Continue?");
+
+                ConsoleKeyInfo key = Console.ReadKey();
+
+                if (key.KeyChar.ToString().ToLower() != "y")
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         private static MailClientMessageConfig GetMsgConfig(string[] args)
@@ -115,7 +117,6 @@ namespace MailClient
                 }
 
                 msgConfig = JsonSerializer.Deserialize<MailClientMessageConfig>(json, MailClientUtilities.GetJsonOptions());
-
             }
             else
             {

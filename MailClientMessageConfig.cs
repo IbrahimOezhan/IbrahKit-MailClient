@@ -33,15 +33,13 @@ namespace MailClient
 
             string regex = "{\\d}";
 
-            int count = Regex.Count(html, regex);
+            int placeholderAmount = Regex.Count(html, regex);
 
-            Console.WriteLine(count + " placeholders found");
+            Console.WriteLine(placeholderAmount + " placeholders found\nEnter recepient");
 
-            Console.WriteLine("Enter recepient");
+            string? rec = MailClientUtilities.ForceInput("You have to enter at least one recepient");
 
-            string rec = MailClientUtilities.ForceInput("You have to enter at least one recepient");
-
-            AddMail(rec, to, count);
+            AddMail(rec, to, placeholderAmount);
 
             while (true)
             {
@@ -49,12 +47,12 @@ namespace MailClient
 
                 rec = Console.ReadLine();
 
-                if (rec.Length == 0 || rec == null)
+                if (rec == null || rec.Length == 0)
                 {
                     break;
                 }
 
-                AddMail(rec, to, count);
+                AddMail(rec, to, placeholderAmount);
             }
         }
 
@@ -70,7 +68,9 @@ namespace MailClient
                 {
                     Console.WriteLine("Add value for placeholder " + i);
 
-                    formattings.Add(Console.ReadLine());
+                    string? formatInput = Console.ReadLine();
+
+                    formattings.Add(formatInput?? "");
                 }
 
                 to.Add(new(rec, formattings));
