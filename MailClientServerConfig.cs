@@ -36,44 +36,40 @@ namespace MailClient
 
             string defaultJson = JsonSerializer.Serialize(config, MailClientUtilities.GetJsonOptions());
 
-            using (StreamWriter sw = new(path))
-            {
-                sw.Write(defaultJson);
-            }
+            using StreamWriter sw = new(path);
+
+            sw.Write(defaultJson);
         }
 
         public static MailClientServerConfig Get()
         {
             string configPath = Path.Combine(MailClientUtilities.GetModuleDir(), MailClientUtilities.configFile);
 
-            if (!File.Exists(configPath))
-            {
-                CreateConfigFile(configPath);
-
-                throw new FileNotFoundException("Configure the config file");
-            }
-
-            string fileContent = File.ReadAllText(configPath);
-
-            MailClientServerConfig? config;
-
             try
             {
-                config = JsonSerializer.Deserialize<MailClientServerConfig>(fileContent);
+                if (!File.Exists(configPath))
+                {
+                    throw new FileNotFoundException("Config file not found",configPath);
+                }
+
+                string fileContent = File.ReadAllText(configPath);
+
+                MailClientServerConfig? config = JsonSerializer.Deserialize<MailClientServerConfig>(fileContent);
+
+                return config ?? throw new NullReferenceException("Config is null");
             }
-            catch (Exception ex)
+            catch (NullReferenceException)
             {
-                CreateConfigFile(configPath);
-
-                throw new JsonException($"Error: Config was corrupt was was regenerated. Please start program again\n{ex.ToString()}\n{ex.Message}");
+                throw;
             }
-
-            if (config == null)
+            catch
             {
-                throw new NullReferenceException("Error: Config is null");
-            }
+                Console.WriteLine("Recreated Config File");
 
-            return config;
+                CreateConfigFile(configPath);               
+
+                throw;
+            }
         }
     }
 }

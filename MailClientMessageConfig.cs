@@ -79,14 +79,11 @@ namespace MailClient
 
         private static bool ValidateFormat(string mail)
         {
-            if (!MailAddress.TryCreate(mail, out var _))
-            {
-                Console.WriteLine("Not a valid adress");
+            if (MailAddress.TryCreate(mail, out var _)) return true;
 
-                return false;
-            }
+            Console.WriteLine("Not a valid adress");
 
-            return true;
+            return false;
         }
 
         public bool ValidateHistory(string history)
@@ -95,16 +92,18 @@ namespace MailClient
 
             for (int i = 0; i < to.Count; i++)
             {
-                if (history.ToLower().Contains(to[i].GetAdress().ToLower()))
+                if (!history.Contains(to[i].GetAdress(),StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-
-                    Console.WriteLine($"Warning: {to[i].GetAdress()} was already used to send a mail");
-
-                    Console.ResetColor();
-
-                    result = false;
+                    continue;
                 }
+
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                Console.WriteLine($"Warning: {to[i].GetAdress()} was already used to send a mail");
+
+                Console.ResetColor();
+
+                result = false;
             }
 
             return result;

@@ -16,18 +16,16 @@ namespace MailClient
             UnmappedMemberHandling = System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow
         };
 
-        private static string GetHistoryPath()
-        {
-            return Path.Combine(GetModuleDir(), historyFile);
-        }
-
-        public static JsonSerializerOptions GetJsonOptions() => options;
-
         public static void SaveHistory(StringBuilder history)
         {
             using StreamWriter sw = new(GetHistoryPath());
 
             sw.Write(history);
+        }
+
+        private static string GetHistoryPath()
+        {
+            return Path.Combine(GetModuleDir(), historyFile);
         }
 
         public static string GetHistory()
@@ -46,19 +44,9 @@ namespace MailClient
 
         public static string GetModuleDir()
         {
-            ProcessModule? module = Process.GetCurrentProcess().MainModule;
+            ProcessModule? module = Process.GetCurrentProcess().MainModule ?? throw new NullReferenceException("Error: Module is null");
 
-            if (module == null)
-            {
-                throw new NullReferenceException("Error: Module is null");
-            }
-
-            string? moduleProccessDir = Path.GetDirectoryName(module.FileName);
-
-            if (moduleProccessDir == null)
-            {
-                throw new Exception("Error: Module proccess dir is null");
-            }
+            string? moduleProccessDir = Path.GetDirectoryName(module.FileName) ?? throw new Exception("Error: Module proccess dir is null");
 
             return moduleProccessDir;
         }
@@ -81,5 +69,7 @@ namespace MailClient
         {
             return exception.ToString() + "\n" + exception.Message;
         }
+
+        public static JsonSerializerOptions GetJsonOptions() => options;
     }
 }
