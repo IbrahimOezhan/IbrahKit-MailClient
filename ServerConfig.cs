@@ -38,12 +38,11 @@ namespace MailClient
 
             try
             {
-                if (!File.Exists(configPath))
-                {
-                    throw new FileNotFoundException("Config file not found", configPath);
-                }
+                if (!File.Exists(configPath)) throw new FileNotFoundException("Config file not found", configPath);
 
-                string fileContent = File.ReadAllText(configPath) ?? throw new FileEmptyException(configPath + " is empty.");
+                string fileContent = File.ReadAllText(configPath);
+
+                if (StringUtilities.IsNullEmptyWhite(fileContent)) throw new FileEmptyException(configPath + " is empty");
 
                 ServerConfig? config = JsonSerializer.Deserialize<ServerConfig>(fileContent, Utilities.GetJsonOptions());
 

@@ -17,7 +17,7 @@ namespace MailClient
 
             string? rec = Utilities.ForceInput(placeholderAmount + " placeholders found\nEnter recepient", "You have to enter at least one recepient");
 
-            AddRecpient(rec, placeholderAmount);
+            AddRecipient(rec, placeholderAmount);
 
             while (true)
             {
@@ -30,16 +30,13 @@ namespace MailClient
                     break;
                 }
 
-                AddRecpient(rec, placeholderAmount);
+                AddRecipient(rec, placeholderAmount);
             }
         }
 
-        private void AddRecpient(string recepient, int count)
+        private void AddRecipient(string recepient, int count)
         {
-            if (!ValidateFormat(recepient))
-            {
-                return;
-            }
+            if (!ValidateRecipient(recepient)) return;
 
             Console.WriteLine("Added: " + recepient);
 
@@ -59,7 +56,7 @@ namespace MailClient
 
         public List<MessageRecepientConfig> GetRecepientConfigs() => to;
 
-        private static bool ValidateFormat(string mail)
+        private static bool ValidateRecipient(string mail)
         {
             if (MailAddress.TryCreate(mail, out var _)) return true;
 
