@@ -57,7 +57,7 @@ namespace MailClient
         {
             using StreamWriter sw = new(file);
 
-            sw.Write(JsonSerializer.Serialize(history));
+            sw.Write(JsonSerializer.Serialize(history,Utilities.GetJsonOptions()));
         }
 
         public bool Validate(List<string> adresses)
@@ -66,7 +66,7 @@ namespace MailClient
 
             if (!result)
             {
-                Console.WriteLine("Found duplicate adresses. Continue? Y/y (Yes) Anything Else (No)");
+                Console.Write("Found duplicate adresses. Continue? Y/y (Yes) Anything Else (No): ");
 
                 ConsoleKeyInfo key = Console.ReadKey();
 

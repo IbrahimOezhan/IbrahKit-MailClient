@@ -6,19 +6,33 @@
 
         static void Main(string[] args)
         {
+            Console.Clear();
+
+            Console.WriteLine("Launching MailClient\n");
+
             Mutex mutex = new(true, $"Global\\{programID}", out bool createdNew);
 
             if (!createdNew)
             {
                 Console.WriteLine("App is already running.");
+
                 return;
             }
 
-            Console.WriteLine(MailClient.Run(args));
+            try
+            {
+                Utilities.WriteLine(MailClient.Run(args), ConsoleColor.Green);
+            }
+            catch(Exception e)
+            {
+                Utilities.WriteLine(Utilities.FormattedException(e), ConsoleColor.Red);
+            }
 
             Console.WriteLine("Press anything to exit");
 
-            Console.ReadKey();
+            Console.Read();
+
+            Console.WriteLine();
 
             mutex.ReleaseMutex();
         }

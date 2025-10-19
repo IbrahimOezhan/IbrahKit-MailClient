@@ -15,7 +15,10 @@ namespace MailClient
 
                 ServerConfig serverConfig = ServerConfig.Get();
 
-                if (!history.Validate(msgConfig.GetTos().Select(x => x.GetAdress()).ToList())) return "Operation Cancelled";
+                if (!history.Validate(msgConfig.GetTos().Select(x => x.GetAdress()).ToList()))
+                {
+                    return "Operation Cancelled";
+                }
 
                 SmtpClient smtpClient = new(serverConfig.SMTP(), serverConfig.Port())
                 {
@@ -46,15 +49,17 @@ namespace MailClient
                     mail.To.Add(toAdress);
 
                     smtpClient.Send(mail);
+
+                    Utilities.WriteLine($"Sent mail to {toAdress} successfully",ConsoleColor.Green);
                 }
 
                 history.SaveHistory();
 
                 return "Success";
             }
-            catch (Exception e)
+            catch
             {
-                return Utilities.FormattedException(e);
+                throw;
             }
         }
     }

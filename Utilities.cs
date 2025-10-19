@@ -37,9 +37,18 @@ namespace MailClient
 
         public static string FormattedException(Exception exception)
         {
-            return exception.ToString() + "\n" + exception.Message;
+            return "\nException: \n\n" + exception.ToString() + "\n\n";
         }
 
         public static JsonSerializerOptions GetJsonOptions() => options;
+
+        public static void WriteLine(string text,ConsoleColor color = ConsoleColor.White)
+        {
+            Console.ForegroundColor = color;
+
+            Console.WriteLine(text);
+
+            Console.ResetColor();
+        }
     }
 }

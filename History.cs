@@ -18,11 +18,7 @@ namespace MailClient
 
             for (int i = 0; i < adresses.Count; i++)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-
-                Console.WriteLine($"Warning: {adresses[i]} was already used to send a mail");
-
-                Console.ResetColor();
+                Utilities.WriteLine($"Warning: {adresses[i]} was already used to send a mail", ConsoleColor.Yellow);
 
                 if (history.Select(x => x.Adress()).Contains(adresses[i]))
                 {
