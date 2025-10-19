@@ -1,4 +1,8 @@
+permissions:
+  contents: write
+
 name: Publish Release
+
 on:
   workflow_dispatch:
   push:
@@ -8,25 +12,27 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
 
-      # Framework-dependent
-      - run: dotnet publish MailClient.csproj -c Release -r win-x64 `
-          -p:PublishSingleFile=true `
-          -p:SelfContained=false `
-          -p:AssemblyName=MailClient-framework-dependent `
-          -o publish/framework-dependent
+      - name: Publish framework-dependent
+        run: dotnet publish MailClient.csproj -c Release -r win-x64 `
+              -p:PublishSingleFile=true `
+              -p:SelfContained=false `
+              -p:AssemblyName=MailClient-framework-dependent `
+              -o publish/framework-dependent
 
-      # Self-contained
-      - run: dotnet publish MailClient.csproj -c Release -r win-x64 `
-          -p:PublishSingleFile=true `
-          -p:SelfContained=true `
-          -p:AssemblyName=MailClient-self-contained `
-          -o publish/self-contained
+      - name: Publish self-contained
+        run: dotnet publish MailClient.csproj -c Release -r win-x64 `
+              -p:PublishSingleFile=true `
+              -p:SelfContained=true `
+              -p:AssemblyName=MailClient-self-contained `
+              -o publish/self-contained
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
