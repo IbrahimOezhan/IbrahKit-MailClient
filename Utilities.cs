@@ -1,46 +1,16 @@
 ﻿using System.Diagnostics;
-using System.Text;
 using System.Text.Json;
 
 namespace MailClient
 {
-    internal static class MailClientUtilities
+    internal static class Utilities
     {
-        public const string configFile = "MailClientServerConfig.json";
-        public const string historyFile = "MailClientHistory.csv";
-
         private static readonly JsonSerializerOptions options = new()
         {
             IncludeFields = true,
             WriteIndented = true,
             UnmappedMemberHandling = System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow
         };
-
-        public static void SaveHistory(StringBuilder history)
-        {
-            using StreamWriter sw = new(GetHistoryPath());
-
-            sw.Write(history);
-        }
-
-        private static string GetHistoryPath()
-        {
-            return Path.Combine(GetModuleDir(), historyFile);
-        }
-
-        public static string GetHistory()
-        {
-            string historyPath = GetHistoryPath();
-
-            string historyContent = string.Empty;
-
-            if (File.Exists(historyPath))
-            {
-                historyContent = File.ReadAllText(historyPath);
-            }
-
-            return historyContent;
-        }
 
         public static string GetModuleDir()
         {

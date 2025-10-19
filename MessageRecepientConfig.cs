@@ -2,27 +2,27 @@
 
 namespace MailClient
 {
-    public class MailClientRecepientConfig
+    public class MessageRecepientConfig
     {
         [JsonInclude]
-        private string adress;
+        private string address = string.Empty;
 
         [JsonInclude]
         private List<string> formattings = new();
 
 
-        public MailClientRecepientConfig()
+        public MessageRecepientConfig()
         {
 
         }
 
-        public MailClientRecepientConfig(string adress, List<string> formattings)
+        public MessageRecepientConfig(string adress, List<string> formattings)
         {
-            this.adress = adress;
+            this.address = adress;
             this.formattings = formattings;
         }
 
-        public string GetAdress() => adress;
+        public string GetAdress() => address;
 
         public List<string> GetFormattings() => formattings;
     }

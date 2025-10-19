@@ -1,12 +1,7 @@
-﻿namespace IbrahKit
+﻿namespace MailClient.Unused
 {
     public class FileUtilities
     {
-        public static void main(string[] args)
-        {
-            FileExplorer(@"C:\");
-        }
-
         public static string FileExplorer(string startPath)
         {
             string currentDir = startPath;

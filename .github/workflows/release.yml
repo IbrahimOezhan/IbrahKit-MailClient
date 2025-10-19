@@ -1,0 +1,36 @@
+name: Publish Release
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+
+      # Framework-dependent
+      - run: dotnet publish FileOrganizer.csproj -c Release -r win-x64 `
+          -p:PublishSingleFile=true `
+          -p:SelfContained=false `
+          -p:AssemblyName=FileOrganizer-framework-dependent `
+          -o publish/framework-dependent
+
+      # Self-contained
+      - run: dotnet publish FileOrganizer.csproj -c Release -r win-x64 `
+          -p:PublishSingleFile=true `
+          -p:SelfContained=true `
+          -p:AssemblyName=FileOrganizer-self-contained `
+          -o publish/self-contained
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            publish/framework-dependent/*.exe
+            publish/self-contained/*.exe

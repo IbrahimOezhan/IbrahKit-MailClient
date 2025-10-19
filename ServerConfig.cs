@@ -3,22 +3,24 @@ using System.Text.Json.Serialization;
 
 namespace MailClient
 {
-    internal class MailClientServerConfig
+    internal class ServerConfig
     {
-        [JsonInclude]
-        private string fromAdress;
+        public const string configFile = "ServerConfig.json";
 
         [JsonInclude]
-        private string password;
+        private string fromAdress = string.Empty;
 
         [JsonInclude]
-        private string smtpServer;
+        private string password = string.Empty;
 
         [JsonInclude]
-        private int port;
+        private string smtpServer = string.Empty;
 
         [JsonInclude]
-        private string htmlSource;
+        private int port = 0;
+
+        [JsonInclude]
+        private string htmlSource = string.Empty;
 
         public string From() => fromAdress;
 
@@ -30,31 +32,20 @@ namespace MailClient
 
         public string HtmlSource() => htmlSource;
 
-        private static void CreateConfigFile(string path)
+        public static ServerConfig Get()
         {
-            MailClientServerConfig config = new();
-
-            string defaultJson = JsonSerializer.Serialize(config, MailClientUtilities.GetJsonOptions());
-
-            using StreamWriter sw = new(path);
-
-            sw.Write(defaultJson);
-        }
-
-        public static MailClientServerConfig Get()
-        {
-            string configPath = Path.Combine(MailClientUtilities.GetModuleDir(), MailClientUtilities.configFile);
+            string configPath = Path.Combine(Utilities.GetModuleDir(), configFile);
 
             try
             {
                 if (!File.Exists(configPath))
                 {
-                    throw new FileNotFoundException("Config file not found",configPath);
+                    throw new FileNotFoundException("Config file not found", configPath);
                 }
 
                 string fileContent = File.ReadAllText(configPath);
 
-                MailClientServerConfig? config = JsonSerializer.Deserialize<MailClientServerConfig>(fileContent);
+                ServerConfig? config = JsonSerializer.Deserialize<ServerConfig>(fileContent);
 
                 return config ?? throw new NullReferenceException("Config is null");
             }
@@ -66,7 +57,13 @@ namespace MailClient
             {
                 Console.WriteLine("Recreated Config File");
 
-                CreateConfigFile(configPath);               
+                ServerConfig config = new();
+
+                string defaultJson = JsonSerializer.Serialize(config, Utilities.GetJsonOptions());
+
+                using StreamWriter sw = new(configPath);
+
+                sw.Write(defaultJson);
 
                 throw;
             }
