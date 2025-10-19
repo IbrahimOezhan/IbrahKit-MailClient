@@ -15,17 +15,17 @@ jobs:
           dotnet-version: '8.x'
 
       # Framework-dependent
-      - run: dotnet publish FileOrganizer.csproj -c Release -r win-x64 `
+      - run: dotnet publish MailClient.csproj -c Release -r win-x64 `
           -p:PublishSingleFile=true `
           -p:SelfContained=false `
-          -p:AssemblyName=FileOrganizer-framework-dependent `
+          -p:AssemblyName=MailClient-framework-dependent `
           -o publish/framework-dependent
 
       # Self-contained
-      - run: dotnet publish FileOrganizer.csproj -c Release -r win-x64 `
+      - run: dotnet publish MailClient.csproj -c Release -r win-x64 `
           -p:PublishSingleFile=true `
           -p:SelfContained=true `
-          -p:AssemblyName=FileOrganizer-self-contained `
+          -p:AssemblyName=MailClient-self-contained `
           -o publish/self-contained
 
       - name: Upload release assets
