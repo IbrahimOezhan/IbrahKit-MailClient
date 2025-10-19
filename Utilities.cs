@@ -21,8 +21,10 @@ namespace MailClient
             return moduleProccessDir;
         }
 
-        public static string ForceInput(string errorMsg)
+        public static string ForceInput(string initalMsg = "", string errorMsg = "")
         {
+            Console.WriteLine("Initial");
+
             string? input = Console.ReadLine();
 
             while (input == null || input == string.Empty || input.Length == 0)
@@ -42,7 +44,7 @@ namespace MailClient
 
         public static JsonSerializerOptions GetJsonOptions() => options;
 
-        public static void WriteLine(string text,ConsoleColor color = ConsoleColor.White)
+        public static void WriteLine(string text, ConsoleColor color = ConsoleColor.White)
         {
             Console.ForegroundColor = color;
 

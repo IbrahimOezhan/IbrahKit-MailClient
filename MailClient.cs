@@ -13,12 +13,12 @@ namespace MailClient
 
                 MessageConfig msgConfig = MessageConfig.Get(args);
 
-                ServerConfig serverConfig = ServerConfig.Get();
-
-                if (!history.Validate(msgConfig.GetTos().Select(x => x.GetAdress()).ToList()))
+                if (!history.Validate(msgConfig.GetRecipients().Select(x => x.GetAdress()).ToList()))
                 {
                     return "Operation Cancelled";
                 }
+
+                ServerConfig serverConfig = ServerConfig.Get();
 
                 SmtpClient smtpClient = new(serverConfig.SMTP(), serverConfig.Port())
                 {
@@ -27,30 +27,22 @@ namespace MailClient
                     EnableSsl = true
                 };
 
-                for (int i = 0; i < msgConfig.GetTos().Count; i++)
+                for (int i = 0; i < msgConfig.GetRecipients().Count; i++)
                 {
-                    object[] placeholderFormattings = msgConfig.GetTos()[i].GetFormattings().ToArray();
+                    object[] placeholderFormattings = msgConfig.GetRecipients()[i].GetFormattings().ToArray();
 
-                    MailMessage mail = new()
+                    string toAdress = msgConfig.GetRecipients()[i].GetAdress();
+
+                    MailMessage mail = new(serverConfig.From(), toAdress, msgConfig.Content().Subject(), string.Format(msgConfig.Content().Body(), placeholderFormattings))
                     {
-                        From = new MailAddress(serverConfig.From()),
-
-                        Subject = msgConfig.Content().Subject(),
-
-                        Body = string.Format(msgConfig.Content().Body(), placeholderFormattings),
-
                         IsBodyHtml = true
                     };
 
-                    string toAdress = msgConfig.GetTos()[i].GetAdress();
+                    smtpClient.Send(mail);
 
                     history.AddToHistory(toAdress);
 
-                    mail.To.Add(toAdress);
-
-                    smtpClient.Send(mail);
-
-                    Utilities.WriteLine($"Sent mail to {toAdress} successfully",ConsoleColor.Green);
+                    Utilities.WriteLine($"Sent mail to {toAdress} successfully", ConsoleColor.Green);
                 }
 
                 history.SaveHistory();

@@ -20,7 +20,7 @@ namespace MailClient
 
         public MessageContentConfig Content() => contentConfig;
 
-        public List<MessageRecepientConfig> GetTos() => recipientsConfig.GetRecepientConfigs();
+        public List<MessageRecepientConfig> GetRecipients() => recipientsConfig.GetRecepientConfigs();
 
         public static MessageConfig Get(string[] args)
         {
@@ -54,17 +54,16 @@ namespace MailClient
                 }
 
                 msgConfig = JsonSerializer.Deserialize<MessageConfig>(json, Utilities.GetJsonOptions());
+
+                if (msgConfig == null) throw new NullReferenceException("Message Comfig is null");
+
                 msgConfig.Content().ConvertURLToHTML();
             }
             else
             {
                 msgConfig = new MessageConfig();
-                msgConfig.Run().GetAwaiter().GetResult();
-            }
 
-            if (msgConfig == null)
-            {
-                throw new NullReferenceException("Message config is null");
+                msgConfig.Run().GetAwaiter().GetResult();
             }
 
             return msgConfig;

@@ -23,7 +23,7 @@
             {
                 Utilities.WriteLine(MailClient.Run(args), ConsoleColor.Green);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Utilities.WriteLine(Utilities.FormattedException(e), ConsoleColor.Red);
             }

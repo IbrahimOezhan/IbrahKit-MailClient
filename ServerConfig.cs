@@ -43,19 +43,15 @@ namespace MailClient
                     throw new FileNotFoundException("Config file not found", configPath);
                 }
 
-                string fileContent = File.ReadAllText(configPath);
+                string fileContent = File.ReadAllText(configPath) ?? throw new FileEmptyException(configPath + " is empty.");
 
-                ServerConfig? config = JsonSerializer.Deserialize<ServerConfig>(fileContent);
+                ServerConfig? config = JsonSerializer.Deserialize<ServerConfig>(fileContent, Utilities.GetJsonOptions());
 
                 return config ?? throw new NullReferenceException("Config is null");
             }
-            catch (NullReferenceException)
-            {
-                throw;
-            }
             catch
             {
-                Console.WriteLine("Recreated Config File");
+                Console.WriteLine($"Recreated {configFile}. Fill it with data and re-start the program.");
 
                 ServerConfig config = new();
 

@@ -32,20 +32,13 @@ namespace MailClient
 
             string fileContent = File.ReadAllText(file);
 
-            if(fileContent == null || fileContent.Trim() == string.Empty)
+            if (fileContent == null || fileContent.Trim() == string.Empty)
             {
                 history = new();
                 return;
             }
 
-            History? newHistory = JsonSerializer.Deserialize<History>(fileContent);
-
-            if(newHistory == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            history = newHistory;
+            history = JsonSerializer.Deserialize<History>(fileContent) ?? throw new NullReferenceException();
         }
 
         public void AddToHistory(string adress)
@@ -57,7 +50,7 @@ namespace MailClient
         {
             using StreamWriter sw = new(file);
 
-            sw.Write(JsonSerializer.Serialize(history,Utilities.GetJsonOptions()));
+            sw.Write(JsonSerializer.Serialize(history, Utilities.GetJsonOptions()));
         }
 
         public bool Validate(List<string> adresses)

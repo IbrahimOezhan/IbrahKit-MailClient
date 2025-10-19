@@ -6,50 +6,16 @@ namespace MailClient
 {
     internal class MessageRecepientsConfig
     {
+        const string regex = "{\\d}";
+
         [JsonInclude]
         private List<MessageRecepientConfig> to = new();
 
-        private void AddRecpient(string recepient, int count)
-        {
-            if (ValidateFormat(recepient))
-            {
-                Console.WriteLine("Added: " + recepient);
-
-                List<string> formattings = new();
-
-                for (int i = 0; i < count; i++)
-                {
-                    Console.WriteLine("Add value for placeholder " + i);
-
-                    string? formatInput = Console.ReadLine();
-
-                    formattings.Add(formatInput ?? string.Empty);
-                }
-
-                to.Add(new(recepient, formattings));
-            }
-        }
-
-        private static bool ValidateFormat(string mail)
-        {
-            if (MailAddress.TryCreate(mail, out var _)) return true;
-
-            Console.WriteLine("Not a valid adress");
-
-            return false;
-        }
-
-        public List<MessageRecepientConfig> GetRecepientConfigs() => to;
-
         public void Run(MessageContentConfig contentConfig)
         {
-            string regex = "{\\d}";
-
             int placeholderAmount = Regex.Count(contentConfig.Body(), regex);
 
-            Console.WriteLine(placeholderAmount + " placeholders found\nEnter recepient");
-
-            string? rec = Utilities.ForceInput("You have to enter at least one recepient");
+            string? rec = Utilities.ForceInput(placeholderAmount + " placeholders found\nEnter recepient", "You have to enter at least one recepient");
 
             AddRecpient(rec, placeholderAmount);
 
@@ -66,6 +32,40 @@ namespace MailClient
 
                 AddRecpient(rec, placeholderAmount);
             }
+        }
+
+        private void AddRecpient(string recepient, int count)
+        {
+            if (!ValidateFormat(recepient))
+            {
+                return;
+            }
+
+            Console.WriteLine("Added: " + recepient);
+
+            List<string> formattings = new();
+
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine("Add value for placeholder " + i);
+
+                string? formatInput = Console.ReadLine();
+
+                formattings.Add(formatInput ?? string.Empty);
+            }
+
+            to.Add(new(recepient, formattings));
+        }
+
+        public List<MessageRecepientConfig> GetRecepientConfigs() => to;
+
+        private static bool ValidateFormat(string mail)
+        {
+            if (MailAddress.TryCreate(mail, out var _)) return true;
+
+            Utilities.WriteLine(mail + " is not a valid mail address.", ConsoleColor.Yellow);
+
+            return false;
         }
     }
 }
