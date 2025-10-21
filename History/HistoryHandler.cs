@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace MailClient
+namespace MailClient.History
 {
     internal class HistoryHandler
     {

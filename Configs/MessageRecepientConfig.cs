@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MailClient
+namespace MailClient.Configs
 {
     public class MessageRecepientConfig
     {
@@ -18,8 +18,17 @@ namespace MailClient
 
         public MessageRecepientConfig(string adress, List<string> formattings)
         {
-            this.address = adress;
+            address = adress;
             this.formattings = formattings;
+        }
+
+        public bool Valid()
+        {
+            bool result = address != string.Empty;
+
+            if (!result) Utilities.WriteLine("Adress is empty", ConsoleColor.Red);
+
+            return result;
         }
 
         public string GetAdress() => address;

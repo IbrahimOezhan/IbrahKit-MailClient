@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MailClient
+namespace MailClient.History
 {
     internal class HistoryElement(string adress, DateTime timeSent)
     {
