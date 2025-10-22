@@ -1,4 +1,4 @@
-﻿namespace MailClient.Unused
+﻿namespace MailClient.Utilities.Utilities
 {
     public class FileUtilities
     {
@@ -23,7 +23,7 @@
 
                 string[] fileNames = new string[files.Length];
 
-                int min = Math.Clamp(0 + (offset * maxDisplay), 0, files.Length - 1);
+                int min = Math.Clamp(0 + offset * maxDisplay, 0, files.Length - 1);
 
                 int max = Math.Clamp(min + maxDisplay, 0, files.Length);
 
@@ -37,7 +37,7 @@
 
                 if (char.IsDigit(key.KeyChar))
                 {
-                    int digit = (key.KeyChar - '0') + min;
+                    int digit = key.KeyChar - '0' + min;
 
                     if (Path.HasExtension(fileNames[digit]))
                     {

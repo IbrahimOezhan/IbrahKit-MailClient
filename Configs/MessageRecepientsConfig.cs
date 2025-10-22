@@ -1,4 +1,5 @@
-﻿using System.Net.Mail;
+﻿using MailClient.Utilities;
+using System.Net.Mail;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
@@ -9,7 +10,7 @@ namespace MailClient.Configs
         private const string regex = "{\\d}";
 
         [JsonInclude]
-        private List<MessageRecepientConfig> to = new();
+        private List<MessageRecepientConfig> recipients = new();
 
         public bool Valid(MessageContentConfig contentConfig)
         {
@@ -17,33 +18,33 @@ namespace MailClient.Configs
 
             bool result = true;
 
-            for (int i = 0; i < to.Count; i++)
+            for (int i = 0; i < recipients.Count; i++)
             {
-                if (!MailAddress.TryCreate(to[i].GetAdress(), out var _))
+                if (!MailAddress.TryCreate(recipients[i].GetAdress(), out var _))
                 {
-                    Utilities.WriteLine(to[i].GetAdress() + " is not a valid mail address.", ConsoleColor.Red);
+                    MainUtilities.WriteLine(recipients[i].GetAdress() + " is not a valid mail address.", ConsoleColor.Red);
 
                     result = false;
                 }
 
-                int placeholderExpected = to[i].GetFormattings().Count;
+                int placeholderExpected = recipients[i].GetFormattings().Count;
 
                 if (placeholderExpected != placeholderAmount)
                 {
-                    Utilities.WriteLine($"The body contains {placeholderAmount} placeholders but the JSON only provides {placeholderExpected}", ConsoleColor.Red);
+                    MainUtilities.WriteLine($"The body contains {placeholderAmount} placeholders but the JSON only provides {placeholderExpected}", ConsoleColor.Red);
 
                     result = false;
                 }
             }
 
-            for (int i = 0; i < to.Count; i++)
+            for (int i = 0; i < recipients.Count; i++)
             {
-                if (!to[i].Valid()) result = false;
+                if (!recipients[i].Valid()) result = false;
             }
 
             return result;
         }
 
-        public List<MessageRecepientConfig> GetRecepientConfigs() => to;
+        public List<MessageRecepientConfig> GetRecepientConfigs() => recipients;
     }
 }

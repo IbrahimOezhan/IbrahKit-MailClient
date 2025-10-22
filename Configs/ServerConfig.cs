@@ -1,4 +1,5 @@
 ﻿using MailClient.Exceptions;
+using MailClient.Utilities;
 using System.Net.Mail;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -8,7 +9,7 @@ namespace MailClient.Configs
     internal class ServerConfig
     {
         [JsonInclude]
-        private string fromAdress = string.Empty;
+        private string fromAddress = string.Empty;
 
         [JsonInclude]
         private string password = string.Empty;
@@ -19,7 +20,7 @@ namespace MailClient.Configs
         [JsonInclude]
         private int port = 0;
 
-        public string From() => fromAdress;
+        public string From() => fromAddress;
 
         public string Password() => password;
 
@@ -29,17 +30,17 @@ namespace MailClient.Configs
 
         public bool Valid()
         {
-            if(fromAdress == string.Empty)
+            if (fromAddress == string.Empty)
             {
                 return false;
             }
 
-            if(!MailAddress.TryCreate(fromAdress,out _))
+            if (!MailAddress.TryCreate(fromAddress, out _))
             {
                 return false;
             }
 
-            if(smtpServer == string.Empty)
+            if (smtpServer == string.Empty)
             {
                 return false;
             }
@@ -55,7 +56,7 @@ namespace MailClient.Configs
 
             if (StringUtilities.IsNullEmptyWhite(fileContent)) throw new FileEmptyException(path + " is empty");
 
-            ServerConfig? config = JsonSerializer.Deserialize<ServerConfig>(fileContent, Utilities.GetJsonOptions());
+            ServerConfig? config = JsonSerializer.Deserialize<ServerConfig>(fileContent, MainUtilities.GetJsonOptions());
 
             if (config == null) throw new NullReferenceException();
 

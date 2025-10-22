@@ -1,4 +1,5 @@
 ﻿using MailClient.Exceptions;
+using MailClient.Utilities;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -14,9 +15,9 @@ namespace MailClient.Configs
 
         public bool Valid()
         {
-            if(!contentConfig.Valid()) return false;
+            if (!contentConfig.Valid()) return false;
 
-            if(!recipientsConfig.Valid(contentConfig)) return false;
+            if (!recipientsConfig.Valid(contentConfig)) return false;
 
             return true;
         }
@@ -24,21 +25,23 @@ namespace MailClient.Configs
         public MessageContentConfig Content() => contentConfig;
 
         public List<MessageRecepientConfig> GetRecipients() => recipientsConfig.GetRecepientConfigs();
+        public List<string> GetRecipientAddresses() => recipientsConfig.GetRecepientConfigs().Select(x => x.GetAdress()).ToList();
 
         public static MessageConfig Get(string path)
         {
-            MessageConfig? msgConfig;
-
-            string json;
-
             if (!File.Exists(path))
             {
                 throw new ArgumentException("Path doesnt exist");
             }
 
-            json = File.ReadAllText(path);
+            string json = File.ReadAllText(path);
 
-            msgConfig = JsonSerializer.Deserialize<MessageConfig>(json, Utilities.GetJsonOptions());
+            if(StringUtilities.IsNullEmptyWhite(json))
+            {
+                throw new FileEmptyException();
+            }
+
+            MessageConfig? msgConfig = JsonSerializer.Deserialize<MessageConfig>(json, MainUtilities.GetJsonOptions());
 
             if (msgConfig == null) throw new NullReferenceException("Message Comfig is null");
 
@@ -48,7 +51,7 @@ namespace MailClient.Configs
             {
                 throw new ConfigInvalidException();
             }
-            
+
             return msgConfig;
         }
     }

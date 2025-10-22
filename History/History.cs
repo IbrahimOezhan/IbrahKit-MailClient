@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using MailClient.Utilities;
+using System.Text.Json.Serialization;
 
 namespace MailClient.History
 {
@@ -18,7 +19,7 @@ namespace MailClient.History
 
             for (int i = 0; i < adresses.Count; i++)
             {
-                Utilities.WriteLine($"Warning: {adresses[i]} was already used to send a mail", ConsoleColor.Yellow);
+                MainUtilities.WriteLine($"Warning: {adresses[i]} was already used to send a mail", ConsoleColor.Yellow);
 
                 if (history.Select(x => x.Adress()).Contains(adresses[i]))
                 {

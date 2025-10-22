@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using MailClient.Utilities;
+using System.Text.Json.Serialization;
 
 namespace MailClient.Configs
 {
@@ -23,16 +24,16 @@ namespace MailClient.Configs
 
         public bool Valid()
         {
-            if(subject == string.Empty)
+            if (subject == string.Empty)
             {
-                Utilities.WriteLine("Subject is empty", ConsoleColor.Red);
+                MainUtilities.WriteLine("Subject is empty", ConsoleColor.Red);
 
                 return false;
             }
 
-            if(body == string.Empty)
+            if (body == string.Empty)
             {
-                Utilities.WriteLine("Body is empty", ConsoleColor.Red);
+                MainUtilities.WriteLine("Body is empty", ConsoleColor.Red);
 
                 return false;
             }

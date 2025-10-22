@@ -1,44 +1,16 @@
-﻿using System.Text.Json;
+﻿using MailClient.Configs;
+using MailClient.Utilities;
+using System.Text.Json;
 
 namespace MailClient.History
 {
     internal class HistoryHandler
     {
-        private const string FOLDER = "IbrahKit";
+        private History history = new();
 
-        private const string FILE = "History.json";
-
-        private string folder = string.Empty;
-
-        private string file = string.Empty;
-
-        private History history;
-
-        public HistoryHandler()
+        public HistoryHandler(ProfileConfig profile)
         {
-            folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), FOLDER);
-
-            if (!Directory.Exists(folder))
-            {
-                Directory.CreateDirectory(folder);
-            }
-
-            file = Path.Combine(folder, FILE);
-
-            if (!File.Exists(file))
-            {
-                File.Create(file).Close();
-            }
-
-            string fileContent = File.ReadAllText(file);
-
-            if (fileContent == null || fileContent.Trim() == string.Empty)
-            {
-                history = new();
-                return;
-            }
-
-            history = JsonSerializer.Deserialize<History>(fileContent) ?? throw new NullReferenceException();
+            history = profile.GetHistory();
         }
 
         public void AddToHistory(string adress)
@@ -46,16 +18,9 @@ namespace MailClient.History
             history.AddToHistory(adress);
         }
 
-        public void SaveHistory()
+        public bool Validate(MessageConfig messageConfig)
         {
-            using StreamWriter sw = new(file);
-
-            sw.Write(JsonSerializer.Serialize(history, Utilities.GetJsonOptions()));
-        }
-
-        public bool Validate(List<string> adresses)
-        {
-            bool result = history.Validate(adresses);
+            bool result = history.Validate(messageConfig.GetRecipientAddresses());
 
             if (!result)
             {

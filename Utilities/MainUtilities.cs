@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 
-namespace MailClient
+namespace MailClient.Utilities
 {
-    internal static class Utilities
+    internal static class MainUtilities
     {
         private static readonly JsonSerializerOptions options = new()
         {
@@ -23,7 +23,7 @@ namespace MailClient
 
         public static string ForceInput(string initalMsg = "", string errorMsg = "")
         {
-            Console.WriteLine("Initial");
+            Console.Write(initalMsg + " ");
 
             string? input = Console.ReadLine();
 
@@ -31,10 +31,32 @@ namespace MailClient
             {
                 Console.WriteLine(errorMsg);
 
+                Console.Write(initalMsg);
+
                 input = Console.ReadLine();
             }
 
             return input;
+        }
+
+        public static bool InputYesNo(char yes, char no, string initalMsg = "", string errorMsg = "")
+        {
+            Console.WriteLine($"{initalMsg} Yes({yes}), No({no})");
+
+            ConsoleKeyInfo input = Console.ReadKey();
+
+            char inputChar = input.KeyChar;
+
+            while (!(inputChar.ToString().Equals(yes.ToString(), StringComparison.OrdinalIgnoreCase) || inputChar.ToString().Equals(no.ToString(), StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine(errorMsg);
+
+                input = Console.ReadKey();
+
+                inputChar = input.KeyChar;
+            }
+
+            return inputChar.ToString().Equals(yes.ToString(), StringComparison.OrdinalIgnoreCase);
         }
 
         public static string FormattedException(Exception exception)

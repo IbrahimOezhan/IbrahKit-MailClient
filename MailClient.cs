@@ -1,5 +1,6 @@
 ﻿using MailClient.Configs;
 using MailClient.History;
+using MailClient.Utilities;
 using System.Net;
 using System.Net.Mail;
 
@@ -7,33 +8,35 @@ namespace MailClient
 {
     internal class MailClient
     {
+        public const string FOLDER = "IbrahKit";
+
         public static string Run(string[] args)
         {
             try
             {
-                switch(args.Length)
+                switch (args.Length)
                 {
                     case 0:
+                        args = new string[3];
+                        args[0] = MainUtilities.ForceInput("Select Profile: ", "You must select a profile");
+                        args[1] = MainUtilities.ForceInput("Select Message Config Path: ", "You must enter a path");
+                        args[2] = MainUtilities.ForceInput("Enter Server Config Path: ", "You must enter a path");
                         break;
                     case 3:
-                        args[0] = Utilities.ForceInput("Select Profile", "You must select a profile");
-                        args[1] = Utilities.ForceInput("Enter Server Config Path", "You must enter a path");
-                        args[2] = Utilities.ForceInput("Select Message Config Path", "You must enter a path");
                         break;
                     default:
                         throw new InvalidDataException("Invalid amount of arguments");
                 }
 
-                MessageConfig msgConfig = MessageConfig.Get(args[0]);
+                ProfileConfig profileConfig = ProfileConfig.Get(args[0]);
 
-                ServerConfig serverConfig = ServerConfig.Get(args[1]);
+                MessageConfig messageConfig = MessageConfig.Get(args[1]);
 
-                HistoryHandler historyHandler = new();
+                ServerConfig serverConfig = ServerConfig.Get(args[2]);
 
-                if (!historyHandler.Validate(msgConfig.GetRecipients().Select(x => x.GetAdress()).ToList()))
-                {
-                    return "Operation Cancelled";
-                }
+                HistoryHandler historyHandler = new(profileConfig);
+
+                if (!historyHandler.Validate(messageConfig)) return "Operation Cancelled";
 
                 SmtpClient smtpClient = new(serverConfig.SMTP(), serverConfig.Port())
                 {
@@ -42,13 +45,13 @@ namespace MailClient
                     EnableSsl = true
                 };
 
-                for (int i = 0; i < msgConfig.GetRecipients().Count; i++)
+                for (int i = 0; i < messageConfig.GetRecipients().Count; i++)
                 {
-                    object[] placeholderFormattings = msgConfig.GetRecipients()[i].GetFormattings().ToArray();
+                    object[] placeholderFormattings = messageConfig.GetRecipients()[i].GetFormattings().ToArray();
 
-                    string toAdress = msgConfig.GetRecipients()[i].GetAdress();
+                    string toAdress = messageConfig.GetRecipients()[i].GetAdress();
 
-                    MailMessage mail = new(serverConfig.From(), toAdress, msgConfig.Content().Subject(), string.Format(msgConfig.Content().Body(), placeholderFormattings))
+                    MailMessage mail = new(serverConfig.From(), toAdress, messageConfig.Content().Subject(), string.Format(messageConfig.Content().Body(), placeholderFormattings))
                     {
                         IsBodyHtml = true
                     };
@@ -57,10 +60,10 @@ namespace MailClient
 
                     historyHandler.AddToHistory(toAdress);
 
-                    Utilities.WriteLine($"Sent mail to {toAdress} successfully", ConsoleColor.Green);
+                    MainUtilities.WriteLine($"Sent mail to {toAdress} successfully", ConsoleColor.Green);
                 }
 
-                historyHandler.SaveHistory();
+                profileConfig.Save();
 
                 return "Success";
             }

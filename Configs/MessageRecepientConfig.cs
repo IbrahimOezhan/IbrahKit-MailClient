@@ -1,11 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using MailClient.Utilities;
+using System.Text.Json.Serialization;
 
 namespace MailClient.Configs
 {
     public class MessageRecepientConfig
     {
         [JsonInclude]
-        private string address = string.Empty;
+        private string toAddress = string.Empty;
 
         [JsonInclude]
         private List<string> formattings = new();
@@ -18,20 +19,20 @@ namespace MailClient.Configs
 
         public MessageRecepientConfig(string adress, List<string> formattings)
         {
-            address = adress;
+            toAddress = adress;
             this.formattings = formattings;
         }
 
         public bool Valid()
         {
-            bool result = address != string.Empty;
+            bool result = toAddress != string.Empty;
 
-            if (!result) Utilities.WriteLine("Adress is empty", ConsoleColor.Red);
+            if (!result) MainUtilities.WriteLine("Adress is empty", ConsoleColor.Red);
 
             return result;
         }
 
-        public string GetAdress() => address;
+        public string GetAdress() => toAddress;
 
         public List<string> GetFormattings() => formattings;
     }
