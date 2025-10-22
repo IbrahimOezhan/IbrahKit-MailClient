@@ -2,6 +2,7 @@
 using MailClient.Utilities;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace MailClient.Configs
 {
@@ -39,16 +40,23 @@ namespace MailClient.Configs
             sw.Write(JsonSerializer.Serialize(this, MainUtilities.GetJsonOptions()));
         }
 
-        public static ProfileConfig Get(string name)
+        private static string GetProfileDirectory()
         {
             string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), MailClient.FOLDER, FOLDER);
-
-            string expectedPath = Path.Combine(folder, name + ".json");
 
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
             }
+
+            return folder;
+        }
+
+        public static ProfileConfig Get(string name)
+        {
+            string folder = GetProfileDirectory();
+
+            string expectedPath = Path.Combine(folder, name + ".json");
 
             string[] files = Directory.GetFiles(folder);
 
@@ -75,38 +83,34 @@ namespace MailClient.Configs
 
                 if (StringUtilities.IsNullEmptyWhite(fileContent))
                 {
-                    bool value = MainUtilities.InputYesNo('y', 'n', "Config file found but empty. Generate a new config?", "Invalid Input");
+                    bool result = MainUtilities.InputYesNo('y', 'n', "Config file found but empty. Generate a new config?", "Invalid Input");
 
-                    if (value)
-                    {
-                        return CreateNew(expectedPath);
-                    }
-                    else
-                    {
-                        throw new ConfigInvalidException();
-                    }
+                    return Decision(expectedPath, result);
                 }
                 else
                 {
                     ProfileConfig? config = JsonSerializer.Deserialize<ProfileConfig>(fileContent, MainUtilities.GetJsonOptions());
 
-                    if (config == null) throw new NullReferenceException();
-
-                    return config;
+                    return config ?? throw new NullReferenceException();
                 }
             }
             else
             {
-                bool res = MainUtilities.InputYesNo('y', 'n', $"Config file with name {name} not found . Generate a new config?", "Invalid Input");
+                bool result = MainUtilities.InputYesNo('y', 'n', $"Config file with name {name} not found . Generate a new config?", "Invalid Input");
 
-                if (res)
-                {
-                    return CreateNew(expectedPath);
-                }
-                else
-                {
-                    throw new ConfigInvalidException();
-                }
+                return Decision(expectedPath, result);
+            }
+        }
+
+        private static ProfileConfig Decision(string path, bool dec)
+        {
+            if (dec)
+            {
+                return CreateNew(path);
+            }
+            else
+            {
+                throw new ConfigInvalidException();
             }
         }
 
