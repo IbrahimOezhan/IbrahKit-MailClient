@@ -73,7 +73,7 @@ namespace MailClient
                     throw new InvalidDataException("Invalid amount of arguments");
             }
 
-            ProfileConfig profileConfig = ProfileConfig.Get(args[0]);
+            ProfileConfig profileConfig = ProfileConfig.Create(args[0]);
 
             MessageConfig messageConfig = MessageConfig.Get(args[1]);
 

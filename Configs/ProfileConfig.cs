@@ -52,7 +52,17 @@ namespace MailClient.Configs
             return folder;
         }
 
-        public static ProfileConfig Get(string name)
+        public static bool TryDelete(string name)
+        {
+
+        }
+
+        private static ProfileConfig Get(string name)
+        {
+
+        }
+
+        public static ProfileConfig Create(string name)
         {
             string folder = GetProfileDirectory();
 
