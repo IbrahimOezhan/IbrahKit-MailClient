@@ -2,7 +2,7 @@
 {
     internal class ProfileContext
     {
-        private string name;
+        private string? name = null;
 
         private Mode mode;
 

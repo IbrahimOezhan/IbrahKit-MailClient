@@ -8,7 +8,7 @@
 
             foreach (var item in commandTypes)
             {
-                if (Activator.CreateInstance(item, args.Skip(1).ToArray()) is Command command)
+                if (Activator.CreateInstance(item, [.. args.Skip(1)]) is Command command)
                 {
                     if (args[0].ToLower().Equals(command.CommandName()))
                     {

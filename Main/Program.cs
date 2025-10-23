@@ -1,6 +1,6 @@
 ﻿using MailClient.Utilities;
 
-namespace MailClient
+namespace MailClient.Main
 {
     internal class Program
     {
@@ -21,14 +21,9 @@ namespace MailClient
                 return;
             }
 
-            try
-            {
-                MainUtilities.WriteLine(MailClient.Run(args), ConsoleColor.Green);
-            }
-            catch (Exception e)
-            {
-                MainUtilities.WriteLine(MainUtilities.FormattedException(e), ConsoleColor.Red);
-            }
+            MailClient client = new();
+
+            client.Run(args);
 
             Console.WriteLine("Press anything to exit");
 

@@ -1,4 +1,6 @@
-﻿using MailClient.Utilities;
+﻿using MailClient.Exceptions;
+using MailClient.Utilities;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MailClient.Configs
@@ -15,11 +17,35 @@ namespace MailClient.Configs
 
         public string Body() => body;
 
-        public void ConvertURLToHTML()
+        public void ChooseBody(MessageContentBodyMode mode)
         {
-            var httpClient = new HttpClient();
+            switch (mode)
+            {
+                case MessageContentBodyMode.PATH:
 
-            body = httpClient.GetStringAsync(body).GetAwaiter().GetResult();
+                    if(!File.Exists(body))
+                    {
+                        throw new InvalidConfigException();
+                    }
+
+                    string fileContent = File.ReadAllText(body);
+
+                    if(StringUtilities.IsNullEmptyWhite(fileContent))
+                    {
+                        throw new InvalidConfigException();
+                    }
+
+                    body = fileContent;
+
+                    break;
+                case MessageContentBodyMode.URL:
+
+                    var httpClient = new HttpClient();
+
+                    body = httpClient.GetStringAsync(body).GetAwaiter().GetResult();
+
+                    break;
+            }
         }
 
         public bool Valid()
@@ -39,6 +65,12 @@ namespace MailClient.Configs
             }
 
             return true;
+        }
+
+        public enum MessageContentBodyMode
+        {
+            PATH,
+            URL,
         }
     }
 }

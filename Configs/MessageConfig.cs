@@ -1,5 +1,6 @@
 ﻿using MailClient.Exceptions;
 using MailClient.Utilities;
+using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -25,34 +26,42 @@ namespace MailClient.Configs
         public MessageContentConfig Content() => contentConfig;
 
         public List<MessageRecepientConfig> GetRecipients() => recipientsConfig.GetRecepientConfigs();
-        public List<string> GetRecipientAddresses() => recipientsConfig.GetRecepientConfigs().Select(x => x.GetAdress()).ToList();
 
-        public static MessageConfig Get(string path)
+        public List<string> GetRecipientAddresses() => [.. recipientsConfig.GetRecepientConfigs().Select(x => x.GetAdress())];
+
+        public static MessageConfig Get(string path, MessageContentConfig.MessageContentBodyMode bodyMode)
         {
+            MessageConfig? config;
+
             if (!File.Exists(path))
             {
-                throw new ArgumentException("Path doesnt exist");
+                throw new InvalidConfigException();
             }
 
-            string json = File.ReadAllText(path);
+            string fileContent = File.ReadAllText(path);
 
-            if (StringUtilities.IsNullEmptyWhite(json))
+            if (StringUtilities.IsNullEmptyWhite(fileContent) || fileContent == null)
             {
-                throw new FileEmptyException();
+                throw new InvalidConfigException();
             }
 
-            MessageConfig? msgConfig = JsonSerializer.Deserialize<MessageConfig>(json, MainUtilities.GetJsonOptions());
-
-            if (msgConfig == null) throw new NullReferenceException("Message Comfig is null");
-
-            msgConfig.Content().ConvertURLToHTML();
-
-            if (!msgConfig.Valid())
+            try
             {
-                throw new ConfigInvalidException();
+                config = JsonSerializer.Deserialize<MessageConfig>(fileContent, MainUtilities.GetJsonOptions());
+            }
+            catch
+            {
+                throw new InvalidConfigException();
             }
 
-            return msgConfig;
+            if (config == null)
+            {
+                throw new InvalidConfigException();
+            }
+
+            config.Content().ChooseBody(bodyMode);
+
+            return config;
         }
     }
 }

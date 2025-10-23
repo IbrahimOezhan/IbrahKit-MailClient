@@ -1,4 +1,5 @@
 ﻿using MailClient.Configs;
+using MailClient.Exceptions;
 using MailClient.History;
 using MailClient.Utilities;
 using System.Net;
@@ -20,7 +21,7 @@ namespace MailClient.Commands
             this.context = context;
         }
 
-        private string Send()
+        protected override string Execute()
         {
             ProfileConfig profileConfig = context.GetProfile();
 
@@ -41,7 +42,7 @@ namespace MailClient.Commands
 
             for (int i = 0; i < messageConfig.GetRecipients().Count; i++)
             {
-                object[] placeholderFormattings = messageConfig.GetRecipients()[i].GetFormattings().ToArray();
+                object[] placeholderFormattings = [.. messageConfig.GetRecipients()[i].GetFormattings()];
 
                 string toAdress = messageConfig.GetRecipients()[i].GetAdress();
 
@@ -66,7 +67,7 @@ namespace MailClient.Commands
         {
             if (args.Length == 0)
             {
-                return Send();
+                return Execute();
             }
 
             if (args.Length == 1)
@@ -78,16 +79,28 @@ namespace MailClient.Commands
             {
                 case "-server":
                 case "-s":
-                    
+
                     context.SetServer(args[1]);
 
-                    return new SendCommand(args.Skip(2).ToArray(), context).Run();
+                    return new SendCommand([.. args.Skip(2)], context).Run();
 
                 case "-message":
                 case "-m":
 
                     context.SetMessage(args[1]);
-                    return new SendCommand(args.Skip(2).ToArray(), context).Run();
+                    return new SendCommand([.. args.Skip(2)], context).Run();
+
+                case "-body":
+                case "-b":
+
+                    if (!Enum.TryParse(args[1],out MessageContentConfig.MessageContentBodyMode result))
+                    {
+                        throw new InvalidConfigException();
+                    }
+
+                    context.SetBodyMode(result);
+
+                    return new SendCommand([.. args.Skip(2)], context).Run();
 
                 default:
 

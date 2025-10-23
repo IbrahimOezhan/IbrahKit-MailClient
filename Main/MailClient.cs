@@ -1,12 +1,12 @@
 ﻿using MailClient.Commands;
 
-namespace MailClient
+namespace MailClient.Main
 {
     internal class MailClient
     {
         public const string FOLDER = "IbrahKit";
 
-        public string Run(string[] args)
+        public void Run(string[] args)
         {
             string res = "";
 
@@ -15,10 +15,10 @@ namespace MailClient
             do
             {
                 res = handler.Run(args);
+
+                Console.WriteLine(res);
             }
             while (res != null);
-
-            return "";
         }
     }
 }

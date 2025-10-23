@@ -20,18 +20,20 @@ namespace MailClient.History
         {
             bool result = history.Validate(messageConfig.GetRecipientAddresses());
 
-            if (!result)
+            if (result)
             {
-                Console.Write("Found duplicate adresses. Continue? Y/y (Yes) Anything Else (No): ");
+                return true;
+            }
 
-                ConsoleKeyInfo key = Console.ReadKey();
+            Console.Write("Found duplicate adresses. Continue? Y/y (Yes) Anything Else (No): ");
 
-                Console.WriteLine();
+            ConsoleKeyInfo key = Console.ReadKey();
 
-                if (!key.KeyChar.ToString().Equals("y", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return false;
-                }
+            Console.WriteLine();
+
+            if (!key.KeyChar.ToString().Equals("y", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return false;
             }
 
             return true;

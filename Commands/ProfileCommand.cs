@@ -16,7 +16,7 @@ namespace MailClient.Commands
             this.context = context;
         }
 
-        private void Execute()
+        protected override string Execute()
         {
             switch (context.GetMode())
             {
@@ -36,13 +36,15 @@ namespace MailClient.Commands
 
                     break;
             }
+
+            return "Success";
         }
 
         public override string Run()
         {
             if (args.Length == 0)
             {
-                Execute();
+                return Execute();
             }
 
             if (args.Length == 1)
@@ -57,7 +59,7 @@ namespace MailClient.Commands
 
                     context.SetName(args[1]);
 
-                    return new ProfileCommand(args.Skip(2).ToArray(), context).Run();
+                    return new ProfileCommand([.. args.Skip(2)], context).Run();
 
                 case "-m":
                 case "-mode":
@@ -69,7 +71,7 @@ namespace MailClient.Commands
 
                     context.SetMode(result);
 
-                    return new ProfileCommand(args.Skip(2).ToArray(), context).Run();
+                    return new ProfileCommand([.. args.Skip(2)], context).Run();
 
                 default:
 

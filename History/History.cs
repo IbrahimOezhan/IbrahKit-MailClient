@@ -6,11 +6,11 @@ namespace MailClient.History
     internal class History
     {
         [JsonInclude]
-        private List<HistoryElement> history = new();
+        private List<HistoryElement> historyElements = new();
 
         public void AddToHistory(string adress)
         {
-            history.Add(new(adress, DateTime.Now));
+            historyElements.Add(new(adress, DateTime.Now));
         }
 
         public bool Validate(List<string> adresses)
@@ -21,7 +21,7 @@ namespace MailClient.History
             {
                 MainUtilities.WriteLine($"Warning: {adresses[i]} was already used to send a mail", ConsoleColor.Yellow);
 
-                if (history.Select(x => x.Adress()).Contains(adresses[i]))
+                if (historyElements.Select(x => x.Adress()).Contains(adresses[i]))
                 {
                     result = false;
                 }

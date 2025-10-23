@@ -28,39 +28,35 @@ namespace MailClient.Configs
 
         public int Port() => port;
 
-        public bool Valid()
+        public static ServerConfig Get(string path)
         {
-            if (fromAddress == string.Empty)
+            ServerConfig? config;
+
+            if (!File.Exists(path))
             {
-                return false;
+                throw new InvalidConfigException();
             }
-
-            if (!MailAddress.TryCreate(fromAddress, out _))
-            {
-                return false;
-            }
-
-            if (smtpServer == string.Empty)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public static ServerConfig Get(string path = "")
-        {
-            if (!File.Exists(path)) throw new FileNotFoundException("Config file not found", path);
 
             string fileContent = File.ReadAllText(path);
 
-            if (StringUtilities.IsNullEmptyWhite(fileContent)) throw new FileEmptyException(path + " is empty");
+            if (StringUtilities.IsNullEmptyWhite(fileContent) || fileContent == null)
+            {
+                throw new InvalidConfigException();
+            }
 
-            ServerConfig? config = JsonSerializer.Deserialize<ServerConfig>(fileContent, MainUtilities.GetJsonOptions());
+            try
+            {
+                config = JsonSerializer.Deserialize<ServerConfig>(fileContent, MainUtilities.GetJsonOptions());
+            }
+            catch
+            {
+                throw new InvalidConfigException();
+            }
 
-            if (config == null) throw new NullReferenceException();
-
-            if (!config.Valid()) throw new ConfigInvalidException();
+            if (config == null)
+            {
+                throw new InvalidConfigException();
+            }
 
             return config;
         }

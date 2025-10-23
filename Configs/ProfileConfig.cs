@@ -1,4 +1,5 @@
 ﻿using MailClient.Utilities;
+using MailClient.Main;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -33,14 +34,14 @@ namespace MailClient.Configs
 
         public void Save()
         {
-            using StreamWriter sw = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), MailClient.FOLDER, FOLDER, profileName + ".json"));
+            using StreamWriter sw = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), MailClient.Main.MailClient.FOLDER, FOLDER, profileName + ".json"));
 
             sw.Write(JsonSerializer.Serialize(this, MainUtilities.GetJsonOptions()));
         }
 
         private static string GetProfileDirectory()
         {
-            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), MailClient.FOLDER, FOLDER);
+            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), MailClient.Main.MailClient.FOLDER, FOLDER);
 
             if (!Directory.Exists(folder))
             {
@@ -59,12 +60,12 @@ namespace MailClient.Configs
         {
             string[] files = Directory.GetFiles(GetProfileDirectory());
 
-            return files.ToList();
+            return [.. files];
         }
 
         public static bool TryDelete(string name)
         {
-            if (TryGet(name, out ProfileConfig config))
+            if (TryGet(name, out _))
             {
                 File.Delete(GetExpectedFilePath(name));
 
@@ -85,6 +86,7 @@ namespace MailClient.Configs
             if (config == null)
             {
                 result = null;
+
                 return false;
             }
 
@@ -108,6 +110,7 @@ namespace MailClient.Configs
             if (deserialized == null)
             {
                 result = null;
+
                 return false;
             }
 
@@ -121,6 +124,7 @@ namespace MailClient.Configs
             if (TryGet(name, out ProfileConfig _))
             {
                 created = null;
+
                 return false;
             }
 
