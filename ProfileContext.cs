@@ -19,6 +19,11 @@ namespace MailClient
             DELETE,
         }
 
+        public string GetName()
+        {
+            return name;
+        }
+
         public Mode GetMode()
         {
             return mode;

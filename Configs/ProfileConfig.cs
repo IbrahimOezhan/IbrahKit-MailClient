@@ -52,89 +52,89 @@ namespace MailClient.Configs
             return folder;
         }
 
+        private static string GetExpectedFilePath(string name)
+        {
+            return Path.Combine(GetProfileDirectory(), name + ".json");
+        }
+
+        public static List<string> GetAllConfigs()
+        {
+            string[] files = Directory.GetFiles(GetProfileDirectory());
+
+            return files.ToList();
+        }
+
         public static bool TryDelete(string name)
         {
+            if(TryGet(name, out ProfileConfig config))
+            {
+                File.Delete(GetExpectedFilePath(name));
 
+                return true;
+            }
+
+            return false;
         }
 
-        private static ProfileConfig Get(string name)
-        {
-
-        }
-
-        public static ProfileConfig Create(string name)
+        private static bool TryGet(string name, out ProfileConfig result)
         {
             string folder = GetProfileDirectory();
 
             string expectedPath = Path.Combine(folder, name + ".json");
 
-            string[] files = Directory.GetFiles(folder);
+            string? config = GetAllConfigs().Find(x => Path.GetFileNameWithoutExtension(x).Equals(name,StringComparison.OrdinalIgnoreCase));
 
-            bool found = false;
-
-            int foundIndex = -1;
-
-            Console.WriteLine($"Profiles in {folder}:");
-
-            for (int i = 0; i < files.Length; i++)
+            if(config == null)
             {
-                if (files[i] == expectedPath)
-                {
-                    found = true;
-                    foundIndex = i;
-                }
-
-                Console.WriteLine($"{i}: {files[i]}");
+                result = null;
+                return false;
             }
 
-            if (found)
+            string fileContent = File.ReadAllText(config);
+
+            if (StringUtilities.IsNullEmptyWhite(fileContent))
             {
-                string fileContent = File.ReadAllText(files[foundIndex]);
+                result = new(name);
 
-                if (StringUtilities.IsNullEmptyWhite(fileContent))
-                {
-                    bool result = MainUtilities.InputYesNo('y', 'n', "Config file found but empty. Generate a new config?", "Invalid Input");
+                string json = JsonSerializer.Serialize(result, MainUtilities.GetJsonOptions());
 
-                    return Decision(expectedPath, result);
-                }
-                else
-                {
-                    ProfileConfig? config = JsonSerializer.Deserialize<ProfileConfig>(fileContent, MainUtilities.GetJsonOptions());
+                using StreamWriter sw = new(config);
 
-                    return config ?? throw new NullReferenceException();
-                }
+                sw.Write(json);
+
+                return true;
             }
-            else
+
+            ProfileConfig? deserialized = JsonSerializer.Deserialize<ProfileConfig>(fileContent, MainUtilities.GetJsonOptions());
+
+            if(deserialized == null)
             {
-                bool result = MainUtilities.InputYesNo('y', 'n', $"Config file with name {name} not found . Generate a new config?", "Invalid Input");
-
-                return Decision(expectedPath, result);
+                result = null;
+                return false;
             }
+
+            result = deserialized;
+
+            return true;
         }
 
-        private static ProfileConfig Decision(string path, bool dec)
+        public static bool TryCreate(string name, out ProfileConfig created)
         {
-            if (dec)
+            if(TryGet(name, out ProfileConfig _))
             {
-                return CreateNew(path);
+                created = null;
+                return false;
             }
-            else
-            {
-                throw new ConfigInvalidException();
-            }
-        }
 
-        private static ProfileConfig CreateNew(string name)
-        {
-            using StreamWriter writer = new(name);
+            using StreamWriter writer = new(GetExpectedFilePath(name));
 
-            ProfileConfig config = new(Path.GetFileNameWithoutExtension(name));
+            created = new(name);
 
-            string json = JsonSerializer.Serialize(config, MainUtilities.GetJsonOptions());
+            string json = JsonSerializer.Serialize(created, MainUtilities.GetJsonOptions());
 
             writer.Write(json);
 
-            return config;
+            return true;
         }
     }
 }

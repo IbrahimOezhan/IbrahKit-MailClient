@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MailClient.Configs;
 
 namespace MailClient
 {
@@ -20,10 +16,19 @@ namespace MailClient
             switch (context.GetMode())
             {
                 case ProfileContext.Mode.LIST:
+
+                    ProfileConfig.GetAllConfigs().Where(x => x.Contains(context.GetName()));
+
                     break;
                 case ProfileContext.Mode.CREATE:
+
+                    ProfileConfig.TryCreate(context.GetName(), out _);
+
                     break;
                 case ProfileContext.Mode.DELETE:
+
+                    ProfileConfig.TryDelete(context.GetName());
+
                     break;
             }
         }
