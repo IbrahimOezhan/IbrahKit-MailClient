@@ -69,30 +69,26 @@ namespace MailClient.Commands
                 return Send();
             }
 
+            if (args.Length == 1)
+            {
+                return $"No value for {args[0]} parameter provided";
+            }
+
             switch (args[0])
             {
                 case "-server":
                 case "-s":
-                    if (args.Length > 1)
-                    {
-                        context.SetServer(args[1]);
-                        return new SendCommand(args.Skip(2).ToArray(), context).Run();
-                    }
-                    else
-                    {
-                        return $"No value for {args[0]} parameter provided";
-                    }
+                    
+                    context.SetServer(args[1]);
+
+                    return new SendCommand(args.Skip(2).ToArray(), context).Run();
+
                 case "-message":
                 case "-m":
-                    if (args.Length > 1)
-                    {
-                        context.SetMessage(args[1]);
-                        return new SendCommand(args.Skip(2).ToArray(), context).Run();
-                    }
-                    else
-                    {
-                        return $"No value for {args[0]} parameter provided";
-                    }
+
+                    context.SetMessage(args[1]);
+                    return new SendCommand(args.Skip(2).ToArray(), context).Run();
+
                 default:
 
                     return $"{args[0]} is not a valid parameter";

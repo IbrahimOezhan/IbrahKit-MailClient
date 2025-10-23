@@ -45,15 +45,15 @@ namespace MailClient.Commands
                 Execute();
             }
 
+            if (args.Length == 1)
+            {
+                return $"No value provided for {args[0]}";
+            }
+
             switch (args[0])
             {
                 case "-n":
                 case "-name":
-
-                    if (args.Length == 1)
-                    {
-                        return $"No value provided for {args[0]}";
-                    }
 
                     context.SetName(args[1]);
 
@@ -61,11 +61,6 @@ namespace MailClient.Commands
 
                 case "-m":
                 case "-mode":
-
-                    if (args.Length == 1)
-                    {
-                        return $"No value provided for {args[0]}";
-                    }
 
                     if (!Enum.TryParse(args[1], out ProfileContext.Mode result))
                     {
@@ -77,6 +72,7 @@ namespace MailClient.Commands
                     return new ProfileCommand(args.Skip(2).ToArray(), context).Run();
 
                 default:
+
                     return $"{args[0]} is an invalid argument";
             }
         }

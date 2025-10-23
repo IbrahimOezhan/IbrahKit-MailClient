@@ -4,9 +4,9 @@ namespace MailClient.Commands
 {
     internal class SendContext
     {
-        private string server = null;
-        private string message = null;
-        private string profile = null;
+        private string? server = null;
+        private string? message = null;
+        private string? profile = null;
 
         public void SetServer(string wert)
         {
