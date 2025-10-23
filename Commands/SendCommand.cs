@@ -1,19 +1,19 @@
 ﻿using MailClient.Configs;
 using MailClient.History;
 using MailClient.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MailClient
+namespace MailClient.Commands
 {
-    internal class SendCommand : CommandState
+    internal class SendCommand : Command
     {
         private SendContext context;
+
+        public SendCommand(string[] args) : base(args)
+        {
+            this.context = new();
+        }
 
         public SendCommand(string[] args, SendContext context) : base(args)
         {
@@ -22,25 +22,11 @@ namespace MailClient
 
         private string Send()
         {
-            switch (args.Length)
-            {
-                case 0:
-                    args = new string[3];
-                    args[0] = MainUtilities.ForceInput("Select Profile: ", "You must select a profile");
-                    args[1] = MainUtilities.ForceInput("Select Message Config Path: ", "You must enter a path");
-                    args[2] = MainUtilities.ForceInput("Enter Server Config Path: ", "You must enter a path");
-                    break;
-                case 3:
-                    break;
-                default:
-                    throw new InvalidDataException("Invalid amount of arguments");
-            }
+            ProfileConfig profileConfig = context.GetProfile();
 
-            ProfileConfig profileConfig = ProfileConfig.Create(args[0]);
+            MessageConfig messageConfig = context.GetMessageConfig();
 
-            MessageConfig messageConfig = MessageConfig.Get(args[1]);
-
-            ServerConfig serverConfig = ServerConfig.Get(args[2]);
+            ServerConfig serverConfig = context.GetServerConfig();
 
             HistoryHandler historyHandler = new(profileConfig);
 
@@ -78,19 +64,19 @@ namespace MailClient
 
         public override string Run()
         {
-            if(args.Length == 0)
+            if (args.Length == 0)
             {
-                return Send();    
+                return Send();
             }
 
-            switch(args[0])
+            switch (args[0])
             {
                 case "-server":
                 case "-s":
-                    if(args.Length > 1)
+                    if (args.Length > 1)
                     {
                         context.SetServer(args[1]);
-                        return new SendCommand(args.Skip(2).ToArray(),context).Run();
+                        return new SendCommand(args.Skip(2).ToArray(), context).Run();
                     }
                     else
                     {
@@ -101,7 +87,7 @@ namespace MailClient
                     if (args.Length > 1)
                     {
                         context.SetMessage(args[1]);
-                        return new SendCommand(args.Skip(2).ToArray(),context).Run();
+                        return new SendCommand(args.Skip(2).ToArray(), context).Run();
                     }
                     else
                     {
@@ -110,7 +96,12 @@ namespace MailClient
                 default:
 
                     return $"{args[0]} is not a valid parameter";
-            }  
+            }
+        }
+
+        public override string CommandName()
+        {
+            return "send";
         }
     }
 }

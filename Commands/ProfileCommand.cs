@@ -1,10 +1,15 @@
 ﻿using MailClient.Configs;
 
-namespace MailClient
+namespace MailClient.Commands
 {
-    internal class ProfileCommand : CommandState
+    internal class ProfileCommand : Command
     {
         private ProfileContext context;
+
+        public ProfileCommand(string[] args) : base(args)
+        {
+            this.context = new();
+        }
 
         public ProfileCommand(string[] args, ProfileContext context) : base(args)
         {
@@ -35,12 +40,12 @@ namespace MailClient
 
         public override string Run()
         {
-            if(args.Length == 0)
+            if (args.Length == 0)
             {
                 Execute();
             }
 
-            switch(args[0])
+            switch (args[0])
             {
                 case "-n":
                 case "-name":
@@ -57,24 +62,28 @@ namespace MailClient
                 case "-m":
                 case "-mode":
 
-                    if(args.Length == 1)
+                    if (args.Length == 1)
                     {
                         return $"No value provided for {args[0]}";
                     }
 
-                    if(Enum.TryParse<ProfileContext.Mode>(args[1], out ProfileContext.Mode result))
-                    {
-                        context.SetMode(result);
-
-                        return new ProfileCommand(args.Skip(2).ToArray(), context).Run();
-                    }
-                    else
+                    if (!Enum.TryParse(args[1], out ProfileContext.Mode result))
                     {
                         return $"{args[0]} is not a valid profile mode";
                     }
+
+                    context.SetMode(result);
+
+                    return new ProfileCommand(args.Skip(2).ToArray(), context).Run();
+
                 default:
                     return $"{args[0]} is an invalid argument";
             }
+        }
+
+        public override string CommandName()
+        {
+            return "profile";
         }
     }
 }

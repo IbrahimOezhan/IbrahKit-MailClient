@@ -1,8 +1,6 @@
-﻿using MailClient.Exceptions;
-using MailClient.Utilities;
+﻿using MailClient.Utilities;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Xml.Linq;
 
 namespace MailClient.Configs
 {
@@ -35,7 +33,7 @@ namespace MailClient.Configs
 
         public void Save()
         {
-            using StreamWriter sw = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), MailClient.FOLDER, FOLDER,profileName + ".json"));
+            using StreamWriter sw = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), MailClient.FOLDER, FOLDER, profileName + ".json"));
 
             sw.Write(JsonSerializer.Serialize(this, MainUtilities.GetJsonOptions()));
         }
@@ -66,7 +64,7 @@ namespace MailClient.Configs
 
         public static bool TryDelete(string name)
         {
-            if(TryGet(name, out ProfileConfig config))
+            if (TryGet(name, out ProfileConfig config))
             {
                 File.Delete(GetExpectedFilePath(name));
 
@@ -76,15 +74,15 @@ namespace MailClient.Configs
             return false;
         }
 
-        private static bool TryGet(string name, out ProfileConfig result)
+        public static bool TryGet(string name, out ProfileConfig result)
         {
             string folder = GetProfileDirectory();
 
             string expectedPath = Path.Combine(folder, name + ".json");
 
-            string? config = GetAllConfigs().Find(x => Path.GetFileNameWithoutExtension(x).Equals(name,StringComparison.OrdinalIgnoreCase));
+            string? config = GetAllConfigs().Find(x => Path.GetFileNameWithoutExtension(x).Equals(name, StringComparison.OrdinalIgnoreCase));
 
-            if(config == null)
+            if (config == null)
             {
                 result = null;
                 return false;
@@ -107,7 +105,7 @@ namespace MailClient.Configs
 
             ProfileConfig? deserialized = JsonSerializer.Deserialize<ProfileConfig>(fileContent, MainUtilities.GetJsonOptions());
 
-            if(deserialized == null)
+            if (deserialized == null)
             {
                 result = null;
                 return false;
@@ -120,7 +118,7 @@ namespace MailClient.Configs
 
         public static bool TryCreate(string name, out ProfileConfig created)
         {
-            if(TryGet(name, out ProfileConfig _))
+            if (TryGet(name, out ProfileConfig _))
             {
                 created = null;
                 return false;

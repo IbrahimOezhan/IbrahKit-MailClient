@@ -36,7 +36,7 @@ namespace MailClient.Configs
 
             string json = File.ReadAllText(path);
 
-            if(StringUtilities.IsNullEmptyWhite(json))
+            if (StringUtilities.IsNullEmptyWhite(json))
             {
                 throw new FileEmptyException();
             }

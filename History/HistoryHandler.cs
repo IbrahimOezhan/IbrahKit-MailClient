@@ -1,6 +1,4 @@
 ﻿using MailClient.Configs;
-using MailClient.Utilities;
-using System.Text.Json;
 
 namespace MailClient.History
 {
