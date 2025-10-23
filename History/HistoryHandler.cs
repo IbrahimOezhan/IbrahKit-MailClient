@@ -1,4 +1,5 @@
 ﻿using MailClient.Configs;
+using MailClient.Utilities;
 
 namespace MailClient.History
 {
@@ -25,18 +26,12 @@ namespace MailClient.History
                 return true;
             }
 
-            Console.Write("Found duplicate adresses. Continue? Y/y (Yes) Anything Else (No): ");
-
-            ConsoleKeyInfo key = Console.ReadKey();
-
-            Console.WriteLine();
-
-            if (!key.KeyChar.ToString().Equals("y", StringComparison.InvariantCultureIgnoreCase))
+            if (MainUtilities.InputYesNo('Y', 'N', "Found duplicate adresses. Continue?", "Must provide valid input."))
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }

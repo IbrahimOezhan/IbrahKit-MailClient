@@ -1,6 +1,4 @@
-﻿using MailClient.Utilities;
-
-namespace MailClient.Main
+﻿namespace MailClient.Main
 {
     internal class Program
     {

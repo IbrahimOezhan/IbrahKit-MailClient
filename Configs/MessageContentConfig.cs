@@ -1,6 +1,5 @@
 ﻿using MailClient.Exceptions;
 using MailClient.Utilities;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MailClient.Configs
@@ -23,14 +22,14 @@ namespace MailClient.Configs
             {
                 case MessageContentBodyMode.PATH:
 
-                    if(!File.Exists(body))
+                    if (!File.Exists(body))
                     {
                         throw new InvalidConfigException();
                     }
 
                     string fileContent = File.ReadAllText(body);
 
-                    if(StringUtilities.IsNullEmptyWhite(fileContent))
+                    if (StringUtilities.IsNullEmptyWhite(fileContent))
                     {
                         throw new InvalidConfigException();
                     }

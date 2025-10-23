@@ -1,5 +1,4 @@
 ﻿using MailClient.Utilities;
-using MailClient.Main;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -25,19 +24,16 @@ namespace MailClient.Configs
             profileName = name;
         }
 
-        public string ProfileName() => profileName;
-
-        public History.History GetHistory()
-        {
-            return history;
-        }
-
         public void Save()
         {
             using StreamWriter sw = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), MailClient.Main.MailClient.FOLDER, FOLDER, profileName + ".json"));
 
             sw.Write(JsonSerializer.Serialize(this, MainUtilities.GetJsonOptions()));
         }
+
+        public string ProfileName() => profileName;
+
+        public History.History GetHistory() => history;
 
         private static string GetProfileDirectory()
         {
@@ -61,6 +57,26 @@ namespace MailClient.Configs
             string[] files = Directory.GetFiles(GetProfileDirectory());
 
             return [.. files];
+        }
+
+        public static bool TryCreate(string name, out ProfileConfig created)
+        {
+            if (TryGet(name, out ProfileConfig _))
+            {
+                created = null;
+
+                return false;
+            }
+
+            using StreamWriter writer = new(GetExpectedFilePath(name));
+
+            created = new(name);
+
+            string json = JsonSerializer.Serialize(created, MainUtilities.GetJsonOptions());
+
+            writer.Write(json);
+
+            return true;
         }
 
         public static bool TryDelete(string name)
@@ -115,26 +131,6 @@ namespace MailClient.Configs
             }
 
             result = deserialized;
-
-            return true;
-        }
-
-        public static bool TryCreate(string name, out ProfileConfig created)
-        {
-            if (TryGet(name, out ProfileConfig _))
-            {
-                created = null;
-
-                return false;
-            }
-
-            using StreamWriter writer = new(GetExpectedFilePath(name));
-
-            created = new(name);
-
-            string json = JsonSerializer.Serialize(created, MainUtilities.GetJsonOptions());
-
-            writer.Write(json);
 
             return true;
         }

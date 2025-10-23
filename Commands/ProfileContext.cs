@@ -6,11 +6,14 @@
 
         private Mode mode;
 
-        internal enum Mode
+        public void SetName(string name)
         {
-            LIST,
-            CREATE,
-            DELETE,
+            this.name = name;
+        }
+
+        public void SetMode(Mode mode)
+        {
+            this.mode = mode;
         }
 
         public string GetName()
@@ -23,14 +26,11 @@
             return mode;
         }
 
-        public void SetName(string name)
+        internal enum Mode
         {
-            this.name = name;
-        }
-
-        public void SetMode(Mode mode)
-        {
-            this.mode = mode;
+            LIST,
+            CREATE,
+            DELETE,
         }
     }
 }

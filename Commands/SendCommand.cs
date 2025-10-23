@@ -1,9 +1,9 @@
 ﻿using MailClient.Configs;
 using MailClient.Exceptions;
 using MailClient.History;
-using MailClient.Utilities;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 
 namespace MailClient.Commands
 {
@@ -40,6 +40,8 @@ namespace MailClient.Commands
                 EnableSsl = true
             };
 
+            StringBuilder sb = new();
+
             for (int i = 0; i < messageConfig.GetRecipients().Count; i++)
             {
                 object[] placeholderFormattings = [.. messageConfig.GetRecipients()[i].GetFormattings()];
@@ -55,12 +57,12 @@ namespace MailClient.Commands
 
                 historyHandler.AddToHistory(toAdress);
 
-                MainUtilities.WriteLine($"Sent mail to {toAdress} successfully", ConsoleColor.Green);
+                sb.AppendLine($"Sent mail to {toAdress} successfully");
             }
 
             profileConfig.Save();
 
-            return "Success";
+            return sb.ToString();
         }
 
         public override string Run()
@@ -93,7 +95,7 @@ namespace MailClient.Commands
                 case "-body":
                 case "-b":
 
-                    if (!Enum.TryParse(args[1],out MessageContentConfig.MessageContentBodyMode result))
+                    if (!Enum.TryParse(args[1], out MessageContentConfig.MessageContentBodyMode result))
                     {
                         throw new InvalidConfigException();
                     }

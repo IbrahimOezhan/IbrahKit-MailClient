@@ -11,7 +11,6 @@ namespace MailClient.Configs
         [JsonInclude]
         private List<string> formattings = new();
 
-
         public MessageRecepientConfig()
         {
 
