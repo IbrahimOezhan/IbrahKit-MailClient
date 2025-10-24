@@ -63,7 +63,7 @@ namespace MailClient.Commands
             return sb.ToString();
         }
 
-        public override string Run()
+        public override string Parse()
         {
             if (args.Length == 0)
             {
@@ -82,7 +82,7 @@ namespace MailClient.Commands
 
                     context.SetServer(args[1]);
 
-                    return new SendCommand([.. args.Skip(2)], context).Run();
+                    return new SendCommand([.. args.Skip(2)], context).Parse();
 
                 case "-message":
                 case "-m":
@@ -93,7 +93,7 @@ namespace MailClient.Commands
                     }
 
                     context.SetMessage(args[1]);
-                    return new SendCommand([.. args.Skip(2)], context).Run();
+                    return new SendCommand([.. args.Skip(2)], context).Parse();
 
                 case "-body":
                 case "-b":
@@ -110,7 +110,7 @@ namespace MailClient.Commands
 
                     context.SetBodyMode(result);
 
-                    return new SendCommand([.. args.Skip(2)], context).Run();
+                    return new SendCommand([.. args.Skip(2)], context).Parse();
 
                 default:
 

@@ -14,7 +14,7 @@
             this.args = args;
         }
 
-        public abstract string Run();
+        public abstract string Parse();
 
         public abstract string Execute();
 

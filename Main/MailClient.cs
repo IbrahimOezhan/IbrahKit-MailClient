@@ -22,7 +22,7 @@ namespace MailClient.Main
 
                 Command command = GetCommand(args);
 
-                res = command.Run();
+                res = command.Parse();
 
                 if(res == string.Empty) res = command.Execute();
 
