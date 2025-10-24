@@ -1,14 +1,16 @@
-﻿namespace MailClient.Commands
+﻿using MailClient.Exceptions;
+
+namespace MailClient.Commands
 {
     internal class ProfileContext
     {
-        private string? profileName = null;
+        private string? profile = null;
 
         private Mode mode;
 
-        public void SetProfileName(string name)
+        public void SetProfile(string profile)
         {
-            this.profileName = name;
+            this.profile = profile;
         }
 
         public void SetMode(Mode mode)
@@ -16,9 +18,14 @@
             this.mode = mode;
         }
 
-        public string GetName()
+        public string GetProfile()
         {
-            return profileName;
+            if (profile == null)
+            {
+                throw new InvalidConfigException($"The provided value of the profile parameter is null");
+            }
+
+            return profile;
         }
 
         public Mode GetMode()

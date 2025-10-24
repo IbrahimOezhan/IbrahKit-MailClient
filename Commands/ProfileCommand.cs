@@ -17,7 +17,7 @@ namespace MailClient.Commands
             this.context = context;
         }
 
-        protected override string Execute()
+        public override string Execute()
         {
             StringBuilder sb = new();
 
@@ -27,7 +27,7 @@ namespace MailClient.Commands
 
                     sb.AppendLine("Found the following profiles");
 
-                    foreach (var profile in ProfileConfig.GetConfigs().Where(x => x.GetProfileName().Contains(context.GetName(), StringComparison.InvariantCultureIgnoreCase)))
+                    foreach (var profile in ProfileConfig.GetConfigs().Where(x => x.GetProfileName().Contains(context.GetProfile(), StringComparison.InvariantCultureIgnoreCase)))
                     {
                         sb.AppendLine(profile.ToString());
                     }
@@ -35,16 +35,16 @@ namespace MailClient.Commands
                     break;
                 case ProfileContext.Mode.CREATE:
 
-                    bool result = ProfileConfig.TryCreate(context.GetName(), out _);
+                    bool result = ProfileConfig.TryCreate(context.GetProfile(), out _);
 
-                    sb.AppendLine($"{context.GetName()} profile creation success? {result}");
+                    sb.AppendLine($"{context.GetProfile()} profile creation success? {result}");
 
                     break;
                 case ProfileContext.Mode.DELETE:
 
-                    bool delResult = ProfileConfig.TryDelete(context.GetName());
+                    bool delResult = ProfileConfig.TryDelete(context.GetProfile());
 
-                    sb.AppendLine($"{context.GetName()} profile deletion success? {delResult}");
+                    sb.AppendLine($"{context.GetProfile()} profile deletion success? {delResult}");
 
                     break;
             }
@@ -56,12 +56,7 @@ namespace MailClient.Commands
         {
             if (args.Length == 0)
             {
-                return Execute();
-            }
-
-            if (args.Length == 1)
-            {
-                return $"No value provided for {args[0]}";
+                return string.Empty;
             }
 
             switch (args[0])
@@ -69,12 +64,22 @@ namespace MailClient.Commands
                 case "-n":
                 case "-name":
 
-                    context.SetProfileName(args[1]);
+                    if (args.Length == 1)
+                    {
+                        return $"No value for {args[0]} parameter provided";
+                    }
+
+                    context.SetProfile(args[1]);
 
                     return new ProfileCommand([.. args.Skip(2)], context).Run();
 
                 case "-m":
                 case "-mode":
+
+                    if (args.Length == 1)
+                    {
+                        return $"No value for {args[0]} parameter provided";
+                    }
 
                     if (!Enum.TryParse(args[1], true, out ProfileContext.Mode result))
                     {
@@ -91,7 +96,7 @@ namespace MailClient.Commands
             }
         }
 
-        public override string CommandName()
+        public override string GetCommand()
         {
             return "profile";
         }

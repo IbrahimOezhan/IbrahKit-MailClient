@@ -20,7 +20,11 @@ namespace MailClient.Main
                     args = input.Split(' ');
                 }
 
-                res = Command(args);
+                Command command = GetCommand(args);
+
+                res = command.Run();
+
+                if(res == string.Empty) res = command.Execute();
 
                 Console.WriteLine(res);
 
@@ -29,7 +33,7 @@ namespace MailClient.Main
             while (res != null);
         }
 
-        public string Command(string[] args)
+        public Command GetCommand(string[] args)
         {
             IEnumerable<Type> commandTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(x => x.IsSubclassOf(typeof(Command)));
 
@@ -39,9 +43,9 @@ namespace MailClient.Main
             {
                 if (Activator.CreateInstance(item, arguments) is Command command)
                 {
-                    if (args[0].ToLower().Equals(command.CommandName()))
+                    if (args[0].ToLower().Equals(command.GetCommand()))
                     {
-                        return command.Run();
+                        return command;
                     }
                 }
             }
@@ -52,7 +56,7 @@ namespace MailClient.Main
             {
                 if (Activator.CreateInstance(item, arguments) is Command command)
                 {
-                    sb.AppendLine(command.CommandName());
+                    sb.AppendLine(command.GetCommand());
                 }
             }
 

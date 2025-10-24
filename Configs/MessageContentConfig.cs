@@ -12,10 +12,6 @@ namespace MailClient.Configs
         [JsonInclude]
         private string body = string.Empty;
 
-        public string Subject() => subject;
-
-        public string Body() => body;
-
         public void ChooseBody(MessageContentBodyMode mode)
         {
             switch (mode)
@@ -46,6 +42,10 @@ namespace MailClient.Configs
                     break;
             }
         }
+
+        public string GetSubject() => subject;
+
+        public string GetBody() => body;
 
         public bool Valid()
         {

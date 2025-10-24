@@ -16,8 +16,8 @@
 
         public abstract string Run();
 
-        protected abstract string Execute();
+        public abstract string Execute();
 
-        public abstract string CommandName();
+        public abstract string GetCommand();
     }
 }

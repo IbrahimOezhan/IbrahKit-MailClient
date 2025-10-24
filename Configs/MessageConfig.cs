@@ -58,6 +58,11 @@ namespace MailClient.Configs
                 throw new InvalidConfigException();
             }
 
+            if(!config.Valid())
+            {
+
+            }
+
             config.Content().ChooseBody(bodyMode);
 
             return config;

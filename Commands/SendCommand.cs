@@ -21,8 +21,10 @@ namespace MailClient.Commands
             this.context = context;
         }
 
-        protected override string Execute()
+        public override string Execute()
         {
+            StringBuilder sb = new();
+
             ProfileConfig profileConfig = context.GetProfile();
 
             MessageConfig messageConfig = context.GetMessageConfig();
@@ -40,18 +42,14 @@ namespace MailClient.Commands
                 EnableSsl = true
             };
 
-            StringBuilder sb = new();
-
             for (int i = 0; i < messageConfig.GetRecipients().Count; i++)
             {
                 object[] placeholderFormattings = [.. messageConfig.GetRecipients()[i].GetFormattings()];
 
                 string toAdress = messageConfig.GetRecipients()[i].GetAdress();
 
-                MailMessage mail = new(serverConfig.From(), toAdress, messageConfig.Content().Subject(), string.Format(messageConfig.Content().Body(), placeholderFormattings))
-                {
-                    IsBodyHtml = true
-                };
+                MailMessage mail = new(serverConfig.From(), toAdress, messageConfig.Content().GetSubject(), string.Format(messageConfig.Content().GetBody(), placeholderFormattings))
+                { IsBodyHtml = true };
 
                 smtpClient.Send(mail);
 
@@ -69,18 +67,18 @@ namespace MailClient.Commands
         {
             if (args.Length == 0)
             {
-                return Execute();
-            }
-
-            if (args.Length == 1)
-            {
-                return $"No value for {args[0]} parameter provided";
+                return string.Empty;
             }
 
             switch (args[0])
             {
                 case "-server":
                 case "-s":
+
+                    if (args.Length == 1)
+                    {
+                        return $"No value for {args[0]} parameter provided";
+                    }
 
                     context.SetServer(args[1]);
 
@@ -89,13 +87,23 @@ namespace MailClient.Commands
                 case "-message":
                 case "-m":
 
+                    if (args.Length == 1)
+                    {
+                        return $"No value for {args[0]} parameter provided";
+                    }
+
                     context.SetMessage(args[1]);
                     return new SendCommand([.. args.Skip(2)], context).Run();
 
                 case "-body":
                 case "-b":
 
-                    if (!Enum.TryParse(args[1], out MessageContentConfig.MessageContentBodyMode result))
+                    if (args.Length == 1)
+                    {
+                        return $"No value for {args[0]} parameter provided";
+                    }
+
+                    if (!Enum.TryParse(args[1],true, out MessageContentConfig.MessageContentBodyMode result))
                     {
                         throw new InvalidConfigException();
                     }
@@ -110,7 +118,7 @@ namespace MailClient.Commands
             }
         }
 
-        public override string CommandName()
+        public override string GetCommand()
         {
             return "send";
         }

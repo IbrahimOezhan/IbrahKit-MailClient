@@ -7,7 +7,9 @@ namespace MailClient.Commands
     internal class SendContext
     {
         private string? server = null;
+
         private string? message = null;
+
         private string? profile = null;
 
         private MessageContentConfig.MessageContentBodyMode bodyMode = MessageContentConfig.MessageContentBodyMode.URL;
@@ -36,32 +38,24 @@ namespace MailClient.Commands
         {
             if (profile == null)
             {
-                throw new InvalidConfigException();
+                throw new InvalidConfigException($"The provided value of the profile parameter is null");
             }
 
-            if (!ProfileConfig.TryGet(profile, out ProfileConfig result))
+            if (ProfileConfig.TryGet(profile, out ProfileConfig result))
             {
-                if (MainUtilities.InputYesNo('Y', 'N', "Profile does not exist. Create a new one?", "Must make a selection."))
-                {
-                    if (!ProfileConfig.TryCreate(profile, out result))
-                    {
-                        throw new InvalidConfigException();
-                    }
-                }
-                else
-                {
-                    throw new InvalidConfigException();
-                }
+                return result;
             }
 
-            return result;
+            ProfileCommand command = new([]);
+
+            throw new InvalidConfigException($"The operation was cancelled because the profile {profile} does not exist. Use \"{command.GetCommand()} {ProfileContext.Mode.CREATE} <name>\" to create one");
         }
 
         public ServerConfig GetServerConfig()
         {
             if (server == null)
             {
-                throw new InvalidConfigException();
+                throw new InvalidConfigException($"The provided value of the server parameter is null");
             }
 
             return ServerConfig.Get(server);
@@ -69,6 +63,11 @@ namespace MailClient.Commands
 
         public MessageConfig GetMessageConfig()
         {
+            if (message == null)
+            {
+                throw new InvalidConfigException($"The provided value of the message parameter is null");
+            }
+
             return MessageConfig.Get(message, bodyMode);
         }
     }
