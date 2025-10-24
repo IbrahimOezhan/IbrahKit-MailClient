@@ -60,7 +60,7 @@ namespace MailClient.Commands
                 sb.AppendLine($"Sent mail to {toAdress} successfully");
             }
 
-            profileConfig.Save();
+            profileConfig.SaveConfig();
 
             return sb.ToString();
         }

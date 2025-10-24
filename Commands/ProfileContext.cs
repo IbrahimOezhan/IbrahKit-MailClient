@@ -2,13 +2,13 @@
 {
     internal class ProfileContext
     {
-        private string? name = null;
+        private string? profileName = null;
 
         private Mode mode;
 
-        public void SetName(string name)
+        public void SetProfileName(string name)
         {
-            this.name = name;
+            this.profileName = name;
         }
 
         public void SetMode(Mode mode)
@@ -18,7 +18,7 @@
 
         public string GetName()
         {
-            return name;
+            return profileName;
         }
 
         public Mode GetMode()

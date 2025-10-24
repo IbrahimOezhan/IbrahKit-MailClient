@@ -13,20 +13,31 @@ namespace MailClient.Main
 
             do
             {
+                if (args.Length == 0)
+                {
+                    string? input = Console.ReadLine();
+
+                    args = input.Split(' ');
+                }
+
                 res = Command(args);
 
                 Console.WriteLine(res);
+
+                args = Array.Empty<string>();
             }
             while (res != null);
         }
 
         public string Command(string[] args)
         {
-            IEnumerable<Type> commandTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(x => x.IsAssignableTo(typeof(Command)));
+            IEnumerable<Type> commandTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(x => x.IsSubclassOf(typeof(Command)));
+
+            object[] arguments = new object[] { args.Skip(1).ToArray() };
 
             foreach (var item in commandTypes)
             {
-                if (Activator.CreateInstance(item, [.. args.Skip(1)]) is Command command)
+                if (Activator.CreateInstance(item, arguments) is Command command)
                 {
                     if (args[0].ToLower().Equals(command.CommandName()))
                     {
@@ -39,7 +50,7 @@ namespace MailClient.Main
 
             foreach (var item in commandTypes)
             {
-                if (Activator.CreateInstance(item, [.. args.Skip(1)]) is Command command)
+                if (Activator.CreateInstance(item, arguments) is Command command)
                 {
                     sb.AppendLine(command.CommandName());
                 }

@@ -1,4 +1,5 @@
 ﻿using MailClient.Configs;
+using System.Text;
 
 namespace MailClient.Commands
 {
@@ -18,26 +19,37 @@ namespace MailClient.Commands
 
         protected override string Execute()
         {
+            StringBuilder sb = new();
+
             switch (context.GetMode())
             {
                 case ProfileContext.Mode.LIST:
 
-                    ProfileConfig.GetAllConfigs().Where(x => x.Contains(context.GetName()));
+                    sb.AppendLine("Found the following profiles");
+
+                    foreach (var profile in ProfileConfig.GetConfigs().Where(x => x.GetProfileName().Contains(context.GetName(), StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        sb.AppendLine(profile.ToString());
+                    }
 
                     break;
                 case ProfileContext.Mode.CREATE:
 
-                    ProfileConfig.TryCreate(context.GetName(), out _);
+                    bool result = ProfileConfig.TryCreate(context.GetName(), out _);
+
+                    sb.AppendLine($"{context.GetName()} profile creation success? {result}");
 
                     break;
                 case ProfileContext.Mode.DELETE:
 
-                    ProfileConfig.TryDelete(context.GetName());
+                    bool delResult = ProfileConfig.TryDelete(context.GetName());
+
+                    sb.AppendLine($"{context.GetName()} profile deletion success? {delResult}");
 
                     break;
             }
 
-            return "Success";
+            return sb.ToString();
         }
 
         public override string Run()
@@ -57,14 +69,14 @@ namespace MailClient.Commands
                 case "-n":
                 case "-name":
 
-                    context.SetName(args[1]);
+                    context.SetProfileName(args[1]);
 
                     return new ProfileCommand([.. args.Skip(2)], context).Run();
 
                 case "-m":
                 case "-mode":
 
-                    if (!Enum.TryParse(args[1], out ProfileContext.Mode result))
+                    if (!Enum.TryParse(args[1], true, out ProfileContext.Mode result))
                     {
                         return $"{args[0]} is not a valid profile mode";
                     }

@@ -1,8 +1,18 @@
 ﻿namespace MailClient.Commands
 {
-    internal abstract class Command(string[] args)
+    internal abstract class Command
     {
-        protected string[] args = args;
+        protected string[] args;
+
+        public Command()
+        {
+
+        }
+
+        public Command(string[] args)
+        {
+            this.args = args;
+        }
 
         public abstract string Run();
 

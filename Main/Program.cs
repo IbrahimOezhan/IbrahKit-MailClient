@@ -21,7 +21,14 @@
 
             MailClient client = new();
 
-            client.Run(args);
+            try
+            {
+                client.Run(args);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
             Console.WriteLine("Press anything to exit");
 
