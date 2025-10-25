@@ -47,7 +47,7 @@ namespace MailClient.Configs
             {
                 config = JsonSerializer.Deserialize<ServerConfig>(fileContent, MainUtilities.GetJsonOptions());
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new InvalidConfigException($"An error was encountered during the deserialization attempt: {e.Message}");
             }

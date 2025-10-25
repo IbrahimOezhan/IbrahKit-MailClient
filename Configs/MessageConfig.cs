@@ -58,7 +58,7 @@ namespace MailClient.Configs
                 throw new InvalidConfigException();
             }
 
-            if(!config.Valid())
+            if (!config.Valid())
             {
 
             }

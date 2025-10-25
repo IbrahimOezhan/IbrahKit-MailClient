@@ -20,13 +20,13 @@
 
                 string[] dirFiles = Directory.GetFiles(currentDir);
 
-                string[] files = dirs.Concat(dirFiles).ToArray();
+                List<string> files = new(dirs.Concat(dirFiles));
 
-                string[] fileNames = new string[files.Length];
+                string[] fileNames = new string[files.Count];
 
-                int min = Math.Clamp(0 + offset * maxDisplay, 0, files.Length - 1);
+                int min = Math.Clamp(0 + offset * maxDisplay, 0, files.Count - 1);
 
-                int max = Math.Clamp(min + maxDisplay, 0, files.Length);
+                int max = Math.Clamp(min + maxDisplay, 0, files.Count);
 
                 for (int i = min; i < max; i++)
                 {
@@ -57,10 +57,10 @@
                 switch (key.Key)
                 {
                     case ConsoleKey.LeftArrow:
-                        offset = Math.Clamp(offset - 1, 0, (int)Math.Ceiling((decimal)(files.Length / 9)));
+                        offset = Math.Clamp(offset - 1, 0, (int)Math.Ceiling((decimal)(files.Count / 9)));
                         break;
                     case ConsoleKey.RightArrow:
-                        offset = Math.Clamp(offset + 1, 0, (int)Math.Ceiling((decimal)(files.Length / 9)));
+                        offset = Math.Clamp(offset + 1, 0, (int)Math.Ceiling((decimal)(files.Count / 9)));
                         break;
                     case ConsoleKey.UpArrow:
                         DirectoryInfo? parent = Directory.GetParent(currentDir);

@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace MailClient.Toolkit.CLI
+﻿namespace MailClient.Toolkit.CLI
 {
     internal class CLI
     {
@@ -12,33 +10,48 @@ namespace MailClient.Toolkit.CLI
         {
             string res = string.Empty;
 
+            bool first = false;
+
             do
             {
-                if (args.Length == 0)
+                if(first)
+                {
+                    args = Array.Empty<string>();
+                }
+
+                first = true;
+
+                while (args.Length == 0)
                 {
                     string? input = Console.ReadLine();
 
-                    args = input.Split(' ');
+                    args = input != null ? input.Split(' ') : Array.Empty<string>();
                 }
 
-                if(!TryGetCommand(args,out CommandBase result))
+                if (!TryGetCommand(args, out CommandBase? result))
                 {
                     Console.WriteLine(INVALID_COMMAND, args[0]);
                     continue;
                 }
 
+                if(result == null)
+                {
+                    res = "Fatal error";
+                    continue;
+                }
+
                 res = result.Parse();
 
-                if(res == string.Empty) res = result.Execute();
+                // Empty result means success.
+                // Non empty means error during argument value proccessing so skip execution and print the error
+                if (res == string.Empty) res = result.Execute();
 
                 Console.WriteLine(res);
-
-                args = Array.Empty<string>();
             }
             while (res != null);
         }
 
-        public bool TryGetCommand(string[] args, out CommandBase result)
+        private static bool TryGetCommand(string[] args, out CommandBase? result)
         {
             IEnumerable<Type> commandTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(
             x => x.GetTypes()).Where(x => x.IsSubclassOf(typeof(CommandBase)) && !x.IsAbstract);

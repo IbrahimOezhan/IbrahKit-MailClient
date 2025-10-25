@@ -1,7 +1,6 @@
 ﻿using MailClient.Configs;
 using MailClient.Exceptions;
 using MailClient.Toolkit.CLI;
-using MailClient.Utilities;
 
 namespace MailClient.Commands
 {

@@ -8,10 +8,11 @@ using System.Text;
 
 namespace MailClient.Commands
 {
-    internal class SendCommand : Command<SendContext,SendCommand>
+    internal class SendCommand : Command<SendContext, SendCommand>
     {
-        public SendCommand(string[] args) : base (args) { }
-        public SendCommand(string[] args, SendContext context) : base (args, context) { }
+        public SendCommand(string[] args) : base(args) { }
+
+        public SendCommand(string[] args, SendContext context) : base(args, context) { }
 
         public override string Execute()
         {

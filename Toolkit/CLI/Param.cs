@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
-namespace MailClient.Toolkit.CLI
+﻿namespace MailClient.Toolkit.CLI
 {
     internal abstract class Param
     {
@@ -13,7 +6,7 @@ namespace MailClient.Toolkit.CLI
         protected string description;
         protected Func<string[], string> function;
 
-        public Param(Func<string[],string> function, string description,params string[] names)
+        public Param(Func<string[], string> function, string description, params string[] names)
         {
             this.function = function;
             this.description = description;
@@ -30,6 +23,8 @@ namespace MailClient.Toolkit.CLI
             return false;
         }
 
+        //Process the argument. This usually involves setting the provided value to the context object.
+        //If that fails because no value is provided a non empty value is returned.
         public string ProcessArg(string[] args)
         {
             return function.Invoke(args);

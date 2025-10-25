@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MailClient.Toolkit.CLI
+﻿namespace MailClient.Toolkit.CLI
 {
     internal class Argument : Param
     {
@@ -14,9 +8,18 @@ namespace MailClient.Toolkit.CLI
         {
             object[] arguments = new object[] { args.Skip(2).ToArray(), cont };
 
-            T? g = (T)Activator.CreateInstance(typeof(T),arguments);
+            Type t = typeof(T);
 
-            return g.Parse();
+            object? o = Activator.CreateInstance(t, arguments);
+
+            if (o == null) throw new NotImplementedException();
+
+            if(o is T command)
+            {
+                return command.Parse();
+            }
+
+            return "Error: Activator.CreateInstance created an instance not of command type";
         }
     }
 }

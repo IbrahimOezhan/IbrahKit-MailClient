@@ -6,29 +6,21 @@ namespace MailClient.Commands
 {
     internal class ProfileCommand : Command<ProfileContext, ProfileCommand>
     {
-        private ProfileContext context;
+        public ProfileCommand(string[] args) : base(args) { }
 
-        public ProfileCommand(string[] args) : base(args)
-        {
-            context = new();
-        }
-
-        public ProfileCommand(string[] args, ProfileContext context) : base(args)
-        {
-            this.context = context;
-        }
+        public ProfileCommand(string[] args, ProfileContext context) : base(args,context) { }
 
         public override string Execute()
         {
             StringBuilder sb = new();
 
-            switch (context.GetMode())
+            switch (GetContext().GetMode())
             {
                 case ProfileContext.Mode.LIST:
 
                     sb.AppendLine("Found the following profiles");
 
-                    foreach (var profile in ProfileConfig.GetConfigs().Where(x => x.GetProfileName().Contains(context.GetProfile(), StringComparison.InvariantCultureIgnoreCase)))
+                    foreach (var profile in ProfileConfig.GetConfigs().Where(x => x.GetProfileName().Contains(GetContext().GetProfile(), StringComparison.InvariantCultureIgnoreCase)))
                     {
                         sb.AppendLine(profile.ToString());
                     }
@@ -36,16 +28,16 @@ namespace MailClient.Commands
                     break;
                 case ProfileContext.Mode.CREATE:
 
-                    bool result = ProfileConfig.TryCreate(context.GetProfile(), out _);
+                    bool result = ProfileConfig.TryCreate(GetContext().GetProfile(), out _);
 
-                    sb.AppendLine($"{context.GetProfile()} profile creation success? {result}");
+                    sb.AppendLine($"{GetContext().GetProfile()} profile creation success? {result}");
 
                     break;
                 case ProfileContext.Mode.DELETE:
 
-                    bool delResult = ProfileConfig.TryDelete(context.GetProfile());
+                    bool delResult = ProfileConfig.TryDelete(GetContext().GetProfile());
 
-                    sb.AppendLine($"{context.GetProfile()} profile deletion success? {delResult}");
+                    sb.AppendLine($"{GetContext().GetProfile()} profile deletion success? {delResult}");
 
                     break;
             }
@@ -69,9 +61,9 @@ namespace MailClient.Commands
                         return $"No value for {args[0]} parameter provided";
                     }
 
-                    context.SetProfile(args[1]);
+                    GetContext().SetProfile(args[1]);
 
-                    return new ProfileCommand([.. args.Skip(2)], context).Parse();
+                    return new ProfileCommand([.. args.Skip(2)], GetContext()).Parse();
                 },"","-p","-profile"),
                 new((args)=>
                 {
@@ -85,10 +77,10 @@ namespace MailClient.Commands
                         return $"{args[0]} is not a valid profile mode";
                     }
 
-                    context.SetMode(result);
+                    GetContext().SetMode(result);
 
-                    return new ProfileCommand([.. args.Skip(2)], context).Parse();
-                },"","-p","-profile"),
+                    return new ProfileCommand([.. args.Skip(2)], GetContext()).Parse();
+                },"","-m","-mode"),
             };
         }
     }
