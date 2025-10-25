@@ -1,4 +1,4 @@
-﻿namespace MailClient.Main
+﻿namespace MailClient
 {
     internal class Program
     {
@@ -19,7 +19,7 @@
                 return;
             }
 
-            MailClient client = new();
+            Toolkit.CLI.CLI client = new();
 
             try
             {

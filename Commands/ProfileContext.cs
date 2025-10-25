@@ -1,8 +1,9 @@
 ﻿using MailClient.Exceptions;
+using MailClient.Toolkit.CLI;
 
 namespace MailClient.Commands
 {
-    internal class ProfileContext
+    internal class ProfileContext : Context
     {
         private string? profile = null;
 

@@ -1,4 +1,4 @@
-﻿namespace MailClient.Utilities.Utilities
+﻿namespace MailClient.Toolkit.Utilities
 {
     public class FileUtilities
     {
@@ -7,6 +7,7 @@
             string currentDir = startPath;
 
             int offset = 0;
+
             int maxDisplay = 10;
 
             while (true)
@@ -33,6 +34,8 @@
                     Console.WriteLine("\t" + (i - min) + ": " + fileNames[i]);
                 }
 
+                //Gets pressed key
+
                 ConsoleKeyInfo key = Console.ReadKey();
 
                 if (char.IsDigit(key.KeyChar))
@@ -48,6 +51,8 @@
                     offset = 0;
                     continue;
                 }
+
+                //Moves page or goes back one directory
 
                 switch (key.Key)
                 {

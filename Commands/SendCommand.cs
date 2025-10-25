@@ -1,35 +1,27 @@
 ﻿using MailClient.Configs;
 using MailClient.Exceptions;
 using MailClient.History;
+using MailClient.Toolkit.CLI;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 
 namespace MailClient.Commands
 {
-    internal class SendCommand : Command
+    internal class SendCommand : Command<SendContext,SendCommand>
     {
-        private SendContext context;
-
-        public SendCommand(string[] args) : base(args)
-        {
-            this.context = new();
-        }
-
-        public SendCommand(string[] args, SendContext context) : base(args)
-        {
-            this.context = context;
-        }
+        public SendCommand(string[] args) : base (args) { }
+        public SendCommand(string[] args, SendContext context) : base (args, context) { }
 
         public override string Execute()
         {
             StringBuilder sb = new();
 
-            ProfileConfig profileConfig = context.GetProfile();
+            ProfileConfig profileConfig = GetContext().GetProfile();
 
-            MessageConfig messageConfig = context.GetMessageConfig();
+            MessageConfig messageConfig = GetContext().GetMessageConfig();
 
-            ServerConfig serverConfig = context.GetServerConfig();
+            ServerConfig serverConfig = GetContext().GetServerConfig();
 
             HistoryHandler historyHandler = new(profileConfig);
 
@@ -63,41 +55,28 @@ namespace MailClient.Commands
             return sb.ToString();
         }
 
-        public override string Parse()
+        public override string GetCommand()
         {
-            if (args.Length == 0)
-            {
-                return string.Empty;
-            }
+            return "send";
+        }
 
-            switch (args[0])
+        public override List<Argument> GetArguments()
+        {
+            return new()
             {
-                case "-server":
-                case "-s":
-
+                new((args) =>
+                {
                     if (args.Length == 1)
                     {
                         return $"No value for {args[0]} parameter provided";
                     }
 
-                    context.SetServer(args[1]);
+                    GetContext().SetMessage(args[1]);
 
-                    return new SendCommand([.. args.Skip(2)], context).Parse();
-
-                case "-message":
-                case "-m":
-
-                    if (args.Length == 1)
-                    {
-                        return $"No value for {args[0]} parameter provided";
-                    }
-
-                    context.SetMessage(args[1]);
-                    return new SendCommand([.. args.Skip(2)], context).Parse();
-
-                case "-body":
-                case "-b":
-
+                    return new SendCommand([.. args.Skip(2)], GetContext()).Parse();
+                },"m","message"),
+                new((args) =>
+                {
                     if (args.Length == 1)
                     {
                         return $"No value for {args[0]} parameter provided";
@@ -108,19 +87,22 @@ namespace MailClient.Commands
                         throw new InvalidConfigException();
                     }
 
-                    context.SetBodyMode(result);
+                    GetContext().SetBodyMode(result);
 
-                    return new SendCommand([.. args.Skip(2)], context).Parse();
+                    return string.Empty;
+                },"b","body"),
+                new((args)=>
+                {
+                    if (args.Length == 1)
+                    {
+                        return $"No value for {args[0]} parameter provided";
+                    }
 
-                default:
+                    GetContext().SetServer(args[1]);
 
-                    return $"{args[0]} is not a valid parameter";
-            }
-        }
-
-        public override string GetCommand()
-        {
-            return "send";
+                    return string.Empty;
+                },"s","server"),
+            };
         }
     }
 }

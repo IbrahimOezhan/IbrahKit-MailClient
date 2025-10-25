@@ -1,4 +1,4 @@
-﻿namespace MailClient.Utilities
+﻿namespace MailClient.Toolkit.Utilities
 {
     public static class StringUtilities
     {

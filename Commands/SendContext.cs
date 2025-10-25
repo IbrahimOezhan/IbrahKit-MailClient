@@ -1,10 +1,11 @@
 ﻿using MailClient.Configs;
 using MailClient.Exceptions;
+using MailClient.Toolkit.CLI;
 using MailClient.Utilities;
 
 namespace MailClient.Commands
 {
-    internal class SendContext
+    internal class SendContext : Context
     {
         private string? server = null;
 

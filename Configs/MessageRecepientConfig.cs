@@ -1,4 +1,4 @@
-﻿using MailClient.Utilities;
+﻿using MailClient.Toolkit.Utilities;
 using System.Net.Mail;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;

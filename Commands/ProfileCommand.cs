@@ -1,15 +1,16 @@
 ﻿using MailClient.Configs;
+using MailClient.Toolkit.CLI;
 using System.Text;
 
 namespace MailClient.Commands
 {
-    internal class ProfileCommand : Command
+    internal class ProfileCommand : Command<ProfileContext, ProfileCommand>
     {
         private ProfileContext context;
 
         public ProfileCommand(string[] args) : base(args)
         {
-            this.context = new();
+            context = new();
         }
 
         public ProfileCommand(string[] args, ProfileContext context) : base(args)
@@ -52,18 +53,17 @@ namespace MailClient.Commands
             return sb.ToString();
         }
 
-        public override string Parse()
+        public override string GetCommand()
         {
-            if (args.Length == 0)
-            {
-                return string.Empty;
-            }
+            return "profile";
+        }
 
-            switch (args[0])
+        public override List<Argument> GetArguments()
+        {
+            return new()
             {
-                case "-n":
-                case "-name":
-
+                new((args) =>
+                {
                     if (args.Length == 1)
                     {
                         return $"No value for {args[0]} parameter provided";
@@ -72,10 +72,9 @@ namespace MailClient.Commands
                     context.SetProfile(args[1]);
 
                     return new ProfileCommand([.. args.Skip(2)], context).Parse();
-
-                case "-m":
-                case "-mode":
-
+                },"","-p","-profile"),
+                new((args)=>
+                {
                     if (args.Length == 1)
                     {
                         return $"No value for {args[0]} parameter provided";
@@ -89,16 +88,8 @@ namespace MailClient.Commands
                     context.SetMode(result);
 
                     return new ProfileCommand([.. args.Skip(2)], context).Parse();
-
-                default:
-
-                    return $"{args[0]} is an invalid argument";
-            }
-        }
-
-        public override string GetCommand()
-        {
-            return "profile";
+                },"","-p","-profile"),
+            };
         }
     }
 }

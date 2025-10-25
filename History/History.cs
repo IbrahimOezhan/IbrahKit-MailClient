@@ -1,4 +1,4 @@
-﻿using MailClient.Utilities;
+﻿using MailClient.Toolkit.Utilities;
 using System.Text.Json.Serialization;
 
 namespace MailClient.History

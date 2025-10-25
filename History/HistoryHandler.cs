@@ -1,5 +1,5 @@
 ﻿using MailClient.Configs;
-using MailClient.Utilities;
+using MailClient.Toolkit.Utilities;
 
 namespace MailClient.History
 {
