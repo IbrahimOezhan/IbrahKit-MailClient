@@ -63,8 +63,8 @@ namespace MailClient.Commands
 
         public override List<Argument> GetArguments()
         {
-            return new()
-            {
+            return
+            [
                 new((args) =>
                 {
                     if (args.Length == 1)
@@ -75,7 +75,7 @@ namespace MailClient.Commands
                     GetContext().SetMessage(args[1]);
 
                     return new SendCommand([.. args.Skip(2)], GetContext()).Parse();
-                },"m","message"),
+                },"-m","-message"),
                 new((args) =>
                 {
                     if (args.Length == 1)
@@ -91,7 +91,7 @@ namespace MailClient.Commands
                     GetContext().SetBodyMode(result);
 
                     return string.Empty;
-                },"b","body"),
+                },"-b","-body"),
                 new((args)=>
                 {
                     if (args.Length == 1)
@@ -102,8 +102,8 @@ namespace MailClient.Commands
                     GetContext().SetServer(args[1]);
 
                     return string.Empty;
-                },"s","server"),
-            };
+                },"-s","-server"),
+            ];
         }
     }
 }

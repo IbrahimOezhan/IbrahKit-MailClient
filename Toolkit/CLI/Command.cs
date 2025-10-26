@@ -6,7 +6,7 @@
 
         private T context;
 
-        private const string INVALID_PARAM = "{0} is an invalid paramter";
+        private const string INVALID_PARAM = "{0} is an invalid paramter. Did you mean {1}?";
 
         public Command(string[] args)
         {
@@ -25,14 +25,18 @@
             return context;
         }
 
-        //Parses the next arguments
+        //Parses the incomming parameters.
+        //A return value of string.empty signalises the CLI to end parsing and process the command
+        //Any other return value means the parsing has failed
         public override string Parse()
         {
-            //If input ends here returns string.Empty to signalise the CLI to process the command
+            //If input ends here returns string.empty
             if (args.Length == 0)
             {
                 return string.Empty;
             }
+
+            string arg = args[0];
 
             List<Argument> arguments = GetArguments();
 
@@ -44,7 +48,7 @@
 
                     // If the argument processing returned string.empty that means it was successfull
                     // In that case call Continue on the argument object which creates a new command and passes the arguments on
-                    if (result == string.Empty) result = arguments[i].Continue<T, S>(args, context);
+                    result = result == string.Empty ? arguments[i].Continue<T, S>(args, context) : result ;
 
                     // If this line is reached that means the returned value was not empty therefor there was an error and its returned to the CLI
                     return result;
@@ -52,9 +56,29 @@
             }
 
             //If the code reached this it means the argument is not known to the command. Return error message
-            return string.Format(INVALID_PARAM,args[0]);
+            return string.Format(INVALID_PARAM, args[0], GetClosestArg(arg,arguments));
         }
 
-        public abstract List<Argument> GetArguments();
+        private string GetClosestArg(string arg, List<Argument> arguments)
+        {
+            int closest = int.MaxValue;
+            
+            string closestValue = string.Empty;
+
+            for (int i = 0; i < arguments.Count; i++)
+            {
+                (int compare, string value) = arguments[i].CompareTo(arg);
+
+                compare = Math.Abs(compare);
+
+                if (compare <= closest)
+                {
+                    closest = compare;
+                    closestValue = value;
+                }
+            }
+
+            return closestValue;
+        }
     }
 }

@@ -14,7 +14,7 @@
 
             if (o == null) throw new NotImplementedException();
 
-            if(o is T command)
+            if (o is T command)
             {
                 return command.Parse();
             }

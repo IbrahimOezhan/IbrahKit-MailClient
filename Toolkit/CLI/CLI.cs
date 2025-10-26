@@ -8,16 +8,13 @@
 
         public void Run(string[] args)
         {
-            string res = string.Empty;
+            string result = string.Empty;
 
             bool first = false;
 
             do
             {
-                if(first)
-                {
-                    args = Array.Empty<string>();
-                }
+                args = first ? Array.Empty<string>() : args;
 
                 first = true;
 
@@ -28,27 +25,27 @@
                     args = input != null ? input.Split(' ') : Array.Empty<string>();
                 }
 
-                if (!TryGetCommand(args, out CommandBase? result))
+                if (!TryGetCommand(args, out CommandBase? command))
                 {
                     Console.WriteLine(INVALID_COMMAND, args[0]);
                     continue;
                 }
 
-                if(result == null)
+                if (command == null)
                 {
-                    res = "Fatal error";
+                    result = "Fatal error";
                     continue;
                 }
 
-                res = result.Parse();
+                result = command.Parse();
 
                 // Empty result means success.
                 // Non empty means error during argument value proccessing so skip execution and print the error
-                if (res == string.Empty) res = result.Execute();
+                if (result == string.Empty) result = command.Execute();
 
-                Console.WriteLine(res);
+                Console.WriteLine(result);
             }
-            while (res != null);
+            while (result != null);
         }
 
         private static bool TryGetCommand(string[] args, out CommandBase? result)
@@ -60,13 +57,10 @@
 
             foreach (var item in commandTypes)
             {
-                if (Activator.CreateInstance(item, arguments) is CommandBase command)
+                if (Activator.CreateInstance(item, arguments) is CommandBase command && args[0].ToLower().Equals(command.GetCommand()))
                 {
-                    if (args[0].ToLower().Equals(command.GetCommand()))
-                    {
-                        result = command;
-                        return true;
-                    }
+                    result = command;
+                    return true;
                 }
             }
 

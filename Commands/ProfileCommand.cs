@@ -8,7 +8,7 @@ namespace MailClient.Commands
     {
         public ProfileCommand(string[] args) : base(args) { }
 
-        public ProfileCommand(string[] args, ProfileContext context) : base(args,context) { }
+        public ProfileCommand(string[] args, ProfileContext context) : base(args, context) { }
 
         public override string Execute()
         {
@@ -18,9 +18,10 @@ namespace MailClient.Commands
             {
                 case ProfileContext.Mode.LIST:
 
-                    sb.AppendLine("Found the following profiles");
+                    sb.AppendLine("Found the following profiles:");
 
-                    foreach (var profile in ProfileConfig.GetConfigs().Where(x => x.GetProfileName().Contains(GetContext().GetProfile(), StringComparison.InvariantCultureIgnoreCase)))
+                    foreach (var profile in ProfileConfig.GetConfigs().Where(
+                    x => x.GetProfileName().Contains(GetContext().GetProfile(), StringComparison.InvariantCultureIgnoreCase)))
                     {
                         sb.AppendLine(profile.ToString());
                     }
@@ -52,8 +53,8 @@ namespace MailClient.Commands
 
         public override List<Argument> GetArguments()
         {
-            return new()
-            {
+            return
+            [
                 new((args) =>
                 {
                     if (args.Length == 1)
@@ -63,7 +64,7 @@ namespace MailClient.Commands
 
                     GetContext().SetProfile(args[1]);
 
-                    return new ProfileCommand([.. args.Skip(2)], GetContext()).Parse();
+                    return string.Empty;
                 },"","-p","-profile"),
                 new((args)=>
                 {
@@ -79,9 +80,9 @@ namespace MailClient.Commands
 
                     GetContext().SetMode(result);
 
-                    return new ProfileCommand([.. args.Skip(2)], GetContext()).Parse();
+                    return string.Empty;
                 },"","-m","-mode"),
-            };
+            ];
         }
     }
 }

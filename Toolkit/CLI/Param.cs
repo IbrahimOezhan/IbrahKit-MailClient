@@ -13,6 +13,28 @@
             this.names = names;
         }
 
+        // Finds the most smiliar name compared to the one passed as an argument and returns it as well as the CompareTo int value
+        public (int, string) CompareTo(string name)
+        {
+            int smallest = int.MaxValue;
+            string smallestValue = string.Empty;
+
+            for (int i = 0; i < names.Length; i++)
+            {
+                int compare = Math.Abs(names[i].CompareTo(name));
+
+                if (compare < smallest)
+                {
+                    smallest = compare;
+
+                    smallestValue = names[i];
+                }
+            }
+
+            return (smallest, smallestValue);
+        }
+
+        // Compares the passed string to the names of this parameter. Returns true if at least one matches
         public bool CompareArg(string input)
         {
             for (int i = 0; i < names.Length; i++)
