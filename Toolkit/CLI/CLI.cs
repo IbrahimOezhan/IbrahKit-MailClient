@@ -20,7 +20,11 @@
 
                 while (args.Length == 0)
                 {
+                    Console.Write("> ");
+
                     string? input = Console.ReadLine();
+
+                    Console.WriteLine();
 
                     args = input != null ? input.Split(' ') : Array.Empty<string>();
                 }
@@ -50,14 +54,13 @@
 
         private static bool TryGetCommand(string[] args, out CommandBase? result)
         {
-            IEnumerable<Type> commandTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(
-            x => x.GetTypes()).Where(x => x.IsSubclassOf(typeof(CommandBase)) && !x.IsAbstract);
+            IEnumerable<Type> commandTypes = CommandBase.GetAllCommands();
 
             object[] arguments = new object[] { args.Skip(1).ToArray() };
 
             foreach (var item in commandTypes)
             {
-                if (Activator.CreateInstance(item, arguments) is CommandBase command && args[0].ToLower().Equals(command.GetCommand()))
+                if (Activator.CreateInstance(item, arguments) is CommandBase command && args[0].ToLower().Equals(command.GetData().name))
                 {
                     result = command;
                     return true;

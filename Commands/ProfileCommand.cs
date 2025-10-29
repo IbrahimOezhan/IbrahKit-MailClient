@@ -1,5 +1,6 @@
 ﻿using MailClient.Configs;
 using MailClient.Toolkit.CLI;
+using MailClient.Toolkit.CLI.Exceptions;
 using System.Text;
 
 namespace MailClient.Commands
@@ -46,43 +47,30 @@ namespace MailClient.Commands
             return sb.ToString();
         }
 
-        public override string GetCommand()
-        {
-            return "profile";
-        }
-
-        public override List<Argument> GetArguments()
+        public override (string name,string desc,List<Argument> args) GetData()
         {
             return
-            [
+            ("profile","execute various actions with profiles",[
                 new((args) =>
                 {
-                    if (args.Length == 1)
-                    {
-                        return $"No value for {args[0]} parameter provided";
-                    }
-
                     GetContext().SetProfile(args[1]);
 
                     return string.Empty;
-                },"","-p","-profile"),
+
+                },"Set the name of the profile to use for this action","-p","-profile"),
                 new((args)=>
                 {
-                    if (args.Length == 1)
-                    {
-                        return $"No value for {args[0]} parameter provided";
-                    }
-
                     if (!Enum.TryParse(args[1], true, out ProfileContext.Mode result))
                     {
-                        return $"{args[0]} is not a valid profile mode";
+                        throw new ArgumentParsingException($"{args[0]} is not a valid profile mode");
                     }
 
                     GetContext().SetMode(result);
 
                     return string.Empty;
-                },"","-m","-mode"),
-            ];
+
+                },"Set the mode to use for the action","-m","-mode"),
+            ]);
         }
     }
 }

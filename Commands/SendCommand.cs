@@ -1,7 +1,7 @@
 ﻿using MailClient.Configs;
-using MailClient.Exceptions;
 using MailClient.History;
 using MailClient.Toolkit.CLI;
+using MailClient.Toolkit.CLI.Exceptions;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -56,54 +56,37 @@ namespace MailClient.Commands
             return sb.ToString();
         }
 
-        public override string GetCommand()
-        {
-            return "send";
-        }
-
-        public override List<Argument> GetArguments()
+        public override (string,string,List<Argument>) GetData()
         {
             return
-            [
+            ("send","sends e-mails to specified recepients",[
                 new((args) =>
                 {
-                    if (args.Length == 1)
-                    {
-                        return $"No value for {args[0]} parameter provided";
-                    }
-
                     GetContext().SetMessage(args[1]);
 
-                    return new SendCommand([.. args.Skip(2)], GetContext()).Parse();
-                },"-m","-message"),
+                    return string.Empty;
+
+                },"Set the path to the message config file","-m","-message"),
                 new((args) =>
                 {
-                    if (args.Length == 1)
-                    {
-                        return $"No value for {args[0]} parameter provided";
-                    }
-
                     if (!Enum.TryParse(args[1],true, out MessageContentConfig.MessageContentBodyMode result))
                     {
-                        throw new InvalidConfigException();
+                        throw new ArgumentParsingException();
                     }
 
                     GetContext().SetBodyMode(result);
 
                     return string.Empty;
-                },"-b","-body"),
+
+                },"Set the path or URL to the body config file","-b","-body"),
                 new((args)=>
                 {
-                    if (args.Length == 1)
-                    {
-                        return $"No value for {args[0]} parameter provided";
-                    }
-
                     GetContext().SetServer(args[1]);
 
                     return string.Empty;
-                },"-s","-server"),
-            ];
+
+                },"Set the path to the server config file","-s","-server"),
+            ]);
         }
     }
 }

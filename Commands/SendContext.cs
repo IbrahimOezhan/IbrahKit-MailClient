@@ -48,7 +48,7 @@ namespace MailClient.Commands
 
             ProfileCommand command = new([]);
 
-            throw new InvalidConfigException($"The operation was cancelled because the profile {profile} does not exist. Use \"{command.GetCommand()} {ProfileContext.Mode.CREATE} <name>\" to create one");
+            throw new InvalidConfigException($"The operation was cancelled because the profile {profile} does not exist. Use \"{command.GetData().name} {ProfileContext.Mode.CREATE} <name>\" to create one");
         }
 
         public ServerConfig GetServerConfig()

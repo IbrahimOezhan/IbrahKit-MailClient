@@ -1,10 +1,9 @@
-﻿namespace MailClient.Toolkit.CLI
+﻿using System.Text;
+
+namespace MailClient.Toolkit.CLI
 {
     internal abstract class CommandBase
     {
-        // Defines the name of the command used for calling it
-        public abstract string GetCommand();
-
         // The code for executing a command. Throws CommandExecutionException if failed
         public abstract string Execute();
 
@@ -12,6 +11,29 @@
         public abstract string Parse();
 
         // Returns all arguments that the command has
-        public abstract List<Argument> GetArguments();
+        public abstract (string name, string desc, List<Argument> args) GetData();
+
+        public static IEnumerable<Type> GetAllCommands()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).Where(x => x.IsSubclassOf(typeof(CommandBase)) && !x.IsAbstract);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+
+            sb.AppendLine("Command: " + GetData().name);
+            sb.AppendLine($"\tDescription: {GetData().desc}");
+            sb.AppendLine($"\tParameters:");
+
+            foreach (var item1 in GetData().args)
+            {
+                sb.AppendLine($"\t\t{item1.ToString()}, ");
+            }
+
+            sb.AppendLine();
+
+            return sb.ToString();
+        }
     }
 }

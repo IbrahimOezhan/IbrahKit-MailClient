@@ -38,7 +38,7 @@
 
             string arg = args[0];
 
-            List<Argument> arguments = GetArguments();
+            List<Argument> arguments = GetData().args;
 
             for (int i = 0; i < arguments.Count; i++)
             {
@@ -48,7 +48,7 @@
 
                     // If the argument processing returned string.empty that means it was successfull
                     // In that case call Continue on the argument object which creates a new command and passes the arguments on
-                    result = result == string.Empty ? arguments[i].Continue<T, S>(args, context) : result ;
+                    result = result == string.Empty ? arguments[i].Continue<T, S>(args, context) : result;
 
                     // If this line is reached that means the returned value was not empty therefor there was an error and its returned to the CLI
                     return result;
@@ -56,29 +56,7 @@
             }
 
             //If the code reached this it means the argument is not known to the command. Return error message
-            return string.Format(INVALID_PARAM, args[0], GetClosestArg(arg,arguments));
-        }
-
-        private string GetClosestArg(string arg, List<Argument> arguments)
-        {
-            int closest = int.MaxValue;
-            
-            string closestValue = string.Empty;
-
-            for (int i = 0; i < arguments.Count; i++)
-            {
-                (int compare, string value) = arguments[i].CompareTo(arg);
-
-                compare = Math.Abs(compare);
-
-                if (compare <= closest)
-                {
-                    closest = compare;
-                    closestValue = value;
-                }
-            }
-
-            return closestValue;
+            return string.Format(INVALID_PARAM, args[0], Param.GetClosestArg(arg, arguments.Cast<Param>().ToList()));
         }
     }
 }
