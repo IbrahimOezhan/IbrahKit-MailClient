@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 
-namespace MailClient.code.Toolkit.Utilities
+namespace MailClient.Utilities
 {
     internal static class MainUtilities
     {

@@ -1,7 +1,7 @@
-﻿using MailClient.code.Configs;
-using MailClient.code.Toolkit.Utilities;
+﻿using MailClient.Configs;
+using MailClient.Utilities;
 
-namespace MailClient.code.History
+namespace MailClient.History
 {
     internal class HistoryHandler
     {

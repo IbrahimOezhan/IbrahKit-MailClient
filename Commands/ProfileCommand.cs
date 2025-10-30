@@ -1,9 +1,11 @@
-﻿using MailClient.code.Configs;
-using MailClient.code.Toolkit.CLI;
-using MailClient.code.Toolkit.CLI.Exceptions;
+﻿
+using IbrahKit_CLI;
+using IbrahKit_CLI.Exceptions;
+using IbrahKit_CLI.Params;
+using MailClient.Configs;
 using System.Text;
 
-namespace MailClient.code.Commands
+namespace MailClient.Commands
 {
     internal class ProfileCommand : Command<ProfileContext, ProfileCommand>
     {

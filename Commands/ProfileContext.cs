@@ -1,7 +1,8 @@
-﻿using MailClient.code.Exceptions;
-using MailClient.code.Toolkit.CLI;
+﻿
+using IbrahKit_CLI;
+using IbrahKit_CLI.Exceptions;
 
-namespace MailClient.code.Commands
+namespace MailClient.Commands
 {
     internal class ProfileContext : Context
     {
@@ -23,7 +24,7 @@ namespace MailClient.code.Commands
         {
             if (profile == null)
             {
-                throw new InvalidConfigException($"The provided value of the profile parameter is null");
+                throw new CommandExecutionException($"The provided value of the profile parameter is null");
             }
 
             return profile;

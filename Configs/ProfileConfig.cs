@@ -1,9 +1,10 @@
-﻿using MailClient.code.Toolkit.Utilities;
+﻿using IbrahKit_CLI;
+using MailClient.Utilities;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MailClient.code.Configs
+namespace MailClient.Configs
 {
     internal class ProfileConfig
     {
@@ -27,7 +28,7 @@ namespace MailClient.code.Configs
 
         public void SaveConfig()
         {
-            using StreamWriter sw = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Toolkit.CLI.CLI.FOLDER, FOLDER, profileName + ".json"));
+            using StreamWriter sw = new(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), CLI.FOLDER, FOLDER, profileName + ".json"));
 
             sw.Write(JsonSerializer.Serialize(this, MainUtilities.GetJsonOptions()));
         }
@@ -38,7 +39,7 @@ namespace MailClient.code.Configs
 
         private static string GetProfileDirectory()
         {
-            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Toolkit.CLI.CLI.FOLDER, FOLDER);
+            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), CLI.FOLDER, FOLDER);
 
             if (!Directory.Exists(folder))
             {

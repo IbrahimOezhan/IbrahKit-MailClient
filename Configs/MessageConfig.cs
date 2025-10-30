@@ -1,9 +1,10 @@
-﻿using MailClient.code.Toolkit.CLI.Exceptions;
-using MailClient.code.Toolkit.Utilities;
+﻿
+using IbrahKit_CLI.Exceptions;
+using MailClient.Utilities;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MailClient.code.Configs
+namespace MailClient.Configs
 {
     internal class MessageConfig
     {

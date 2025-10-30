@@ -1,7 +1,7 @@
-﻿using MailClient.code.Toolkit.Utilities;
+﻿using MailClient.Utilities;
 using System.Text.Json.Serialization;
 
-namespace MailClient.code.History
+namespace MailClient.History
 {
     internal class History
     {

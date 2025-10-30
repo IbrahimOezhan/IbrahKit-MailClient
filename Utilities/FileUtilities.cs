@@ -1,4 +1,4 @@
-﻿namespace MailClient.code.Toolkit.Utilities
+﻿namespace MailClient.Utilities
 {
     public class FileUtilities
     {

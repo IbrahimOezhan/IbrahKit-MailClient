@@ -1,4 +1,4 @@
-﻿namespace MailClient.code.Exceptions
+﻿namespace MailClient.Exceptions
 {
     internal class InvalidConfigException : Exception
     {

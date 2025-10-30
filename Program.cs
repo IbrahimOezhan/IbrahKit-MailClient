@@ -1,4 +1,6 @@
-﻿namespace MailClient.code
+﻿using IbrahKit_CLI;
+
+namespace MailClient
 {
     internal class Program
     {
@@ -19,7 +21,7 @@
                 return;
             }
 
-            Toolkit.CLI.CLI client = new();
+            CLI client = new();
 
             try
             {

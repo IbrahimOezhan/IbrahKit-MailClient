@@ -13,4 +13,8 @@
 		<!-- hides missing-doc warnings -->
 	</PropertyGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="IbrahKit-CLI" Version="1.0.0" />
+	</ItemGroup>
+
 </Project>

@@ -1,9 +1,10 @@
-﻿using MailClient.code.Exceptions;
-using MailClient.code.Toolkit.Utilities;
+﻿using IbrahKit_CLI.Exceptions;
+
+using MailClient.Utilities;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MailClient.code.Configs
+namespace MailClient.Configs
 {
     internal class ServerConfig
     {
@@ -33,14 +34,14 @@ namespace MailClient.code.Configs
 
             if (!File.Exists(path))
             {
-                throw new InvalidConfigException($"ServerConfig at path {path} does not exist.");
+                throw new CommandExecutionException($"ServerConfig at path {path} does not exist.");
             }
 
             string fileContent = File.ReadAllText(path);
 
             if (StringUtilities.IsNullEmptyWhite(fileContent) || fileContent == null)
             {
-                throw new InvalidConfigException($"The contents of ServerConfig at path {path} are empty.");
+                throw new CommandExecutionException($"The contents of ServerConfig at path {path} are empty.");
             }
 
             try
@@ -49,12 +50,12 @@ namespace MailClient.code.Configs
             }
             catch (Exception e)
             {
-                throw new InvalidConfigException($"An error was encountered during the deserialization attempt: {e.Message}");
+                throw new CommandExecutionException($"An error was encountered during the deserialization attempt: {e.Message}");
             }
 
             if (config == null)
             {
-                throw new InvalidConfigException($"The value of the deserialized ServerConfig json at {path} is null.");
+                throw new CommandExecutionException($"The value of the deserialized ServerConfig json at {path} is null.");
             }
 
             return config;

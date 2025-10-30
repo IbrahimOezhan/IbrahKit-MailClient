@@ -1,12 +1,14 @@
-﻿using MailClient.code.Configs;
-using MailClient.code.History;
-using MailClient.code.Toolkit.CLI;
-using MailClient.code.Toolkit.CLI.Exceptions;
+﻿using IbrahKit_CLI;
+using IbrahKit_CLI.Exceptions;
+using IbrahKit_CLI.Params;
+
+using MailClient.Configs;
+using MailClient.History;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 
-namespace MailClient.code.Commands
+namespace MailClient.Commands
 {
     internal class SendCommand : Command<SendContext, SendCommand>
     {
