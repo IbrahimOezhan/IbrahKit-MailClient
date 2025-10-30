@@ -1,4 +1,5 @@
-﻿using MailClient.Toolkit.Utilities;
+﻿using MailClient.Toolkit.CLI.Exceptions;
+using MailClient.Toolkit.Utilities;
 using System.Net.Mail;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
@@ -36,23 +37,19 @@ namespace MailClient.Configs
             {
                 MainUtilities.WriteLine("Address is empty", ConsoleColor.Red);
 
-                result = false;
+                throw new CommandExecutionException($"The recepients adress is empty");
             }
 
             if (!MailAddress.TryCreate(GetAdress(), out var _))
             {
-                MainUtilities.WriteLine(GetAdress() + " is not a valid mail address.", ConsoleColor.Red);
-
-                result = false;
+                throw new CommandExecutionException($"{GetAdress()} is not a valid mail address.");
             }
 
             int placeholderExpected = GetFormattings().Count;
 
             if (placeholderExpected != placeholderAmount)
             {
-                MainUtilities.WriteLine($"The body contains {placeholderAmount} placeholders but the JSON only provides {placeholderExpected}", ConsoleColor.Red);
-
-                result = false;
+                throw new CommandExecutionException($"The body contains {placeholderAmount} placeholders but the JSON only provides {placeholderExpected}");
             }
 
             return result;

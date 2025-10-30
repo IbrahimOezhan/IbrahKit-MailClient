@@ -1,4 +1,5 @@
 ﻿using MailClient.Exceptions;
+using MailClient.Toolkit.CLI.Exceptions;
 using MailClient.Toolkit.Utilities;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -15,9 +16,9 @@ namespace MailClient.Configs
 
         public bool Valid()
         {
-            if (!contentConfig.Valid()) return false;
+            contentConfig.Valid();
 
-            if (!recipientsConfig.Valid(contentConfig)) return false;
+            recipientsConfig.Valid(contentConfig);
 
             return true;
         }
@@ -34,14 +35,14 @@ namespace MailClient.Configs
 
             if (!File.Exists(path))
             {
-                throw new InvalidConfigException();
+                throw new CommandExecutionException($"There is no message config file at {path}");
             }
 
             string fileContent = File.ReadAllText(path);
 
             if (StringUtilities.IsNullEmptyWhite(fileContent) || fileContent == null)
             {
-                throw new InvalidConfigException();
+                throw new CommandExecutionException($"The messgae config file's contents are empty or null at {path}");
             }
 
             try
@@ -50,18 +51,15 @@ namespace MailClient.Configs
             }
             catch
             {
-                throw new InvalidConfigException();
+                throw new CommandExecutionException($"An exception happened during the deserialization of the message config at {path}");
             }
 
             if (config == null)
             {
-                throw new InvalidConfigException();
+                throw new CommandExecutionException($"The deserialization of the message config at {path} resulted in a null value");
             }
 
-            if (!config.Valid())
-            {
-
-            }
+            config.Valid();
 
             config.Content().ChooseBody(bodyMode);
 

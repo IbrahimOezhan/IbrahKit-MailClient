@@ -1,4 +1,6 @@
-﻿namespace MailClient.Toolkit.CLI
+﻿using MailClient.Toolkit.CLI.Exceptions;
+
+namespace MailClient.Toolkit.CLI
 {
     internal class CLI
     {
@@ -18,16 +20,7 @@
 
             do
             {
-                while (args.Length == 0)
-                {
-                    Console.Write(BEFORE_INPUT);
-
-                    string? input = Console.ReadLine();
-
-                    Console.WriteLine();
-
-                    args = input != null ? input.Split(SPLIT_AT_SPACE) : Array.Empty<string>();
-                }
+                args = GetInput(args);
 
                 if (!TryGetCommand(args, out CommandBase? command))
                 {
@@ -36,9 +29,11 @@
                 else
                 {
                     result = command.Parse();
-                    // Empty result means success.
-                    // Non empty means error during argument value proccessing so skip execution and print the error
-                    if (result == string.Empty) result = command.Execute();
+
+                    if (result == CommandBase.ARG_PROCESS_SUCCES)
+                    {
+                        result = Execute(command);
+                    }
                 }
 
                 Console.WriteLine(result);
@@ -48,11 +43,47 @@
             while (result != null);
         }
 
+        private string[] GetInput(string[] args)
+        {
+            while (args.Length == 0)
+            {
+                Console.Write(BEFORE_INPUT);
+
+                string? input = Console.ReadLine();
+
+                Console.WriteLine();
+
+                args = input != null ? input.Trim().Split(SPLIT_AT_SPACE) : Array.Empty<string>();
+            }
+
+            return args;
+        }
+
+        private string Execute(CommandBase command)
+        {
+            string result;
+
+            try
+            {
+                result = command.Execute();
+            }
+            catch (CommandExecutionException cee)
+            {
+                result = cee.Message;
+            }
+            catch (Exception e)
+            {
+                result = e.ToString();
+            }
+
+            return result;
+        }
+
         private static bool TryGetCommand(string[] args, out CommandBase result)
         {
             IEnumerable<Type> commandTypes = CommandBase.GetAllCommands();
 
-            object[] arguments = new object[] { args.Skip(1).ToArray() };
+            object[] arguments = [args.Skip(1).ToArray()];
 
             foreach (var item in commandTypes)
             {
@@ -63,7 +94,7 @@
                 }
             }
 
-            result = new HelpCommand(new string[0]);
+            result = new HelpCommand(Array.Empty<string>());
 
             return false;
         }

@@ -4,7 +4,7 @@ namespace MailClient.Toolkit.CLI
 {
     internal abstract class CommandBase
     {
-        protected const string ARG_PROCESS_SUCCES = "";
+        public const string ARG_PROCESS_SUCCES = "";
 
         // The code for executing a command. Throws CommandExecutionException if failed
         public abstract string Execute();

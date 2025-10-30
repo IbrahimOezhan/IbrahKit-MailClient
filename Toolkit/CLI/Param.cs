@@ -1,10 +1,14 @@
-﻿namespace MailClient.Toolkit.CLI
+﻿using System.Xml.Linq;
+
+namespace MailClient.Toolkit.CLI
 {
     internal abstract class Param
     {
         protected string[] names;
         protected string description;
         protected Func<string[], string> function;
+
+        private const string TO_STRING_FORMAT = "{0,-10} {1,-10} {2}";
 
         public Param(Func<string[], string> function, string description, params string[] names)
         {
@@ -13,12 +17,11 @@
             this.names = names;
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0,-10} {1,-10} {2}",$"{GetLongestName()}","<value>",GetDescription());
-        }
-
-        public string GetLongestName()
+        /// <summary>
+        /// Gets the longest name from the names array
+        /// </summary>
+        /// <returns>The longest name from the names array</returns>
+        private string GetLongestName()
         {
             int length = int.MinValue;
 
@@ -36,53 +39,62 @@
             return names[index];
         }
 
-        public string GetDescription()
+        public string GetName(int index)
         {
-            return description;
+            return names[index];
         }
 
-        // Finds the most smiliar name compared to the one passed as an argument and returns it as well as the CompareTo int value
-        public (int, string) CompareTo(string name)
+        /// <summary>
+        /// Gets the params description
+        /// </summary>
+        /// <returns>The description</returns>
+        private string GetDescription() => description;
+
+        public override string ToString()
         {
-            int smallest = int.MaxValue;
-            string smallestValue = string.Empty;
-
-            for (int i = 0; i < names.Length; i++)
-            {
-                int compare = Math.Abs(names[i].CompareTo(name));
-
-                if (compare < smallest)
-                {
-                    smallest = compare;
-
-                    smallestValue = names[i];
-                }
-            }
-
-            return (smallest, smallestValue);
+            return string.Format(TO_STRING_FORMAT, $"{GetLongestName()}","<value>",GetDescription());
         }
 
         // Compares the passed string to the names of this parameter. Returns true if at least one matches
-        public bool CompareArg(string input)
+        public bool TryCompare(string input,out int closestValue, out int closestIndex)
         {
+            closestIndex = -1;
+            closestValue = int.MinValue;
+
             for (int i = 0; i < names.Length; i++)
             {
-                if (names[i].Equals(input)) return true;
+                int compare = Math.Abs(names[i].CompareTo(input));
+
+                if(compare == 0)
+                {
+                    closestIndex = i;
+                    closestValue = compare;
+                    return true;
+                }
+
+                if(compare <= closestValue)
+                {
+                    closestValue = compare;
+                    closestIndex = i;
+                }
             }
 
             return false;
         }
 
-        //Process the argument.
-        // An empty return value means success
-        //This usually involves setting the provided value to the context object.
-        //If that fails because no value is provided a non empty value is returned.
-        public virtual string ProcessArg(string[] args)
+        /// <summary>
+        /// Proccesses the passed input
+        /// </summary>
+        /// <param name="args">The remaining unproccessed arguments</param>
+        /// <returns>A string value. Empty Means success and non-empty means failiure</returns>
+        public virtual string Process(string[] args)
         {
             return function.Invoke(args);
         }
 
-        protected string Continue<S, T>(string[] args, Context cont, int amountSkip) where T : Context, new() where S : Command<T, S>
+        public abstract string Pass<T, S>(string[] args, Context cont) where T : Context, new() where S : Command<T, S>;
+
+        protected string Pass<S, T>(string[] args, Context cont, int amountSkip) where T : Context, new() where S : Command<T, S>
         {
             object[] arguments = [args.Skip(amountSkip).ToArray(), cont];
 
@@ -98,28 +110,31 @@
             return "Error: Activator.CreateInstance created an instance not of command type";
         }
 
-        public abstract string Continue<T, S>(string[] args, Context cont) where T : Context, new() where S : Command<T, S>;
-
-        public static string GetClosestArg(string arg, IEnumerable<Param> arguments)
+        /// <summary>
+        /// Returns a param with the closest name to what was entered
+        /// </summary>
+        /// <param name="input">The input to check all params against</param>
+        /// <param name="params">The params to check the input against</param>
+        /// <returns>The closest Param</returns>
+        public static string GetClosestParam(string input, IEnumerable<Param> @params)
         {
-            int closest = int.MaxValue;
+            int closestScore = int.MaxValue;
+            int closestIndex = -1;
+            Param closest = null;
 
-            string closestValue = string.Empty;
-
-            foreach (var item in arguments)
+            foreach (var item in @params)
             {
-                (int compare, string value) = item.CompareTo(arg);
+                item.TryCompare(input, out int _closestScore, out int _closestIndex);
 
-                compare = Math.Abs(compare);
-
-                if (compare <= closest)
+                if (_closestScore <= closestScore)
                 {
-                    closest = compare;
-                    closestValue = value;
+                    closestScore = _closestScore;
+                    closestIndex = _closestIndex;
+                    closest = item;
                 }
             }
 
-            return closestValue;
+            return closest.GetName(closestIndex);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace MailClient.Configs
 
             for (int i = 0; i < recipients.Count; i++)
             {
-                if (!recipients[i].Valid(contentConfig)) result = false;
+                recipients[i].Valid(contentConfig);
             }
 
             return result;

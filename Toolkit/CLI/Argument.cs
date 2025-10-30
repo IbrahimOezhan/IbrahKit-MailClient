@@ -9,19 +9,19 @@ namespace MailClient.Toolkit.CLI
 
         }
 
-        public override string Continue<T, S>(string[] args, Context cont)
+        public override string Pass<T, S>(string[] args, Context cont)
         {
-            return Continue<S, T>(args, cont, 2);
+            return Pass<S, T>(args, cont, 2);
         }
 
-        public override string ProcessArg(string[] args)
+        public override string Process(string[] args)
         {
             if (args.Length == 1)
             {
                 throw new ArgumentParsingException($"No value for {args[0]} parameter provided");
             }
 
-            return base.ProcessArg(args);
+            return base.Process(args);
         }
     }
 }

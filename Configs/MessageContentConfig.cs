@@ -1,4 +1,5 @@
 ﻿using MailClient.Exceptions;
+using MailClient.Toolkit.CLI.Exceptions;
 using MailClient.Toolkit.Utilities;
 using System.Text.Json.Serialization;
 
@@ -51,16 +52,12 @@ namespace MailClient.Configs
         {
             if (subject == string.Empty)
             {
-                MainUtilities.WriteLine("Subject is empty", ConsoleColor.Red);
-
-                return false;
+                throw new CommandExecutionException("The subject in the provided message config is empty");
             }
 
             if (body == string.Empty)
             {
-                MainUtilities.WriteLine("Body is empty", ConsoleColor.Red);
-
-                return false;
+                throw new CommandExecutionException("The body in the provided message config is empty");
             }
 
             return true;

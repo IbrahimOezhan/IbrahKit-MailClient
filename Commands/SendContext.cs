@@ -1,16 +1,17 @@
 ﻿using MailClient.Configs;
 using MailClient.Exceptions;
 using MailClient.Toolkit.CLI;
+using MailClient.Toolkit.CLI.Exceptions;
 
 namespace MailClient.Commands
 {
     internal class SendContext : Context
     {
-        private string? server = null;
+        private string server = string.Empty;
 
-        private string? message = null;
+        private string message = string.Empty;
 
-        private string? profile = null;
+        private string profile = string.Empty;
 
         private MessageContentConfig.MessageContentBodyMode bodyMode = MessageContentConfig.MessageContentBodyMode.URL;
 
@@ -36,9 +37,9 @@ namespace MailClient.Commands
 
         public ProfileConfig GetProfile()
         {
-            if (profile == null)
+            if (profile == string.Empty)
             {
-                throw new InvalidConfigException($"The provided value of the profile parameter is null");
+                throw new CommandExecutionException($"The provided value of the profile parameter is null");
             }
 
             if (ProfileConfig.TryGet(profile, out ProfileConfig result))
@@ -48,14 +49,14 @@ namespace MailClient.Commands
 
             ProfileCommand command = new([]);
 
-            throw new InvalidConfigException($"The operation was cancelled because the profile {profile} does not exist. Use \"{command.GetData().name} {ProfileContext.Mode.CREATE} <name>\" to create one");
+            throw new CommandExecutionException($"The operation was cancelled because the profile {profile} does not exist. Use \"{command.GetData().name} {ProfileContext.Mode.CREATE} <name>\" to create one");
         }
 
         public ServerConfig GetServerConfig()
         {
-            if (server == null)
+            if (server == string.Empty)
             {
-                throw new InvalidConfigException($"The provided value of the server parameter is null");
+                throw new CommandExecutionException($"The provided value of the server parameter is null");
             }
 
             return ServerConfig.Get(server);
@@ -63,9 +64,9 @@ namespace MailClient.Commands
 
         public MessageConfig GetMessageConfig()
         {
-            if (message == null)
+            if (message == string.Empty)
             {
-                throw new InvalidConfigException($"The provided value of the message parameter is null");
+                throw new CommandExecutionException($"The provided value of the message parameter is null");
             }
 
             return MessageConfig.Get(message, bodyMode);

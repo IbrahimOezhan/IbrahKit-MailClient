@@ -22,7 +22,11 @@ namespace MailClient.Commands
 
             MessageConfig messageConfig = GetContext().GetMessageConfig();
 
+            Console.Write(1);
+
             ServerConfig serverConfig = GetContext().GetServerConfig();
+
+            Console.Write(2);
 
             HistoryHandler historyHandler = new(profileConfig);
 
@@ -59,8 +63,8 @@ namespace MailClient.Commands
         public override (string,string,List<Argument>) GetData()
         {
             return
-            ("send","sends e-mails to specified recepients",
-            [    
+            ("send", "sends e-mails to specified recepients",
+            [
                 new((args) =>
                 {
                     GetContext().SetMessage(args[1]);
@@ -79,7 +83,7 @@ namespace MailClient.Commands
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the path or URL to the body config file","-b","-body"),
+                },"Set the mode of the body source","-b","-body"),
                 new((args)=>
                 {
                     GetContext().SetServer(args[1]);
@@ -87,6 +91,12 @@ namespace MailClient.Commands
                     return ARG_PROCESS_SUCCES;
 
                 },"Set the path to the server config file","-s","-server"),
+                new((args) =>
+                {
+                    GetContext().SetProfile(args[1]);
+                    return ARG_PROCESS_SUCCES;
+
+                },"Set the profile to use","-p","-profile")
             ]);
         }
     }
