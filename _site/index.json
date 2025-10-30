@@ -1,0 +1,37 @@
+{
+  "README.html": {
+    "href": "README.html",
+    "title": "| mysite",
+    "summary": "Intructions and documentation will follow"
+  },
+  "api/MailClient.code.Toolkit.Utilities.FileUtilities.html": {
+    "href": "api/MailClient.code.Toolkit.Utilities.FileUtilities.html",
+    "title": "Class FileUtilities | mysite",
+    "summary": "Class FileUtilities Namespace MailClient.code.Toolkit.Utilities Assembly MailClient.dll public class FileUtilities Inheritance object FileUtilities Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.MemberwiseClone() object.ReferenceEquals(object, object) object.ToString() Methods FileExplorer(string) public static string FileExplorer(string startPath) Parameters startPath string Returns string"
+  },
+  "api/MailClient.code.Toolkit.Utilities.StringUtilities.html": {
+    "href": "api/MailClient.code.Toolkit.Utilities.StringUtilities.html",
+    "title": "Class StringUtilities | mysite",
+    "summary": "Class StringUtilities Namespace MailClient.code.Toolkit.Utilities Assembly MailClient.dll public static class StringUtilities Inheritance object StringUtilities Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.MemberwiseClone() object.ReferenceEquals(object, object) object.ToString() Methods IsNullEmptyWhite(string) Parses the incomming parameters public static bool IsNullEmptyWhite(string text) Parameters text string Returns bool An empty string if successfull"
+  },
+  "api/MailClient.code.Toolkit.Utilities.html": {
+    "href": "api/MailClient.code.Toolkit.Utilities.html",
+    "title": "Namespace MailClient.code.Toolkit.Utilities | mysite",
+    "summary": "Namespace MailClient.code.Toolkit.Utilities Classes FileUtilities StringUtilities"
+  },
+  "docs/getting-started.html": {
+    "href": "docs/getting-started.html",
+    "title": "Getting Started | mysite",
+    "summary": "Getting Started"
+  },
+  "docs/introduction.html": {
+    "href": "docs/introduction.html",
+    "title": "Introduction | mysite",
+    "summary": "Introduction"
+  },
+  "index.html": {
+    "href": "index.html",
+    "title": "This is the HOMEPAGE. | mysite",
+    "summary": "This is the HOMEPAGE. Refer to Markdown for how to write markdown files. Quick Start Notes: Add images to the images folder if the file is referencing an image."
+  }
+}

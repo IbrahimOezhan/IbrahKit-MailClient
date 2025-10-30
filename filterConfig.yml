@@ -1,0 +1,6 @@
+apiRules:
+  - exclude:
+      uidRegex: ^$
+      type: Namespace
+  - include:
+      visibility: internal
