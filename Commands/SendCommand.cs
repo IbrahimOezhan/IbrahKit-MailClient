@@ -59,12 +59,13 @@ namespace MailClient.Commands
         public override (string,string,List<Argument>) GetData()
         {
             return
-            ("send","sends e-mails to specified recepients",[
+            ("send","sends e-mails to specified recepients",
+            [    
                 new((args) =>
                 {
                     GetContext().SetMessage(args[1]);
 
-                    return string.Empty;
+                    return ARG_PROCESS_SUCCES;
 
                 },"Set the path to the message config file","-m","-message"),
                 new((args) =>
@@ -76,14 +77,14 @@ namespace MailClient.Commands
 
                     GetContext().SetBodyMode(result);
 
-                    return string.Empty;
+                    return ARG_PROCESS_SUCCES;
 
                 },"Set the path or URL to the body config file","-b","-body"),
                 new((args)=>
                 {
                     GetContext().SetServer(args[1]);
 
-                    return string.Empty;
+                    return ARG_PROCESS_SUCCES;
 
                 },"Set the path to the server config file","-s","-server"),
             ]);

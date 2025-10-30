@@ -6,53 +6,49 @@
 
         public const string FOLDER = "IbrahKit";
 
+        public const char SPLIT_AT_SPACE = ' ';
+
+        private const string BEFORE_INPUT = "> ";
+
+        private const string COMMAND_NULL_ERROR = "Fatal Error: Command is null";
+
         public void Run(string[] args)
         {
             string result = string.Empty;
 
-            bool first = false;
-
             do
             {
-                args = first ? Array.Empty<string>() : args;
-
-                first = true;
-
                 while (args.Length == 0)
                 {
-                    Console.Write("> ");
+                    Console.Write(BEFORE_INPUT);
 
                     string? input = Console.ReadLine();
 
                     Console.WriteLine();
 
-                    args = input != null ? input.Split(' ') : Array.Empty<string>();
+                    args = input != null ? input.Split(SPLIT_AT_SPACE) : Array.Empty<string>();
                 }
 
                 if (!TryGetCommand(args, out CommandBase? command))
                 {
-                    Console.WriteLine(INVALID_COMMAND, args[0]);
-                    continue;
+                    result = string.Format(INVALID_COMMAND, args[0]);
                 }
-
-                if (command == null)
+                else
                 {
-                    result = "Fatal error";
-                    continue;
+                    result = command.Parse();
+                    // Empty result means success.
+                    // Non empty means error during argument value proccessing so skip execution and print the error
+                    if (result == string.Empty) result = command.Execute();
                 }
-
-                result = command.Parse();
-
-                // Empty result means success.
-                // Non empty means error during argument value proccessing so skip execution and print the error
-                if (result == string.Empty) result = command.Execute();
 
                 Console.WriteLine(result);
+
+                args = Array.Empty<string>();
             }
             while (result != null);
         }
 
-        private static bool TryGetCommand(string[] args, out CommandBase? result)
+        private static bool TryGetCommand(string[] args, out CommandBase result)
         {
             IEnumerable<Type> commandTypes = CommandBase.GetAllCommands();
 
@@ -67,7 +63,7 @@
                 }
             }
 
-            result = null;
+            result = new HelpCommand(new string[0]);
 
             return false;
         }

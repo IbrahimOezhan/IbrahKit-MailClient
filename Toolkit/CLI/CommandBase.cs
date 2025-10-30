@@ -4,6 +4,8 @@ namespace MailClient.Toolkit.CLI
 {
     internal abstract class CommandBase
     {
+        protected const string ARG_PROCESS_SUCCES = "";
+
         // The code for executing a command. Throws CommandExecutionException if failed
         public abstract string Execute();
 
@@ -24,11 +26,11 @@ namespace MailClient.Toolkit.CLI
 
             sb.AppendLine("Command: " + GetData().name);
             sb.AppendLine($"\tDescription: {GetData().desc}");
-            sb.AppendLine($"\tParameters:");
+            sb.AppendLine($"\t\tParameters:");
 
             foreach (var item1 in GetData().args)
             {
-                sb.AppendLine($"\t\t{item1.ToString()}, ");
+                sb.AppendLine($"\t\t\t{item1.ToString()}, ");
             }
 
             sb.AppendLine();

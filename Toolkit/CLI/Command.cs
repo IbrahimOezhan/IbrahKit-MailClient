@@ -26,7 +26,7 @@
         }
 
         //Parses the incomming parameters.
-        //A return value of string.empty signalises the CLI to end parsing and process the command
+        //A return value of ARG_PROCESS_SUCCESS signalises the CLI to end parsing and process the command
         //Any other return value means the parsing has failed
         public override string Parse()
         {
@@ -48,7 +48,7 @@
 
                     // If the argument processing returned string.empty that means it was successfull
                     // In that case call Continue on the argument object which creates a new command and passes the arguments on
-                    result = result == string.Empty ? arguments[i].Continue<T, S>(args, context) : result;
+                    result = result == ARG_PROCESS_SUCCES ? arguments[i].Continue<T, S>(args, context) : result;
 
                     // If this line is reached that means the returned value was not empty therefor there was an error and its returned to the CLI
                     return result;
@@ -56,7 +56,7 @@
             }
 
             //If the code reached this it means the argument is not known to the command. Return error message
-            return string.Format(INVALID_PARAM, args[0], Param.GetClosestArg(arg, arguments.Cast<Param>().ToList()));
+            return string.Format(INVALID_PARAM, args[0], Param.GetClosestArg(arg, arguments.Cast<Param>()));
         }
     }
 }

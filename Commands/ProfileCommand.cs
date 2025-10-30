@@ -50,12 +50,13 @@ namespace MailClient.Commands
         public override (string name,string desc,List<Argument> args) GetData()
         {
             return
-            ("profile","execute various actions with profiles",[
+            ("profile","execute various actions with profiles",
+            [
                 new((args) =>
                 {
                     GetContext().SetProfile(args[1]);
 
-                    return string.Empty;
+                    return ARG_PROCESS_SUCCES;
 
                 },"Set the name of the profile to use for this action","-p","-profile"),
                 new((args)=>
@@ -67,7 +68,7 @@ namespace MailClient.Commands
 
                     GetContext().SetMode(result);
 
-                    return string.Empty;
+                    return ARG_PROCESS_SUCCES;
 
                 },"Set the mode to use for the action","-m","-mode"),
             ]);

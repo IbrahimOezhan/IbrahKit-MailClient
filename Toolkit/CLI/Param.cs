@@ -15,7 +15,7 @@
 
         public override string ToString()
         {
-            return string.Format("{0,-25} {1}",$"{GetLongestName()} <value>",GetDescription());
+            return string.Format("{0,-10} {1,-10} {2}",$"{GetLongestName()}","<value>",GetDescription());
         }
 
         public string GetLongestName()
@@ -100,15 +100,15 @@
 
         public abstract string Continue<T, S>(string[] args, Context cont) where T : Context, new() where S : Command<T, S>;
 
-        public static string GetClosestArg(string arg, List<Param> arguments)
+        public static string GetClosestArg(string arg, IEnumerable<Param> arguments)
         {
             int closest = int.MaxValue;
 
             string closestValue = string.Empty;
 
-            for (int i = 0; i < arguments.Count; i++)
+            foreach (var item in arguments)
             {
-                (int compare, string value) = arguments[i].CompareTo(arg);
+                (int compare, string value) = item.CompareTo(arg);
 
                 compare = Math.Abs(compare);
 

@@ -27,7 +27,7 @@ namespace MailClient.Toolkit.CLI
 
             foreach (var item in commandTypes)
             {
-                CommandBase command = (CommandBase)Activator.CreateInstance(item, args);
+                commands.Add((CommandBase)Activator.CreateInstance(item, args));
             }
 
             if(res)
@@ -35,10 +35,14 @@ namespace MailClient.Toolkit.CLI
                 StringBuilder sb = new();
 
                 CommandBase basealue = commands.Find(x => x.GetData().name == commandName);
-                
-                if(basealue != null)
+
+                if (basealue != null)
                 {
                     sb.Append(basealue.ToString());
+                }
+                else
+                {
+                    sb.AppendLine($"Couldn't find command {commandName}");
                 }
 
                 return sb.ToString();
@@ -64,7 +68,9 @@ namespace MailClient.Toolkit.CLI
                 new Argument((args)=>
                 {
                     GetContext().SetCommandName(args[1]);
-                    return string.Empty;
+                    
+                    return ARG_PROCESS_SUCCES;
+                
                 },"If you want help for one specific command","-c","-command")
 
             ]);
