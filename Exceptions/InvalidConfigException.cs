@@ -1,4 +1,4 @@
-﻿namespace MailClient.Exceptions
+﻿namespace IbrahKit_MailClient.Exceptions
 {
     internal class InvalidConfigException : Exception
     {

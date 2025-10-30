@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MailClient.Configs
+namespace IbrahKit_MailClient.Configs
 {
     internal class MessageRecepientsConfig
     {

@@ -1,0 +1,30 @@
+### YamlMime:ManagedReference
+items:
+- uid: MailClient.Utilities
+  commentId: N:MailClient.Utilities
+  id: MailClient.Utilities
+  children:
+  - MailClient.Utilities.FileUtilities
+  - MailClient.Utilities.StringUtilities
+  langs:
+  - csharp
+  - vb
+  name: MailClient.Utilities
+  nameWithType: MailClient.Utilities
+  fullName: MailClient.Utilities
+  type: Namespace
+  assemblies:
+  - MailClient
+references:
+- uid: MailClient.Utilities.FileUtilities
+  commentId: T:MailClient.Utilities.FileUtilities
+  href: MailClient.Utilities.FileUtilities.html
+  name: FileUtilities
+  nameWithType: FileUtilities
+  fullName: MailClient.Utilities.FileUtilities
+- uid: MailClient.Utilities.StringUtilities
+  commentId: T:MailClient.Utilities.StringUtilities
+  href: MailClient.Utilities.StringUtilities.html
+  name: StringUtilities
+  nameWithType: StringUtilities
+  fullName: MailClient.Utilities.StringUtilities

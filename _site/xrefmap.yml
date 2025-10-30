@@ -1,6 +1,56 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
+- uid: MailClient.Utilities
+  name: MailClient.Utilities
+  href: api/MailClient.Utilities.html
+  commentId: N:MailClient.Utilities
+  fullName: MailClient.Utilities
+  nameWithType: MailClient.Utilities
+- uid: MailClient.Utilities.FileUtilities
+  name: FileUtilities
+  href: api/MailClient.Utilities.FileUtilities.html
+  commentId: T:MailClient.Utilities.FileUtilities
+  fullName: MailClient.Utilities.FileUtilities
+  nameWithType: FileUtilities
+- uid: MailClient.Utilities.FileUtilities.FileExplorer(System.String)
+  name: FileExplorer(string)
+  href: api/MailClient.Utilities.FileUtilities.html#MailClient_Utilities_FileUtilities_FileExplorer_System_String_
+  commentId: M:MailClient.Utilities.FileUtilities.FileExplorer(System.String)
+  name.vb: FileExplorer(String)
+  fullName: MailClient.Utilities.FileUtilities.FileExplorer(string)
+  fullName.vb: MailClient.Utilities.FileUtilities.FileExplorer(String)
+  nameWithType: FileUtilities.FileExplorer(string)
+  nameWithType.vb: FileUtilities.FileExplorer(String)
+- uid: MailClient.Utilities.FileUtilities.FileExplorer*
+  name: FileExplorer
+  href: api/MailClient.Utilities.FileUtilities.html#MailClient_Utilities_FileUtilities_FileExplorer_
+  commentId: Overload:MailClient.Utilities.FileUtilities.FileExplorer
+  isSpec: "True"
+  fullName: MailClient.Utilities.FileUtilities.FileExplorer
+  nameWithType: FileUtilities.FileExplorer
+- uid: MailClient.Utilities.StringUtilities
+  name: StringUtilities
+  href: api/MailClient.Utilities.StringUtilities.html
+  commentId: T:MailClient.Utilities.StringUtilities
+  fullName: MailClient.Utilities.StringUtilities
+  nameWithType: StringUtilities
+- uid: MailClient.Utilities.StringUtilities.IsNullEmptyWhite(System.String)
+  name: IsNullEmptyWhite(string)
+  href: api/MailClient.Utilities.StringUtilities.html#MailClient_Utilities_StringUtilities_IsNullEmptyWhite_System_String_
+  commentId: M:MailClient.Utilities.StringUtilities.IsNullEmptyWhite(System.String)
+  name.vb: IsNullEmptyWhite(String)
+  fullName: MailClient.Utilities.StringUtilities.IsNullEmptyWhite(string)
+  fullName.vb: MailClient.Utilities.StringUtilities.IsNullEmptyWhite(String)
+  nameWithType: StringUtilities.IsNullEmptyWhite(string)
+  nameWithType.vb: StringUtilities.IsNullEmptyWhite(String)
+- uid: MailClient.Utilities.StringUtilities.IsNullEmptyWhite*
+  name: IsNullEmptyWhite
+  href: api/MailClient.Utilities.StringUtilities.html#MailClient_Utilities_StringUtilities_IsNullEmptyWhite_
+  commentId: Overload:MailClient.Utilities.StringUtilities.IsNullEmptyWhite
+  isSpec: "True"
+  fullName: MailClient.Utilities.StringUtilities.IsNullEmptyWhite
+  nameWithType: StringUtilities.IsNullEmptyWhite
 - uid: MailClient.code.Toolkit.Utilities
   name: MailClient.code.Toolkit.Utilities
   href: api/MailClient.code.Toolkit.Utilities.html

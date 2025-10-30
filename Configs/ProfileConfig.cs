@@ -1,10 +1,10 @@
 ﻿using IbrahKit_CLI;
-using MailClient.Utilities;
+using IbrahKit_MailClient.Utilities;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace MailClient.Configs
+namespace IbrahKit_MailClient.Configs
 {
     internal class ProfileConfig
     {

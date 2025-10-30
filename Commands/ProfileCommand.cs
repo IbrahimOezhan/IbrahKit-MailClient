@@ -2,10 +2,10 @@
 using IbrahKit_CLI;
 using IbrahKit_CLI.Exceptions;
 using IbrahKit_CLI.Params;
-using MailClient.Configs;
+using IbrahKit_MailClient.Configs;
 using System.Text;
 
-namespace MailClient.Commands
+namespace IbrahKit_MailClient.Commands
 {
     internal class ProfileCommand : Command<ProfileContext, ProfileCommand>
     {

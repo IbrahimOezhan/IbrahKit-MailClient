@@ -2,7 +2,7 @@
 using IbrahKit_CLI;
 using IbrahKit_CLI.Exceptions;
 
-namespace MailClient.Commands
+namespace IbrahKit_MailClient.Commands
 {
     internal class ProfileContext : Context
     {

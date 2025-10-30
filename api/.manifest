@@ -1,7 +1,7 @@
 {
-  "MailClient.code.Toolkit.Utilities": "MailClient.code.Toolkit.Utilities.yml",
-  "MailClient.code.Toolkit.Utilities.FileUtilities": "MailClient.code.Toolkit.Utilities.FileUtilities.yml",
-  "MailClient.code.Toolkit.Utilities.FileUtilities.FileExplorer(System.String)": "MailClient.code.Toolkit.Utilities.FileUtilities.yml",
-  "MailClient.code.Toolkit.Utilities.StringUtilities": "MailClient.code.Toolkit.Utilities.StringUtilities.yml",
-  "MailClient.code.Toolkit.Utilities.StringUtilities.IsNullEmptyWhite(System.String)": "MailClient.code.Toolkit.Utilities.StringUtilities.yml"
+  "MailClient.Utilities": "MailClient.Utilities.yml",
+  "MailClient.Utilities.FileUtilities": "MailClient.Utilities.FileUtilities.yml",
+  "MailClient.Utilities.FileUtilities.FileExplorer(System.String)": "MailClient.Utilities.FileUtilities.yml",
+  "MailClient.Utilities.StringUtilities": "MailClient.Utilities.StringUtilities.yml",
+  "MailClient.Utilities.StringUtilities.IsNullEmptyWhite(System.String)": "MailClient.Utilities.StringUtilities.yml"
 }

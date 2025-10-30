@@ -1,11 +1,11 @@
 ﻿using IbrahKit_CLI.Exceptions;
 
-using MailClient.Utilities;
+using IbrahKit_MailClient.Utilities;
 using System.Net.Mail;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace MailClient.Configs
+namespace IbrahKit_MailClient.Configs
 {
     internal class MessageRecepientConfig
     {

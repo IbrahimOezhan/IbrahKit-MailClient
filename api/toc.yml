@@ -1,13 +1,13 @@
 ### YamlMime:TableOfContent
 items:
-- uid: MailClient.code.Toolkit.Utilities
-  name: MailClient.code.Toolkit.Utilities
+- uid: MailClient.Utilities
+  name: MailClient.Utilities
   type: Namespace
   items:
-  - uid: MailClient.code.Toolkit.Utilities.FileUtilities
+  - uid: MailClient.Utilities.FileUtilities
     name: FileUtilities
     type: Class
-  - uid: MailClient.code.Toolkit.Utilities.StringUtilities
+  - uid: MailClient.Utilities.StringUtilities
     name: StringUtilities
     type: Class
 memberLayout: SamePage

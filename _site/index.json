@@ -4,6 +4,21 @@
     "title": "| mysite",
     "summary": "Intructions and documentation will follow"
   },
+  "api/MailClient.Utilities.FileUtilities.html": {
+    "href": "api/MailClient.Utilities.FileUtilities.html",
+    "title": "Class FileUtilities | mysite",
+    "summary": "Class FileUtilities Namespace MailClient.Utilities Assembly MailClient.dll public class FileUtilities Inheritance object FileUtilities Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.MemberwiseClone() object.ReferenceEquals(object, object) object.ToString() Methods FileExplorer(string) public static string FileExplorer(string startPath) Parameters startPath string Returns string"
+  },
+  "api/MailClient.Utilities.StringUtilities.html": {
+    "href": "api/MailClient.Utilities.StringUtilities.html",
+    "title": "Class StringUtilities | mysite",
+    "summary": "Class StringUtilities Namespace MailClient.Utilities Assembly MailClient.dll public static class StringUtilities Inheritance object StringUtilities Inherited Members object.Equals(object) object.Equals(object, object) object.GetHashCode() object.GetType() object.MemberwiseClone() object.ReferenceEquals(object, object) object.ToString() Methods IsNullEmptyWhite(string) Parses the incomming parameters public static bool IsNullEmptyWhite(string text) Parameters text string Returns bool An empty string if successfull"
+  },
+  "api/MailClient.Utilities.html": {
+    "href": "api/MailClient.Utilities.html",
+    "title": "Namespace MailClient.Utilities | mysite",
+    "summary": "Namespace MailClient.Utilities Classes FileUtilities StringUtilities"
+  },
   "api/MailClient.code.Toolkit.Utilities.FileUtilities.html": {
     "href": "api/MailClient.code.Toolkit.Utilities.FileUtilities.html",
     "title": "Class FileUtilities | mysite",

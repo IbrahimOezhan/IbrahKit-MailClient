@@ -1,6 +1,6 @@
 ﻿using IbrahKit_CLI;
 
-namespace MailClient
+namespace IbrahKit_MailClient
 {
     internal class Program
     {

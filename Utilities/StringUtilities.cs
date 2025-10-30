@@ -1,4 +1,4 @@
-﻿namespace MailClient.Utilities
+﻿namespace IbrahKit_MailClient.Utilities
 {
     public static class StringUtilities
     {

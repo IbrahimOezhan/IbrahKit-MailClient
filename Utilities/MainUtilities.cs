@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 
-namespace MailClient.Utilities
+namespace IbrahKit_MailClient.Utilities
 {
     internal static class MainUtilities
     {

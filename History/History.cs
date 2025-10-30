@@ -1,7 +1,7 @@
-﻿using MailClient.Utilities;
+﻿using IbrahKit_MailClient.Utilities;
 using System.Text.Json.Serialization;
 
-namespace MailClient.History
+namespace IbrahKit_MailClient.History
 {
     internal class History
     {

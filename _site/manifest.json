@@ -1,5 +1,5 @@
 {
-  "source_base_path": "C:/Users/ibrah/Documents/GitHub/MailClient",
+  "source_base_path": "E:/VS/Projects/MailClient",
   "xrefmap": "xrefmap.yml",
   "files": [
     {
@@ -19,6 +19,48 @@
         }
       },
       "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/MailClient.Utilities.FileUtilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/MailClient.Utilities.FileUtilities.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "MailClient.Utilities.FileUtilities",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/MailClient.Utilities.StringUtilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/MailClient.Utilities.StringUtilities.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "MailClient.Utilities.StringUtilities",
+      "Summary": null
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/MailClient.Utilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/MailClient.Utilities.html"
+        }
+      },
+      "version": "",
+      "Uid": null,
+      "IsMRef": true,
+      "Title": "MailClient.Utilities",
+      "Summary": null
     },
     {
       "type": "ManagedReference",

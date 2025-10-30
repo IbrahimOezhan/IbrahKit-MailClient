@@ -1,7 +1,7 @@
-﻿using MailClient.Configs;
-using MailClient.Utilities;
+﻿using IbrahKit_MailClient.Configs;
+using IbrahKit_MailClient.Utilities;
 
-namespace MailClient.History
+namespace IbrahKit_MailClient.History
 {
     internal class HistoryHandler
     {

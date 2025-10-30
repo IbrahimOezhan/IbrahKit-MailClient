@@ -1,9 +1,9 @@
 ﻿
 using IbrahKit_CLI;
 using IbrahKit_CLI.Exceptions;
-using MailClient.Configs;
+using IbrahKit_MailClient.Configs;
 
-namespace MailClient.Commands
+namespace IbrahKit_MailClient.Commands
 {
     internal class SendContext : Context
     {
