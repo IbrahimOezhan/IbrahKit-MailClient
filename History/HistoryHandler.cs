@@ -17,21 +17,16 @@ namespace IbrahKit_MailClient.History
             history.AddToHistory(adress);
         }
 
-        public bool Validate(MessageConfig messageConfig)
+        public bool Validate(MessageConfig messageConfig,bool inc, bool skip)
         {
-            bool result = history.Validate(messageConfig.GetRecipientAddresses());
+            bool result = history.Validate(messageConfig.GetRecipients(), inc, skip);
 
             if (result)
             {
                 return true;
             }
 
-            if (MainUtilities.InputYesNo('Y', 'N', "Found duplicate adresses. Continue?", "Must provide valid input."))
-            {
-                return true;
-            }
-
-            return false;
+            throw new IbrahKit_CLI.Exceptions.CommandExecutionException("Found duplicate addresses. Use --includeDuplicates or --skipDuplicates");
         }
     }
 }

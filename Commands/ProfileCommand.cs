@@ -49,19 +49,19 @@ namespace IbrahKit_MailClient.Commands
             return sb.ToString();
         }
 
-        public override (string name, string desc, List<Argument> args) GetData()
+        public override (string name, string desc, List<Param> args) GetData()
         {
             return
             ("profile", "execute various actions with profiles",
             [
-                new((args) =>
+                new Argument((args) =>
                 {
                     GetContext().SetProfile(args[1]);
 
                     return ARG_PROCESS_SUCCES;
 
                 },"Set the name of the profile to use for this action","-p","-profile"),
-                new((args)=>
+                new Argument((args)=>
                 {
                     if (!Enum.TryParse(args[1], true, out ProfileContext.Mode result))
                     {

@@ -1,4 +1,5 @@
-﻿using IbrahKit_MailClient.Utilities;
+﻿using IbrahKit_MailClient.Configs;
+using IbrahKit_MailClient.Utilities;
 using System.Text.Json.Serialization;
 
 namespace IbrahKit_MailClient.History
@@ -13,19 +14,26 @@ namespace IbrahKit_MailClient.History
             historyElements.Add(new(adress, DateTime.Now));
         }
 
-        public bool Validate(List<string> adresses)
+        public bool Validate(List<MessageRecepientConfig> addresses, bool inc, bool skip)
         {
             bool result = true;
 
-            for (int i = 0; i < adresses.Count; i++)
+            for (int i = addresses.Count - 1; i >= 0; i--)
             {
-                MainUtilities.WriteLine($"Warning: {adresses[i]} was already used to send a mail", ConsoleColor.Yellow);
-
-                if (historyElements.Select(x => x.Adress()).Contains(adresses[i]))
+                if(historyElements.Select(x => x.Adress()).Contains(addresses[i].GetAddress()))
                 {
+                    if (inc) continue;
+                    if(skip)
+                    {
+                        addresses.RemoveAt(i);
+                        continue;
+                    }
+
+                    MainUtilities.WriteLine($"Warning: {addresses[i].GetAddress()} was already used to send a mail", ConsoleColor.Yellow);
                     result = false;
                 }
             }
+
 
             return result;
         }

@@ -27,7 +27,7 @@ namespace IbrahKit_MailClient.Configs
 
         public List<MessageRecepientConfig> GetRecipients() => recipientsConfig.GetRecepientConfigs();
 
-        public List<string> GetRecipientAddresses() => [.. recipientsConfig.GetRecepientConfigs().Select(x => x.GetAdress())];
+        public List<string> GetRecipientAddresses() => [.. recipientsConfig.GetRecepientConfigs().Select(x => x.GetAddress())];
 
         public static MessageConfig Get(string path, MessageContentConfig.MessageContentBodyMode bodyMode)
         {

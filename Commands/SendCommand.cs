@@ -28,7 +28,7 @@ namespace IbrahKit_MailClient.Commands
 
             HistoryHandler historyHandler = new(profileConfig);
 
-            if (!historyHandler.Validate(messageConfig)) return "Operation Cancelled";
+            if (!historyHandler.Validate(messageConfig, GetContext().GetInclude(), GetContext().GetSkip())) return "Operation Cancelled";
 
             SmtpClient smtpClient = new(serverConfig.SMTP(), serverConfig.Port())
             {
@@ -41,7 +41,7 @@ namespace IbrahKit_MailClient.Commands
             {
                 object[] placeholderFormattings = [.. messageConfig.GetRecipients()[i].GetFormattings()];
 
-                string toAdress = messageConfig.GetRecipients()[i].GetAdress();
+                string toAdress = messageConfig.GetRecipients()[i].GetAddress();
 
                 MailMessage mail = new(serverConfig.From(), toAdress, messageConfig.Content().GetSubject(), string.Format(messageConfig.Content().GetBody(), placeholderFormattings))
                 { IsBodyHtml = true };
@@ -58,19 +58,19 @@ namespace IbrahKit_MailClient.Commands
             return sb.ToString();
         }
 
-        public override (string, string, List<Argument>) GetData()
+        public override (string, string, List<Param>) GetData()
         {
             return
             ("send", "sends e-mails to specified recepients",
             [
-                new((args) =>
+                new Argument((args) =>
                 {
                     GetContext().SetMessage(args[1]);
 
                     return ARG_PROCESS_SUCCES;
 
                 },"Set the path to the message config file","-m","-message"),
-                new((args) =>
+                new Argument((args) =>
                 {
                     if (!Enum.TryParse(args[1],true, out MessageContentConfig.MessageContentBodyMode result))
                     {
@@ -82,19 +82,31 @@ namespace IbrahKit_MailClient.Commands
                     return ARG_PROCESS_SUCCES;
 
                 },"Set the mode of the body source","-b","-body"),
-                new((args)=>
+                new Argument((args)=>
                 {
                     GetContext().SetServer(args[1]);
 
                     return ARG_PROCESS_SUCCES;
 
                 },"Set the path to the server config file","-s","-server"),
-                new((args) =>
+                new Argument((args) =>
                 {
                     GetContext().SetProfile(args[1]);
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the profile to use","-p","-profile")
+                },"Set the profile to use","-p","-profile"),
+                new Flag((args)=>
+                {
+                    GetContext().Include();
+                    return ARG_PROCESS_SUCCES;
+
+                },"Include Duplicates","--includeDuplicates"),
+                new Flag((args)=>
+                {
+                    GetContext().Skip();
+                    return ARG_PROCESS_SUCCES;
+
+                },"Skip Duplicates","--skipDuplicates")
             ]);
         }
     }

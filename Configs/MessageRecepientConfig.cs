@@ -41,9 +41,9 @@ namespace IbrahKit_MailClient.Configs
                 throw new CommandExecutionException($"The recepients adress is empty");
             }
 
-            if (!MailAddress.TryCreate(GetAdress(), out var _))
+            if (!MailAddress.TryCreate(GetAddress(), out var _))
             {
-                throw new CommandExecutionException($"{GetAdress()} is not a valid mail address.");
+                throw new CommandExecutionException($"{GetAddress()} is not a valid mail address.");
             }
 
             int placeholderExpected = GetFormattings().Count;
@@ -56,7 +56,7 @@ namespace IbrahKit_MailClient.Configs
             return result;
         }
 
-        public string GetAdress() => toAddress;
+        public string GetAddress() => toAddress;
 
         public List<string> GetFormattings() => formattings;
     }

@@ -13,7 +13,29 @@ namespace IbrahKit_MailClient.Commands
 
         private string profile = string.Empty;
 
+        private bool include = false;
+
+        private bool skip = false;
+
         private MessageContentConfig.MessageContentBodyMode bodyMode = MessageContentConfig.MessageContentBodyMode.URL;
+
+        public void Skip()
+        {
+            if (include)
+            {
+                throw new ArgumentParsingException($"The command already defined --includeDuplicates which collides with --skipDuplicates");
+            }
+            skip = true;
+        }
+
+        public void Include()
+        {
+            if (skip)
+            {
+                throw new ArgumentParsingException($"The command already defined --skipDuplicates which collides with --includeDuplicates");
+            }
+            include = true;
+        }
 
         public void SetServer(string server)
         {
@@ -34,6 +56,9 @@ namespace IbrahKit_MailClient.Commands
         {
             this.bodyMode = bodyMode;
         }
+
+        public bool GetSkip() => skip;
+        public bool GetInclude() => include;
 
         public ProfileConfig GetProfile()
         {
