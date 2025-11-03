@@ -24,11 +24,7 @@ namespace IbrahKit_MailClient.Commands
 
             MessageConfig messageConfig = GetContext().GetMessageConfig();
 
-            Console.Write(1);
-
             ServerConfig serverConfig = GetContext().GetServerConfig();
-
-            Console.Write(2);
 
             HistoryHandler historyHandler = new(profileConfig);
 
