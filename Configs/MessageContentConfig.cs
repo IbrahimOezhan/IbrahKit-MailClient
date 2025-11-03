@@ -13,7 +13,7 @@ namespace IbrahKit_MailClient.Configs
         [JsonInclude]
         private string body = string.Empty;
 
-        public void ChooseBody(MessageContentBodyMode mode)
+        public async Task ChooseBody(MessageContentBodyMode mode)
         {
             switch (mode)
             {
@@ -38,7 +38,7 @@ namespace IbrahKit_MailClient.Configs
 
                     var httpClient = new HttpClient();
 
-                    body = httpClient.GetStringAsync(body).GetAwaiter().GetResult();
+                    body = await httpClient.GetStringAsync(body);
 
                     break;
             }

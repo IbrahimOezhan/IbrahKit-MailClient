@@ -59,9 +59,9 @@ namespace IbrahKit_MailClient.Configs
                 throw new CommandExecutionException($"The deserialization of the message config at {path} resulted in a null value");
             }
 
-            config.Valid();
+            config.Content().ChooseBody(bodyMode).GetAwaiter().GetResult();
 
-            config.Content().ChooseBody(bodyMode);
+            config.Valid();
 
             return config;
         }
