@@ -9,7 +9,9 @@ namespace IbrahKit_MailClient.Commands
     {
         private string server = string.Empty;
 
-        private string message = string.Empty;
+        private string source = string.Empty;
+
+        private string recepients = string.Empty;
 
         private string profile = string.Empty;
 
@@ -17,7 +19,7 @@ namespace IbrahKit_MailClient.Commands
 
         private bool skip = false;
 
-        private MessageContentConfig.MessageContentBodyMode bodyMode = MessageContentConfig.MessageContentBodyMode.URL;
+        private SourceConfig.MessageContentBodyMode bodyMode = SourceConfig.MessageContentBodyMode.URL;
 
         public void Skip()
         {
@@ -44,7 +46,12 @@ namespace IbrahKit_MailClient.Commands
 
         public void SetMessage(string message)
         {
-            this.message = message;
+            this.source = message;
+        }
+
+        public void SetRecepients(string message)
+        {
+            this.recepients = message;
         }
 
         public void SetProfile(string profile)
@@ -52,12 +59,13 @@ namespace IbrahKit_MailClient.Commands
             this.profile = profile;
         }
 
-        public void SetBodyMode(MessageContentConfig.MessageContentBodyMode bodyMode)
+        public void SetBodyMode(SourceConfig.MessageContentBodyMode bodyMode)
         {
             this.bodyMode = bodyMode;
         }
 
         public bool GetSkip() => skip;
+
         public bool GetInclude() => include;
 
         public ProfileConfig GetProfile()
@@ -87,14 +95,24 @@ namespace IbrahKit_MailClient.Commands
             return ServerConfig.Get(server);
         }
 
-        public MessageConfig GetMessageConfig()
+        public SourceConfig GetSourceConfig()
         {
-            if (message == string.Empty)
+            if (source == string.Empty)
             {
                 throw new CommandExecutionException($"The provided value of the message parameter is null");
             }
 
-            return MessageConfig.Get(message, bodyMode);
+            return SourceConfig.Get(source, bodyMode);
+        }
+
+        public RecepientsConfig GetRecConfig(SourceConfig sourceConfig)
+        {
+            if (recepients == string.Empty)
+            {
+                throw new CommandExecutionException($"The provided value of the message parameter is null");
+            }
+
+            return RecepientsConfig.Get(source, sourceConfig);
         }
     }
 }

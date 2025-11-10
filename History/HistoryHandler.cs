@@ -1,5 +1,4 @@
 ﻿using IbrahKit_MailClient.Configs;
-using IbrahKit_MailClient.Utilities;
 
 namespace IbrahKit_MailClient.History
 {
@@ -12,21 +11,14 @@ namespace IbrahKit_MailClient.History
             history = profile.GetHistory();
         }
 
-        public void AddToHistory(string adress)
+        public void AddToHistory(RecepientConfig config)
         {
-            history.AddToHistory(adress);
+            history.AddToHistory(config);
         }
 
-        public bool Validate(MessageConfig messageConfig,bool inc, bool skip)
+        public bool Validate(RecepientsConfig recepientsConfig, bool inc, bool skip, out List<RecepientHistory> alreadyUsed)
         {
-            bool result = history.Validate(messageConfig.GetRecipients(), inc, skip);
-
-            if (result)
-            {
-                return true;
-            }
-
-            throw new IbrahKit_CLI.Exceptions.CommandExecutionException("Found duplicate addresses. Use --includeDuplicates or --skipDuplicates");
+            return history.Validate(recepientsConfig.GetRecepientConfigs(), inc, skip, out alreadyUsed);
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace IbrahKit_MailClient.Configs
 {
-    internal class MessageRecepientConfig
+    internal class RecepientConfig
     {
         private const string regex = "{\\d}";
 
@@ -17,18 +17,18 @@ namespace IbrahKit_MailClient.Configs
         [JsonInclude]
         private List<string> formattings = new();
 
-        public MessageRecepientConfig()
+        public RecepientConfig()
         {
 
         }
 
-        public MessageRecepientConfig(string adress, List<string> formattings)
+        public RecepientConfig(string adress, List<string> formattings)
         {
             toAddress = adress;
             this.formattings = formattings;
         }
 
-        public bool Valid(MessageContentConfig contentConfig)
+        public bool Validate(SourceConfig contentConfig)
         {
             bool result = true;
 

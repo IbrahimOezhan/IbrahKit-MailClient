@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace IbrahKit_MailClient.History
+namespace IbrahKit_MailClient.Deprecated
 {
     internal class HistoryElement(string adress, DateTime timeSent)
     {

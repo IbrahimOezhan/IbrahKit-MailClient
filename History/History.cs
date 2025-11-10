@@ -1,5 +1,4 @@
 ﻿using IbrahKit_MailClient.Configs;
-using IbrahKit_MailClient.Utilities;
 using System.Text.Json.Serialization;
 
 namespace IbrahKit_MailClient.History
@@ -7,35 +6,43 @@ namespace IbrahKit_MailClient.History
     internal class History
     {
         [JsonInclude]
-        private List<HistoryElement> historyElements = new();
+        private List<RecepientHistory> historyElements = new();
 
-        public void AddToHistory(string adress)
+        public void AddToHistory(RecepientConfig recepient)
         {
-            historyElements.Add(new(adress, DateTime.Now));
+            historyElements.Add(new(recepient));
         }
 
-        public bool Validate(List<MessageRecepientConfig> addresses, bool inc, bool skip)
+        public bool Validate(List<RecepientConfig> addresses, bool inc, bool skip, out List<RecepientHistory> alreadyUsed)
         {
             bool result = true;
 
-            for (int i = addresses.Count - 1; i >= 0; i--)
-            {
-                if(historyElements.Select(x => x.Adress()).Contains(addresses[i].GetAddress()))
-                {
-                    if (inc) continue;
-                    if(skip)
-                    {
-                        addresses.RemoveAt(i);
-                        continue;
-                    }
+            List<RecepientHistory> _alreadyUsed = new();
 
-                    MainUtilities.WriteLine($"Warning: {addresses[i].GetAddress()} was already used to send a mail", ConsoleColor.Yellow);
-                    result = false;
-                }
+            alreadyUsed = new();
+
+            if (inc)
+            {
+                return result;
             }
 
+            addresses.ForEach((y) =>
+            {
+                IEnumerable<RecepientHistory> his = historyElements.Where(x => x.GetConfig().GetAddress().Equals(y.GetAddress(), StringComparison.OrdinalIgnoreCase));
 
-            return result;
+                _alreadyUsed.AddRange(his);
+            });
+
+            alreadyUsed = _alreadyUsed;
+
+            if (skip)
+            {
+                addresses.RemoveAll(address => _alreadyUsed.Select(already => already.GetConfig()).Contains(address));
+
+                return true;
+            }
+
+            return alreadyUsed.Count == 0;
         }
     }
 }

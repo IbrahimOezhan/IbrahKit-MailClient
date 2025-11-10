@@ -4,6 +4,7 @@ using IbrahKit_CLI.Params;
 
 using IbrahKit_MailClient.Configs;
 using IbrahKit_MailClient.History;
+
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -22,13 +23,27 @@ namespace IbrahKit_MailClient.Commands
 
             ProfileConfig profileConfig = GetContext().GetProfile();
 
-            MessageConfig messageConfig = GetContext().GetMessageConfig();
+            SourceConfig sourceConfig = GetContext().GetSourceConfig();
+
+            RecepientsConfig recepientsConfig = GetContext().GetRecConfig(sourceConfig);
 
             ServerConfig serverConfig = GetContext().GetServerConfig();
 
             HistoryHandler historyHandler = new(profileConfig);
 
-            if (!historyHandler.Validate(messageConfig, GetContext().GetInclude(), GetContext().GetSkip())) return "Operation Cancelled";
+            if (!historyHandler.Validate(recepientsConfig, GetContext().GetInclude(), GetContext().GetSkip(), out List<RecepientHistory> alreadyUsed))
+            {
+                StringBuilder errMsg = new("Found email addresses that were already in use: ");
+
+                foreach (var item in alreadyUsed)
+                {
+                    errMsg.AppendLine(alreadyUsed.ToString());
+                }
+
+                errMsg.AppendLine("Use --includeDuplicates or --skipDuplicates");
+
+                throw new CommandExecutionException(errMsg.ToString());
+            }
 
             SmtpClient smtpClient = new(serverConfig.SMTP(), serverConfig.Port())
             {
@@ -37,13 +52,16 @@ namespace IbrahKit_MailClient.Commands
                 EnableSsl = true
             };
 
-            for (int i = 0; i < messageConfig.GetRecipients().Count; i++)
+            for (int i = 0; i < recepientsConfig.GetRecepientConfigs().Count; i++)
             {
-                object[] placeholderFormattings = [.. messageConfig.GetRecipients()[i].GetFormattings()];
+                object[] placeholderFormattings = [.. recepientsConfig.GetRecepientConfigs()[i].GetFormattings()];
 
-                string toAdress = messageConfig.GetRecipients()[i].GetAddress();
+                string toAdress = recepientsConfig.GetRecepientConfigs()[i].GetAddress();
 
-                MailMessage mail = new(serverConfig.From(), toAdress, messageConfig.Content().GetSubject(), string.Format(messageConfig.Content().GetBody(), placeholderFormattings))
+                string body = string.Format(sourceConfig.GetBody(), placeholderFormattings);
+
+                MailMessage mail = new(
+                    serverConfig.From(), toAdress, sourceConfig.GetSubject(), body)
                 { IsBodyHtml = true };
 
                 smtpClient.Send(mail);
@@ -70,9 +88,18 @@ namespace IbrahKit_MailClient.Commands
                     return ARG_PROCESS_SUCCES;
 
                 },"Set the path to the message config file","-m","-message"),
+
                 new Argument((args) =>
                 {
-                    if (!Enum.TryParse(args[1],true, out MessageContentConfig.MessageContentBodyMode result))
+                    GetContext().SetRecepients(args[1]);
+
+                    return ARG_PROCESS_SUCCES;
+
+                },"Set the path to the recepient config file","-r","-recepients"),
+
+                new Argument((args) =>
+                {
+                    if (!Enum.TryParse(args[1],true, out SourceConfig.MessageContentBodyMode result))
                     {
                         throw new ArgumentParsingException();
                     }
