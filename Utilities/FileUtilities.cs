@@ -31,6 +31,7 @@
                 for (int i = min; i < max; i++)
                 {
                     fileNames[i] = Path.GetFileName(files[i]);
+
                     Console.WriteLine("\t" + (i - min) + ": " + fileNames[i]);
                 }
 

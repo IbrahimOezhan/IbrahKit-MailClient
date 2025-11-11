@@ -20,7 +20,7 @@ namespace IbrahKit_MailClient.Configs
 
             if (!suc)
             {
-                throw new CommandExecutionException($"Couldnt find or deserialize the source config at {path}")
+                throw new CommandExecutionException($"Couldnt find or deserialize the source config at {path}");
             }
 
             result.Validate(bodyMode).GetAwaiter().GetResult();

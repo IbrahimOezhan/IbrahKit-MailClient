@@ -36,9 +36,7 @@ namespace IbrahKit_MailClient.Configs
 
             if (toAddress == string.Empty)
             {
-                MainUtilities.WriteLine("Address is empty", ConsoleColor.Red);
-
-                throw new CommandExecutionException($"The recepients adress is empty");
+                throw new CommandExecutionException($"The recepients address is empty.");
             }
 
             if (!MailAddress.TryCreate(GetAddress(), out var _))
@@ -50,7 +48,7 @@ namespace IbrahKit_MailClient.Configs
 
             if (placeholderExpected != placeholderAmount)
             {
-                throw new CommandExecutionException($"The body contains {placeholderAmount} placeholders but the JSON only provides {placeholderExpected}");
+                throw new CommandExecutionException($"The Source Config expects {placeholderExpected} values for placeholders but the RecepientConfig provides {placeholderAmount} values.");
             }
 
             return result;

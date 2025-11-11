@@ -3,6 +3,7 @@ using IbrahKit_CLI;
 using IbrahKit_CLI.Exceptions;
 using IbrahKit_CLI.Params;
 using IbrahKit_MailClient.Configs;
+using IbrahKit_MailClient.Utilities;
 using System.Text;
 
 namespace IbrahKit_MailClient.Commands
@@ -72,7 +73,7 @@ namespace IbrahKit_MailClient.Commands
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the mode to use for the action","-m","-mode"),
+                },$"Set the mode to use for the action. The following are available: {CollectionUtilities.OutputEnum<ProfileContext.Mode>(typeof(ProfileContext.Mode))}","-m","-mode"),
             ]);
         }
     }

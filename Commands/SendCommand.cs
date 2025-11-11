@@ -56,7 +56,9 @@ namespace IbrahKit_MailClient.Commands
             {
                 object[] placeholderFormattings = [.. recepientsConfig.GetRecepientConfigs()[i].GetFormattings()];
 
-                string toAdress = recepientsConfig.GetRecepientConfigs()[i].GetAddress();
+                RecepientConfig config = recepientsConfig.GetRecepientConfigs()[i];
+
+                string toAdress = config.GetAddress();
 
                 string body = string.Format(sourceConfig.GetBody(), placeholderFormattings);
 
@@ -66,7 +68,7 @@ namespace IbrahKit_MailClient.Commands
 
                 smtpClient.Send(mail);
 
-                historyHandler.AddToHistory(toAdress);
+                historyHandler.AddToHistory(config);
 
                 sb.AppendLine($"Sent mail to {toAdress} successfully");
             }
@@ -87,7 +89,7 @@ namespace IbrahKit_MailClient.Commands
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the path to the message config file","-m","-message"),
+                },"Set the path to the message config file","-m","-msgsource"),
 
                 new Argument((args) =>
                 {
@@ -95,7 +97,7 @@ namespace IbrahKit_MailClient.Commands
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the path to the recepient config file","-r","-recepients"),
+                },"Set the path to the recipient config file","-r","-recipients"),
 
                 new Argument((args) =>
                 {
