@@ -11,12 +11,12 @@ namespace IbrahKit_MailClient.History
             history = profile.GetHistory();
         }
 
-        public void AddToHistory(RecepientConfig config)
+        public void AddToHistory(RecipientConfig config)
         {
             history.AddToHistory(config);
         }
 
-        public bool Validate(RecepientsConfig recepientsConfig, bool inc, bool skip, out List<RecepientHistory> alreadyUsed)
+        public bool Validate(RecipientsConfig recepientsConfig, bool inc, bool skip, out List<RecepientHistory> alreadyUsed)
         {
             return history.Validate(recepientsConfig.GetRecepientConfigs(), inc, skip, out alreadyUsed);
         }

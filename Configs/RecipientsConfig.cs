@@ -4,14 +4,21 @@ using Utilities;
 
 namespace IbrahKit_MailClient.Configs
 {
-    internal class RecepientsConfig
+    internal class RecipientsConfig
     {
         [JsonInclude]
-        private List<RecepientConfig> recipients = new();
+        private List<RecipientConfig> recipients = new();
 
-        public static RecepientsConfig Get(string path, SourceConfig sourceConfig)
+        public static RecipientsConfig Get(string path, SourceConfig sourceConfig)
         {
-            if (!JsonUtilities.TryDeserialize(path, out RecepientsConfig result,out Exception e))
+            if (!File.Exists(path))
+            {
+                throw new CommandExecutionException($"Couldnt find the recipientconfig at {path}");
+            }
+
+            string fileContent = File.ReadAllText(path);
+
+            if (!JsonUtilities.TryDeserialize(fileContent, out RecipientsConfig result,out Exception e))
             {
                 throw new CommandExecutionException($"Couldnt find or deserialize the source config at {path} with error {e.Message}");
             }
@@ -29,6 +36,6 @@ namespace IbrahKit_MailClient.Configs
             }
         }
 
-        public List<RecepientConfig> GetRecepientConfigs() => recipients;
+        public List<RecipientConfig> GetRecepientConfigs() => recipients;
     }
 }

@@ -25,7 +25,7 @@ namespace IbrahKit_MailClient.Commands
 
             SourceConfig sourceConfig = GetContext().GetSourceConfig();
 
-            RecepientsConfig recepientsConfig = GetContext().GetRecConfig(sourceConfig);
+            RecipientsConfig recepientsConfig = GetContext().GetRecConfig(sourceConfig);
 
             ServerConfig serverConfig = GetContext().GetServerConfig();
 
@@ -56,7 +56,7 @@ namespace IbrahKit_MailClient.Commands
             {
                 object[] placeholderFormattings = [.. recepientsConfig.GetRecepientConfigs()[i].GetFormattings()];
 
-                RecepientConfig config = recepientsConfig.GetRecepientConfigs()[i];
+                RecipientConfig config = recepientsConfig.GetRecepientConfigs()[i];
 
                 string toAdress = config.GetAddress();
 

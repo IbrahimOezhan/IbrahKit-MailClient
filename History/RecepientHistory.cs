@@ -4,7 +4,7 @@ namespace IbrahKit_MailClient.History
 {
     internal class RecepientHistory
     {
-        private RecepientConfig recepient;
+        private RecipientConfig recepient;
         private DateTime sentAt;
 
         public RecepientHistory()
@@ -12,13 +12,13 @@ namespace IbrahKit_MailClient.History
 
         }
 
-        public RecepientHistory(RecepientConfig config)
+        public RecepientHistory(RecipientConfig config)
         {
             recepient = config;
             sentAt = DateTime.UtcNow;
         }
 
-        public RecepientConfig GetConfig() => recepient;
+        public RecipientConfig GetConfig() => recepient;
 
         public DateTime GetTime() => sentAt;
     }

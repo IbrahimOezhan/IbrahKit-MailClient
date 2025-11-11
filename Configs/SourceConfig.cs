@@ -16,9 +16,16 @@ namespace IbrahKit_MailClient.Configs
 
         public static SourceConfig Get(string path, MessageContentBodyMode bodyMode)
         {
-            if (!JsonUtilities.TryDeserialize(path, out SourceConfig result, out Exception e))
+            if(!File.Exists(path))
             {
-                throw new CommandExecutionException($"Couldnt find or deserialize the source config at {path} with error {e.Message}");
+                throw new CommandExecutionException($"Couldnt find the sourceconfig at {path}");
+            }
+
+            string fileContent = File.ReadAllText(path);
+
+            if (!JsonUtilities.TryDeserialize(fileContent, out SourceConfig result, out Exception e))
+            {
+                throw new CommandExecutionException($"Couldnt deserialize the source config at {path} with error {e.Message}");
             }
 
             result.Validate(bodyMode).GetAwaiter().GetResult();

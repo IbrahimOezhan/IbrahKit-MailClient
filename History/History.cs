@@ -8,12 +8,12 @@ namespace IbrahKit_MailClient.History
         [JsonInclude]
         private List<RecepientHistory> historyElements = new();
 
-        public void AddToHistory(RecepientConfig recepient)
+        public void AddToHistory(RecipientConfig recepient)
         {
             historyElements.Add(new(recepient));
         }
 
-        public bool Validate(List<RecepientConfig> addresses, bool inc, bool skip, out List<RecepientHistory> alreadyUsed)
+        public bool Validate(List<RecipientConfig> addresses, bool inc, bool skip, out List<RecepientHistory> alreadyUsed)
         {
             bool result = true;
 

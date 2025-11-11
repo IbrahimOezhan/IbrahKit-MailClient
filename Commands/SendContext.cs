@@ -105,14 +105,14 @@ namespace IbrahKit_MailClient.Commands
             return SourceConfig.Get(source, bodyMode);
         }
 
-        public RecepientsConfig GetRecConfig(SourceConfig sourceConfig)
+        public RecipientsConfig GetRecConfig(SourceConfig sourceConfig)
         {
             if (recepients == string.Empty)
             {
                 throw new CommandExecutionException($"The provided value of the message parameter is null");
             }
 
-            return RecepientsConfig.Get(source, sourceConfig);
+            return RecipientsConfig.Get(source, sourceConfig);
         }
     }
 }
