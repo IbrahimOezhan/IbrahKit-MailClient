@@ -16,7 +16,7 @@ namespace IbrahKit_MailClient.Configs
 
         public static SourceConfig Get(string path, MessageContentBodyMode bodyMode)
         {
-            if (JsonUtilities.TryDeserialize(path, out SourceConfig result, out Exception e))
+            if (!JsonUtilities.TryDeserialize(path, out SourceConfig result, out Exception e))
             {
                 throw new CommandExecutionException($"Couldnt find or deserialize the source config at {path} with error {e.Message}");
             }
