@@ -58,19 +58,18 @@ namespace IbrahKit_MailClient.Commands
 
                 RecipientConfig config = recepientsConfig.GetRecepientConfigs()[i];
 
-                string toAdress = config.GetAddress();
+                string toAddress = config.GetAddress();
 
                 string body = string.Format(sourceConfig.GetBody(), placeholderFormattings);
 
-                MailMessage mail = new(
-                    serverConfig.From(), toAdress, sourceConfig.GetSubject(), body)
+                MailMessage mail = new(serverConfig.From(), toAddress, sourceConfig.GetSubject(), body)
                 { IsBodyHtml = true };
 
                 smtpClient.Send(mail);
 
                 historyHandler.AddToHistory(config);
 
-                sb.AppendLine($"Sent mail to {toAdress} successfully");
+                sb.AppendLine($"Sent mail to {toAddress} successfully");
             }
 
             profileConfig.SaveConfig();
@@ -81,7 +80,7 @@ namespace IbrahKit_MailClient.Commands
         public override (string, string, List<Param>) GetData()
         {
             return
-            ("send", "sends e-mails to specified recepients",
+            ("send", "Sends e-mails to specified recepients",
             [
                 new Argument((args) =>
                 {
@@ -89,7 +88,8 @@ namespace IbrahKit_MailClient.Commands
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the path to the message config file","-m","-source"),
+                },"Set the path to the message config file",
+                "-m","-source"),
 
                 new Argument((args) =>
                 {
@@ -97,7 +97,8 @@ namespace IbrahKit_MailClient.Commands
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the path to the recipient config file","-r","-recipients"),
+                },"Set the path to the recipient config file",
+                "-r","-recipients"),
 
                 new Argument((args) =>
                 {
@@ -110,32 +111,41 @@ namespace IbrahKit_MailClient.Commands
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the mode of the body source","-b","-body"),
+                },"Set the mode of the body source",
+                "-b","-body"),
+
                 new Argument((args)=>
                 {
                     GetContext().SetServer(args[1]);
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the path to the server config file","-s","-server"),
+                },"Set the path to the server config file",
+                "-s","-server"),
+
                 new Argument((args) =>
                 {
                     GetContext().SetProfile(args[1]);
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the profile to use","-p","-profile"),
+                },"Set the profile to use",
+                "-p","-profile"),
+
                 new Flag((args)=>
                 {
                     GetContext().Include();
                     return ARG_PROCESS_SUCCES;
 
-                },"Include Duplicates","--includeDuplicates"),
+                },"Include Emails that were already used",
+                "--includeDuplicates"),
+
                 new Flag((args)=>
                 {
                     GetContext().Skip();
                     return ARG_PROCESS_SUCCES;
 
-                },"Skip Duplicates","--skipDuplicates")
+                },"Skip Emails that were already used",
+                "--skipDuplicates")
             ]);
         }
     }

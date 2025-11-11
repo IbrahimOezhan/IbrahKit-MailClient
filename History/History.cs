@@ -19,7 +19,7 @@ namespace IbrahKit_MailClient.History
 
             List<RecepientHistory> _alreadyUsed = new();
 
-            alreadyUsed = new();
+            alreadyUsed = [];
 
             if (inc)
             {

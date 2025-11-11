@@ -1,5 +1,4 @@
-﻿
-using IbrahKit_CLI;
+﻿using IbrahKit_CLI;
 using IbrahKit_CLI.Exceptions;
 
 namespace IbrahKit_MailClient.Commands
@@ -15,9 +14,14 @@ namespace IbrahKit_MailClient.Commands
             this.profile = profile;
         }
 
-        public void SetMode(Mode mode)
+        public void SetMode(string mode)
         {
-            this.mode = mode;
+            if (!Enum.TryParse(mode, true, out ProfileContext.Mode result))
+            {
+                throw new ArgumentParsingException($"{mode} is not a valid profile mode");
+            }
+
+            this.mode = result;
         }
 
         public string GetProfile()

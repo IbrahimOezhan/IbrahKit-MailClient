@@ -4,7 +4,7 @@ namespace IbrahKit_MailClient
 {
     internal class Program
     {
-        private const string programID = "IbrahKit.MailClient";
+        private const string programID = "Global\\IbrahKit.MailClient";
 
         static void Main(string[] args)
         {
@@ -12,7 +12,7 @@ namespace IbrahKit_MailClient
 
             Console.WriteLine("Launching MailClient\n");
 
-            Mutex mutex = new(true, $"Global\\{programID}", out bool createdNew);
+            Mutex mutex = new(true, programID, out bool createdNew);
 
             if (!createdNew)
             {

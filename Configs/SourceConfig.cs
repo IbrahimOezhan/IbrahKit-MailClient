@@ -16,7 +16,7 @@ namespace IbrahKit_MailClient.Configs
 
         public static SourceConfig Get(string path, MessageContentBodyMode bodyMode)
         {
-            if(!File.Exists(path))
+            if (!File.Exists(path))
             {
                 throw new CommandExecutionException($"Couldnt find the sourceconfig at {path}");
             }

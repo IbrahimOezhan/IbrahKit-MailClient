@@ -82,7 +82,7 @@ namespace IbrahKit_MailClient.Commands
 
             ProfileCommand command = new([]);
 
-            throw new CommandExecutionException($"The operation was cancelled because the profile {profile} does not exist. Use \"{command.GetData().name} {ProfileContext.Mode.CREATE} <name>\" to create one");
+            throw new CommandExecutionException($"The profile {profile} does not exist. Use \"{command.GetData().name} {ProfileContext.Mode.CREATE} <name>\" to create one");
         }
 
         public ServerConfig GetServerConfig()
@@ -99,7 +99,7 @@ namespace IbrahKit_MailClient.Commands
         {
             if (source == string.Empty)
             {
-                throw new CommandExecutionException($"The provided value of the message parameter is null");
+                throw new CommandExecutionException($"The provided value of the source parameter is null");
             }
 
             return SourceConfig.Get(source, bodyMode);
@@ -109,7 +109,7 @@ namespace IbrahKit_MailClient.Commands
         {
             if (recepients == string.Empty)
             {
-                throw new CommandExecutionException($"The provided value of the message parameter is null");
+                throw new CommandExecutionException($"The provided value of the recepients parameter is null");
             }
 
             return RecipientsConfig.Get(recepients, sourceConfig);

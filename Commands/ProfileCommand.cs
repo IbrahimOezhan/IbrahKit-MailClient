@@ -1,6 +1,4 @@
-﻿
-using IbrahKit_CLI;
-using IbrahKit_CLI.Exceptions;
+﻿using IbrahKit_CLI;
 using IbrahKit_CLI.Params;
 using IbrahKit_MailClient.Configs;
 using IbrahKit_MailClient.Utilities;
@@ -53,7 +51,7 @@ namespace IbrahKit_MailClient.Commands
         public override (string name, string desc, List<Param> args) GetData()
         {
             return
-            ("profile", "execute various actions with profiles",
+            ("profile", "Execute various actions with profiles",
             [
                 new Argument((args) =>
                 {
@@ -61,19 +59,17 @@ namespace IbrahKit_MailClient.Commands
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the name of the profile to use for this action","-p","-profile"),
+                },"Set the name of the profile to use for this action",
+                "-p","-profile"),
+
                 new Argument((args)=>
                 {
-                    if (!Enum.TryParse(args[1], true, out ProfileContext.Mode result))
-                    {
-                        throw new ArgumentParsingException($"{args[0]} is not a valid profile mode");
-                    }
-
-                    GetContext().SetMode(result);
+                    GetContext().SetMode(args[1]);
 
                     return ARG_PROCESS_SUCCES;
 
-                },$"Set the mode to use for the action. The following are available: {CollectionUtilities.OutputEnum<ProfileContext.Mode>(typeof(ProfileContext.Mode))}","-m","-mode"),
+                },$"Set the mode to use for the action. The following are available: {CollectionUtilities.OutputEnum<ProfileContext.Mode>(typeof(ProfileContext.Mode))}",
+                "-m","-mode"),
             ]);
         }
     }

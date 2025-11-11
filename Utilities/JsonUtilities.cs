@@ -19,7 +19,7 @@ namespace Utilities
                 ex = default;
                 return true;
             }
-            catch(Exception exc)
+            catch (Exception exc)
             {
                 t = default;
                 ex = exc;

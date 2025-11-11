@@ -18,7 +18,7 @@ namespace IbrahKit_MailClient.Configs
 
             string fileContent = File.ReadAllText(path);
 
-            if (!JsonUtilities.TryDeserialize(fileContent, out RecipientsConfig result,out Exception e))
+            if (!JsonUtilities.TryDeserialize(fileContent, out RecipientsConfig result, out Exception e))
             {
                 throw new CommandExecutionException($"Couldnt find or deserialize the recipients config at {path} with error {e.Message}");
             }
