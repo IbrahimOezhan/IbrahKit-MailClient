@@ -20,7 +20,7 @@ namespace IbrahKit_MailClient.Configs
 
             if (!JsonUtilities.TryDeserialize(fileContent, out RecipientsConfig result,out Exception e))
             {
-                throw new CommandExecutionException($"Couldnt find or deserialize the source config at {path} with error {e.Message}");
+                throw new CommandExecutionException($"Couldnt find or deserialize the recipients config at {path} with error {e.Message}");
             }
 
             result.Validate(sourceConfig);
