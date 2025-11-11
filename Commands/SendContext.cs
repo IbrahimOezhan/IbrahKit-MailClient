@@ -44,14 +44,14 @@ namespace IbrahKit_MailClient.Commands
             this.server = server;
         }
 
-        public void SetMessage(string message)
+        public void SetSource(string source)
         {
-            this.source = message;
+            this.source = source;
         }
 
-        public void SetRecepients(string message)
+        public void SetRecipients(string recipients)
         {
-            this.recepients = message;
+            this.recepients = recipients;
         }
 
         public void SetProfile(string profile)
@@ -112,7 +112,7 @@ namespace IbrahKit_MailClient.Commands
                 throw new CommandExecutionException($"The provided value of the message parameter is null");
             }
 
-            return RecipientsConfig.Get(source, sourceConfig);
+            return RecipientsConfig.Get(recepients, sourceConfig);
         }
     }
 }

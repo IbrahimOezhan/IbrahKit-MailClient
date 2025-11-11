@@ -85,7 +85,7 @@ namespace IbrahKit_MailClient.Commands
             [
                 new Argument((args) =>
                 {
-                    GetContext().SetMessage(args[1]);
+                    GetContext().SetSource(args[1]);
 
                     return ARG_PROCESS_SUCCES;
 
@@ -93,7 +93,7 @@ namespace IbrahKit_MailClient.Commands
 
                 new Argument((args) =>
                 {
-                    GetContext().SetRecepients(args[1]);
+                    GetContext().SetRecipients(args[1]);
 
                     return ARG_PROCESS_SUCCES;
 
