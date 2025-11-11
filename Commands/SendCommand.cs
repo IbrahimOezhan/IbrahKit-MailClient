@@ -89,7 +89,7 @@ namespace IbrahKit_MailClient.Commands
 
                     return ARG_PROCESS_SUCCES;
 
-                },"Set the path to the message config file","-m","-msgsource"),
+                },"Set the path to the message config file","-m","-source"),
 
                 new Argument((args) =>
                 {
