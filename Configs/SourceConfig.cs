@@ -14,13 +14,11 @@ namespace IbrahKit_MailClient.Configs
         [JsonInclude]
         private string body = string.Empty;
 
-        public static SourceConfig Get(string path, SourceConfig.MessageContentBodyMode bodyMode)
+        public static SourceConfig Get(string path, MessageContentBodyMode bodyMode)
         {
-            bool suc = JsonUtilities.TryDeserialize<SourceConfig>(path, out SourceConfig result);
-
-            if (!suc)
+            if (JsonUtilities.TryDeserialize(path, out SourceConfig result, out Exception e))
             {
-                throw new CommandExecutionException($"Couldnt find or deserialize the source config at {path}");
+                throw new CommandExecutionException($"Couldnt find or deserialize the source config at {path} with error {e.Message}");
             }
 
             result.Validate(bodyMode).GetAwaiter().GetResult();

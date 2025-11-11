@@ -11,16 +11,18 @@ namespace Utilities
             UnmappedMemberHandling = System.Text.Json.Serialization.JsonUnmappedMemberHandling.Disallow
         };
 
-        public static bool TryDeserialize<T>(string json, out T t) where T : new()
+        public static bool TryDeserialize<T>(string json, out T t, out Exception ex) where T : new()
         {
             try
             {
                 t = JsonSerializer.Deserialize<T>(json, options) ?? throw new NullReferenceException();
+                ex = default;
                 return true;
             }
-            catch
+            catch(Exception exc)
             {
                 t = default;
+                ex = exc;
                 return false;
             }
         }
