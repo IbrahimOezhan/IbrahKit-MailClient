@@ -21,17 +21,17 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Publish framework-dependent
-        run: dotnet publish IbrahKit-MailClient.csproj -c Release -r win-x64 `
+        run: dotnet publish IbrahKit_MailClient.csproj -c Release -r win-x64 `
               -p:PublishSingleFile=true `
               -p:SelfContained=false `
-              -p:AssemblyName=IbrahKit-MailClient-framework-dependent `
+              -p:AssemblyName=IbrahKit_MailClient-framework-dependent `
               -o publish/framework-dependent
 
       - name: Publish self-contained
-        run: dotnet publish IbrahKit-MailClient.csproj -c Release -r win-x64 `
+        run: dotnet publish IbrahKit_MailClient.csproj -c Release -r win-x64 `
               -p:PublishSingleFile=true `
               -p:SelfContained=true `
-              -p:AssemblyName=IbrahKit-MailClient-self-contained `
+              -p:AssemblyName=IbrahKit_MailClient-self-contained `
               -o publish/self-contained
 
       - name: Upload release assets
