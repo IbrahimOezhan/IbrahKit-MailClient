@@ -2,6 +2,7 @@
 using IbrahKit_CLI;
 using IbrahKit_CLI.Exceptions;
 using IbrahKit_MailClient.Configs;
+using System.Text;
 
 namespace IbrahKit_MailClient.Commands
 {
@@ -75,14 +76,14 @@ namespace IbrahKit_MailClient.Commands
                 throw new CommandExecutionException($"The provided value of the profile parameter is null");
             }
 
-            if (ProfileConfig.TryGet(profile, out ProfileConfig result))
+            StringBuilder sb = new();
+
+            if (ProfileConfig.TryGet(profile, out ProfileConfig result,sb))
             {
                 return result;
             }
 
-            ProfileCommand command = new([]);
-
-            throw new CommandExecutionException($"The profile {profile} does not exist. Use \"{command.GetData().name} {ProfileContext.Mode.CREATE} <name>\" to create one");
+            throw new CommandExecutionException(sb.ToString());
         }
 
         public ServerConfig GetServerConfig()

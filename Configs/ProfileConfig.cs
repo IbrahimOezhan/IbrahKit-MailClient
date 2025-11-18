@@ -1,13 +1,21 @@
 ﻿using IbrahKit_CLI;
+using IbrahKit_MailClient.Commands;
 using IbrahKit_MailClient.Utilities;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
+using Utilities;
 
 namespace IbrahKit_MailClient.Configs
 {
     internal class ProfileConfig
     {
+        private static string DOESNT_EXIST_ERROR(string name) => $"The profile {name} does not exist. " +
+            $"Use \"{new ProfileCommand(Array.Empty<string>()).GetData().name} {ProfileContext.Mode.CREATE} <name>\" to create one";
+
+        private const string JSON = ".json";
+
         public const string FOLDER = "PROFILES\\";
 
         [JsonInclude]
@@ -51,7 +59,7 @@ namespace IbrahKit_MailClient.Configs
 
         private static string GetExpectedFilePath(string name)
         {
-            return Path.Combine(GetProfileDirectory(), name + ".json");
+            return Path.Combine(GetProfileDirectory(), name + JSON);
         }
 
         public static List<ProfileConfig> GetConfigs(StringBuilder? log = null)
@@ -120,7 +128,7 @@ namespace IbrahKit_MailClient.Configs
 
             if (!found)
             {
-                log?.AppendLine($"Profile matching {name} was not found.");
+                log?.AppendLine(DOESNT_EXIST_ERROR(name));
 
                 return false;
             }
@@ -142,24 +150,9 @@ namespace IbrahKit_MailClient.Configs
                 return true;
             }
 
-            try
+            if(!JsonUtilities.TryDeserialize(fileContent,out result, out Exception ex))
             {
-                ProfileConfig? jsonResult = JsonSerializer.Deserialize<ProfileConfig>(fileContent, MainUtilities.GetJsonOptions());
-
-                if (jsonResult == null)
-                {
-                    log?.AppendLine($"Deserialization of json from profile {name} resulted in null value.");
-
-                    return false;
-                }
-
-                result = jsonResult;
-            }
-            catch (Exception e)
-            {
-                log?.AppendLine($"Exception when deserializing the json from profile. {name} \n {e.ToString()}");
-
-                return false;
+                log?.AppendLine($"Exception when deserializing the json from profile. {name} \n {ex.ToString()}");
             }
 
             return true;
